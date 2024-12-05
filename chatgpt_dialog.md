@@ -1,8 +1,12 @@
+---
+title: ChatGPT Dialog
+---
 
 # Reference material for implement identifier validation, verification and normalization
 
 The following is an edited transcript of a dialog with ChatGPT for implementing various identifier type functions and CiteProc functions which are useful for libraries and archives.  The original transcript is available at <https://chatgpt.com/share/6750f3c6-8a54-8001-bc85-ed8a69d6a364>
 
+The ruff draft was generated from [generator_questions.ts](generator_questions.ts) with the result being lightly edited to created this document with answers supplied by the LLM.
 
 ## 1. How do I write a validator, verifier and normalize functions for ISBN in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 

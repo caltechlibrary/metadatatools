@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "reference_docs": "pandoc -t html5 -f markdown -s --output chatgpt_dialog.html chatgpt_dialog.md",
+	"test": "deno test --allow-net --allow-read"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.8"
+  }
+}
