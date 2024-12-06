@@ -1,10 +1,10 @@
 //
 // Test our ISSN methods
 //
-import { assertEquals, assertNotEquals } from "@std/assert";
+import { assertEquals } from "@std/assert";
 
 import { normalizeISSN, validateISSN } from "./issn.ts";
-import { verifyISSN, getObjectISSN } from "./issn_record.ts";
+import { verifyISSN } from "./issn_record.ts";
 
 const varified_ids: string[] = [
   "1058-6180",

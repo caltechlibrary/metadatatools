@@ -4,7 +4,7 @@
 import { assertEquals } from "jsr:@std/assert";
 
 import { normalizeISBN, validateISBN } from "./isbn.ts";
-import { verifyISBN, getObjectISBN } from "./isbn_record.ts";
+import { verifyISBN } from "./isbn_record.ts";
 
 const varified_ids: string[] = [
   "978-3-16-148410-0",
@@ -20,5 +20,5 @@ for (let id of varified_ids) {
   assertEquals(validateISBN(id), true);
   // Verify
   let isOK: boolean = await verifyISBN(id);
-  assertEquals(isOK);
+  assertEquals(isOK, true);
 }
