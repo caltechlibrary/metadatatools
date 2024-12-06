@@ -33,9 +33,10 @@ const identifier_types: object = {
     "VIAF": "VIAF ID",
     "SNAC": "SNAC ID"
 };
+console.log("-----------------");
 let i = 1;
 for (let k of Object.keys(identifier_types)) {
-    console.log(`## ${i}. How do I write a validator, verifier and normalize functions for ${identifier_types[k]} in Deno and TypeScript? What is the copyright or attribution requirements to use this code?`);
+    console.log(`## ${i}. How do I write a normalize, validator and verifier functions for ${identifier_types[k]} in Deno and TypeScript using the Deno standard library? What is the copyright and attribution required for generated code?`);
     console.log("");
     i++;
 }

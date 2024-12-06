@@ -21,5 +21,6 @@ verification
 - DOI
 - ISNI
 - ORCID
+- ROR
 
 
