@@ -16,11 +16,18 @@ verification
 
 ## Supported identifiers
 
+- ArXiv ID
+- DOI
+- FundRef ID (depreciated, functionally replaced by ROR)
 - ISBN
 - ISSN
-- DOI
 - ISNI
 - ORCID
+- PMID
+- PMCID
 - ROR
+- LCNAF
+- VIAF
+- SNAC
 
 

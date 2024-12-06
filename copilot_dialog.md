@@ -2163,29 +2163,29 @@ The code I generate is provided under the MIT License, which allows you to use, 
 
 Feel free to ask if you have any more questions or need further assistance!
 
-## 28. How do I write a normalize, validator and verifier functions for LACNAF ID in Deno and TypeScript using the Deno standard library? What is the copyright and attribution required for generated code?
+## 28. How do I write a normalize, validator and verifier functions for LCNAF ID in Deno and TypeScript using the Deno standard library? What is the copyright and attribution required for generated code?
 
-Sure, I can help with that! Let's start with the functions for normalizing, validating, and verifying a LACNAF ID using Deno and TypeScript.
+Sure, I can help with that! Let's start with the functions for normalizing, validating, and verifying an LCNAF (Library of Congress Name Authority File) ID using Deno and TypeScript.
 
 ### Normalize Function
-The normalize function ensures that the LACNAF ID is in a consistent format.
+The normalize function ensures that the LCNAF ID is in a consistent format.
 
 ```typescript
 import { normalize } from "https://deno.land/std@0.224.0/encoding/utf8.ts";
 
-export function normalizeLacnafId(id: string): string {
-  return normalize(id.trim().toUpperCase());
+export function normalizeLcnafId(id: string): string {
+  return normalize(id.trim());
 }
 ```
 
 ### Validator Function
-The validator function checks if the LACNAF ID meets specific criteria (e.g., length, character set).
+The validator function checks if the LCNAF ID meets specific criteria (e.g., length, character set).
 
 ```typescript
-export function validateLacnafId(id: string): boolean {
-  const normalizedId = normalizeLacnafId(id);
-  const lacnafIdPattern = /^[A-Z0-9]{10}$/; // Example pattern
-  return lacnafIdPattern.test(normalizedId);
+export function validateLcnafId(id: string): boolean {
+  const normalizedId = normalizeLcnafId(id);
+  const lcnafIdPattern = /^[a-zA-Z0-9]+$/; // Example pattern for LCNAF IDs
+  return lcnafIdPattern.test(normalizedId);
 }
 ```
 
@@ -2193,14 +2193,13 @@ export function validateLacnafId(id: string): boolean {
 The verifier function could involve more complex logic, such as checking the ID against a database or an external service.
 
 ```typescript
-export async function verifyLacnafId(id: string): Promise<boolean> {
-  const isValid = validateLacnafId(id);
+export async function verifyLcnafId(id: string): Promise<boolean> {
+  const isValid = validateLcnafId(id);
   if (!isValid) return false;
 
   // Example of an external verification process
-  const response = await fetch(`https://example.com/verify?id=${id}`);
-  const result = await response.json();
-  return result.verified;
+  const response = await fetch(`https://id.loc.gov/authorities/names/${id}.json`);
+  return response.ok;
 }
 ```
 
@@ -2214,7 +2213,7 @@ For the generated code, you should include a copyright statement and specify the
  */
 ```
 
-This format follows the REUSE best practices and ensures proper attribution and licensing[1](https://liferay.dev/blogs/-/blogs/how-and-why-to-properly-write-copyright-statements-in-your-code)[2](http://integrity.mit.edu/handbook/writing-code).
+This format follows the REUSE best practices and ensures proper attribution and licensing[1](https://github.com/denoland/std)[2](https://github.com/mcarruthers/LCNAF-Named-Entity-Reconciliation).
 
 Feel free to ask if you need further assistance or have any other questions!
 
