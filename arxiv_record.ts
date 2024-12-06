@@ -10,7 +10,9 @@ export async function verifyArXivID(arxiv: string): Promise<boolean> {
   const normalizedID = normalizeArXivID(arxiv);
   return await verifyIdentifier(
     arxiv,
-    `https://export.arxiv.org/api/query?id_list=${normalizedID.replace(/^arxiv:/i,'').trim()}`,
+    `https://export.arxiv.org/api/query?id_list=${
+      normalizedID.replace(/^arxiv:/i, "").trim()
+    }`,
     validateArXivID,
   );
 }

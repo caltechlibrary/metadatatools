@@ -26,7 +26,7 @@ export function validateISNIChecksum(normalizedISNI: string): boolean {
 
   // If the checksum is 10, it should be represented as 'X' in the normalizedISNI
   if (calculatedChecksum === 10) {
-    return normalizedISNI[15] === 'X';    
+    return normalizedISNI[15] === "X";
   }
   // Compare with the actual checksum digit
   return digits[15] === calculatedChecksum;

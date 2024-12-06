@@ -14,7 +14,7 @@ export async function verifyDOI(doi: string): Promise<boolean> {
   const verified: boolean = await verifyIdentifier(
     doi,
     `https://doi.org/api/handles/${encodeURIComponent(normalizedDOI)}`,
-    validateDOI
+    validateDOI,
   );
   return verified;
 }

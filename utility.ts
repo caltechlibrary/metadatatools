@@ -11,14 +11,14 @@ export type normalizorFunc = (arg0: string) => string;
 export async function verifyIdentifier(
   identifier: string,
   u: string,
-  validate: validatorFunc
+  validate: validatorFunc,
 ): Promise<boolean> {
   if (validate(identifier)) {
-//    console.log(`DEBUG getting response from ${u}`);
+    //    console.log(`DEBUG getting response from ${u}`);
     const response = await fetch(u);
-//    console.log(`DEBUG response -> ${typeof response} -> ${response}`);
+    //    console.log(`DEBUG response -> ${typeof response} -> ${response}`);
     if (response !== undefined && response !== null) {
-        return response.ok;
+      return response.ok;
     }
   }
   return false;
@@ -35,7 +35,7 @@ export async function verifyIdentifier(
 export async function getObject(
   identifier: string,
   url: string,
-  validate: validatorFunc
+  validate: validatorFunc,
 ): Promise<object | undefined> {
   if (validate(identifier)) {
     const response = await fetch(url);

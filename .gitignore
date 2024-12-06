@@ -2,3 +2,6 @@
 *.bak
 *.swp
 *.tmp
+#*_dialog.md
+*_dialog.html
+development_approach.html

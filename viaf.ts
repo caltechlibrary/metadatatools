@@ -6,7 +6,7 @@ const VIAFPattern = /^\d+$/; // VIAF IDs are numeric
  * @returns normalized VIAF identifier as a string.
  */
 export function normalizeVIAF(id: string): string {
-    return id.trim();
+  return id.trim();
 }
 
 /**
@@ -15,7 +15,6 @@ export function normalizeVIAF(id: string): string {
  * @returns true if valid, false otherwise
  */
 export function validateVIAF(id: string): boolean {
-    const normalizedID = normalizeVIAF(id);
-    return VIAFPattern.test(normalizedID);
+  const normalizedID = normalizeVIAF(id);
+  return VIAFPattern.test(normalizedID);
 }
-  

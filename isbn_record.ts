@@ -11,7 +11,7 @@ export async function verifyISBN(isbn: string): Promise<boolean> {
   return verifyIdentifier(
     isbn,
     `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`,
-    validateISBN
+    validateISBN,
   );
 }
 
@@ -25,6 +25,6 @@ export async function getObjectISBN(isbn: string): Promise<object | undefined> {
   return await getObject(
     isbn,
     `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`,
-    validateISBN
+    validateISBN,
   );
 }

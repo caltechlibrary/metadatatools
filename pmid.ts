@@ -1,14 +1,13 @@
-
 const pubMedIDPattern = /^[0-9]+$/;
 
 /**
  * normalizePMID normalized the Pub Med ID.
- * 
+ *
  * @param pubMedID, a string representing a pmid.
  * @returns string
  */
 export function normalizePMID(pubMedID: string): string {
-    return pubMedID.replace(/pmid:\s+|pmid:/i,'').trim();
+  return pubMedID.replace(/pmid:\s+|pmid:/i, "").trim();
 }
 
 /**
@@ -18,7 +17,6 @@ export function normalizePMID(pubMedID: string): string {
  * @returns true if validates, false otherwise
  */
 export function validatePMID(pubMedID: string): boolean {
-    const normalizedID = normalizePMID(pubMedID);
-    return pubMedIDPattern.test(normalizedID);
+  const normalizedID = normalizePMID(pubMedID);
+  return pubMedIDPattern.test(normalizedID);
 }
-

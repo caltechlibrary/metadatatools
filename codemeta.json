@@ -66,6 +66,7 @@
   "releaseNotes": "Proof of concept",
   "softwareRequirements": [
         "Deno >= 2.1.2",
-        "Pandoc >= 3.1"
+        "Pandoc >= 3.1",
+        "GNU Make >= 3.81"
   ]
 }

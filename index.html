@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>COLD (Controlled Object List and Datum (Concept))</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://caltechlibrary.github.io/css/site.css">
+</head>
+<body>
+<header>
+<a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="https://caltechlibrary.github.io/assets/liblogo.gif" alt="Caltech Library logo"></a>
+</header>
+<nav>
+<ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="index.html">README</a></li>
+    <li><a href="LICENSE">LICENSE</a></li>
+    <li><a href="INSTALL.html">INSTALL</a></li>
+    <li><a href="user_manual.html">User Manual</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="https://github.com/caltechlibrary/cold">GitHub</a></li>
+</ul>
+</nav>
+
+<section>
+<h1 id="metadata-tools">Metadata Tools</h1>
+<p>This project was inspired by the <a
+href="https://idutils.readthedocs.io/en/latest/">idutils</a> Python
+package. <strong>This package is not a port of the Python
+idutils</strong>. This project focuses on the identifiers Caltech
+Library needs for the <a
+href="https://github.com/caltechlibrary/cold">COLD</a> project.</p>
+<p>For each supported identifier three types of methods are
+implemented.</p>
+<dl>
+<dt>normalization</dt>
+<dd>
+this will return a valid identifier into a regularize format for
+validation and verification
+</dd>
+<dt>validation</dt>
+<dd>
+this checks if the form of the identifier string makes sense, e.g. does
+it look like an ORCID is expected to look?
+</dd>
+<dt>verification</dt>
+<dd>
+verification checks with the authoritative organization to see if data
+is available for the identifier. In most cases that means the
+organizations that supports creating and managing the identifier
+(e.g. orcid.org, isni.org, ror.org).
+</dd>
+</dl>
+<h2 id="supported-identifiers">Supported identifiers</h2>
+<ul>
+<li>ArXiv ID</li>
+<li>DOI</li>
+<li>ISBN</li>
+<li>ISSN</li>
+<li>ISNI</li>
+<li>ORCID</li>
+<li>PMID</li>
+<li>PMCID</li>
+<li>ROR</li>
+<li>LCNAF</li>
+<li>VIAF</li>
+<li>SNAC</li>
+</ul>
+</section>
+
+<footer>
+<span>&copy; 2022 <a href="https://www.library.caltech.edu/copyright">Caltech Library</a></span>
+<address>1200 E California Blvd, Mail Code 1-32, Pasadena, CA 91125-3200</address>
+<span><a href="mailto:library@caltech.edu">Email Us</a></span>
+<span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
+</footer>
+</body>
+</html>

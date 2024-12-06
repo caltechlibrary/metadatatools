@@ -10,8 +10,9 @@ export async function verifyISSN(issn: string): Promise<boolean> {
   const normalizedISSN = normalizeISSN(issn);
   return await verifyIdentifier(
     issn,
-    `https://portal.issn.org/resource/ISSN/${encodeURIComponent(normalizedISSN)}`,
-    validateISSN
+    `https://portal.issn.org/resource/ISSN/${
+      encodeURIComponent(normalizedISSN)
+    }`,
+    validateISSN,
   );
 }
-
