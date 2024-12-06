@@ -21,11 +21,4 @@ for (let id of varified_ids) {
   // Verify is via isni.org
   let isOK: boolean = await verifyISNI(id);
   assertEquals(isOK, true);
-
-  /* NOTE: getObjectISNI will always return undefined, there is no public JSON API end point.
-  // getObject is via isni.org
-  let obj: object | undefined = await getObjectISNI(id);
-  assertNotEquals(obj, undefined);
-  console.log(`DEBUG obj -> ${typeof obj} -> ${obj}`);
-   */
 }

@@ -4,7 +4,7 @@ import { normalizeISBN, validateISBN } from "./isbn.ts";
 /**
  * Verifies an ISBN using the Open Library API.
  * @param isbn - The identifier to verify.
- * @returns Promise<boolean> - True if the ISBN exists, false otherwise.
+ * @returns Promise<boolean> - True if the ISBN exists at Open Library, false otherwise.
  */
 export async function verifyISBN(isbn: string): Promise<boolean> {
   const normalizedISBN = normalizeISBN(isbn);

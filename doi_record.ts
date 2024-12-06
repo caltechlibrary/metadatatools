@@ -11,21 +11,6 @@ import { normalizeDOI, validateDOI } from "./doi.ts";
  */
 export async function verifyDOI(doi: string): Promise<boolean> {
   const normalizedDOI = normalizeDOI(doi);
-  /*
-  const verified: boolean = await verifyIdentifier(
-    doi,
-    `https://api.crossref.org/works/${encodeURIComponent(normalizedDOI)}?mailto=help@library.caltech.edu`,
-    validateDOI,
-  );
-  if (verified) {
-    return true;
-  }
-  return await verifyIdentifier(
-    doi,
-    `https://api.datacite.org/dois/${encodeURIComponent(normalizedDOI)}`,
-    validateDOI,
-  );
-  */
   const verified: boolean = await verifyIdentifier(
     doi,
     `https://doi.org/api/handles/${encodeURIComponent(normalizedDOI)}`,

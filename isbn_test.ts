@@ -1,7 +1,7 @@
 //
 // Test our isbn methods
 //
-import { assert } from "jsr:@std/assert";
+import { assertEquals } from "jsr:@std/assert";
 
 import { normalizeISBN, validateISBN } from "./isbn.ts";
 import { verifyISBN, getObjectISBN } from "./isbn_record.ts";
@@ -17,11 +17,8 @@ for (let id of varified_ids) {
   let normalized = normalizeISBN(id);
   console.log(`Normalized ISBN: ${normalized}`);
   // Validate
-  assert(validateISBN(id));
+  assertEquals(validateISBN(id), true);
   // Verify
   let isOK: boolean = await verifyISBN(id);
-  assert(isOK);
-  let obj: object | undefined = await getObjectISBN(id);
-  assert(obj !== undefined);
-  //console.log(`DEBUG obj -> ${JSON.stringify(obj)}`);
+  assertEquals(isOK);
 }

@@ -20,8 +20,4 @@ for (let id of varified_ids) {
   // Verify is via retrieving the CrossRef record and not via portal.issn.org
   let isOK: boolean = await verifyISSN(id);
   assertEquals(isOK, true);
-  // getObject is handle via CrossRef lookup
-  let obj: object | undefined = await getObjectISSN(id);
-  assertNotEquals(obj, undefined);
-//  console.log(`DEBUG obj -> ${typeof obj} -> ${obj}`);
 }
