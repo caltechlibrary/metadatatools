@@ -9,8 +9,10 @@
   "copyrightYear": 2024,
   "isAccessibleForFree": true,
   "dateCreated": "2024-12-04",
-  "dateModified": "2024-12-05",
-  "version": "0.0.0",
+  "dateModified": "2024-12-09",
+  "releaseDate": "2024-12-09",
+  "releaseNotes": "Proof of concept",
+  "version": "0.0.1",
   "developmentStatus": "concept",
   "author": [
     {

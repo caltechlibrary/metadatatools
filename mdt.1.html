@@ -22,13 +22,54 @@
 </nav>
 
 <section>
-<h1 id="metadata-tools-user-manual">Metadata Tools User Manual</h1>
+<h1 id="name">NAME</h1>
+<p>mtd</p>
+<h1 id="synopsis">SYNOPSIS</h1>
+<p>mtd <a href="#options">OPTIONS</a> normalize|validate|verify ID_TYPE
+IDENTIFIER</p>
+<h1 id="description">DESCRIPTION</h1>
+<p>mtd will normalize, validate or verify the identifier provided based
+on the type provided. Validate and verify it will return the text ‘true’
+or ‘false’ and set an error level. Normalize will return the normalized
+string.</p>
+<p>NOTE: verify requires network access.</p>
+<h1 id="id_type">ID_TYPE</h1>
+<p>The following identifier types are supported (type name are case
+insensitive).</p>
 <ul>
-<li><a href="mdt.1.html">mdt</a>, a the command line tool for working
-with metadata identifiers</li>
-<li><a href="about.html">About</a></li>
-<li><a href="presentations/presentation1.html">Presentation</a></li>
+<li>ArXiv</li>
+<li>DOI</li>
+<li>ISBN</li>
+<li>ISSN</li>
+<li>ISNI</li>
+<li>ORCID</li>
+<li>PMID</li>
+<li>PMCID</li>
+<li>ROR</li>
+<li>LCNAF</li>
+<li>VIAF</li>
+<li>SNAC</li>
 </ul>
+<h1 id="options">OPTIONS</h1>
+<dl>
+<dt>help</dt>
+<dd>
+display help
+</dd>
+<dt>license</dt>
+<dd>
+display license
+</dd>
+<dt>version</dt>
+<dd>
+display version
+</dd>
+</dl>
+<h1 id="example">EXAMPLE</h1>
+<p>mtd used to normalize, validate and verify an ORCID.</p>
+<pre class="shell"><code>mtd normalize orcid 0000-0003-0900-6903
+mtd validate orcid 0000-0003-0900-6903
+mtd verify orcid 0000-0003-0900-6903</code></pre>
 </section>
 
 <footer>

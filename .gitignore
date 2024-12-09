@@ -5,3 +5,6 @@
 #*_dialog.md
 *_dialog.html
 development_approach.html
+bin/*
+man/*
+dist/*

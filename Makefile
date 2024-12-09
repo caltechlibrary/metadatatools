@@ -48,10 +48,11 @@ build: version.ts $(TS_MODS) CITATION.cff about.md bin compile installer.sh inst
 
 bin: .FORCE
 	mkdir -p bin
+	-if [ -d bin ]; then rm bin/*; fi
 
 compile: check $(TS_MODS)
 	deno task build
-	bin/mtd$(EXT) --help >mtd.1.md
+	./bin/mdt$(EXT) --help >mtd.1.md
 
 check: $(TS_MODS)
 
@@ -133,7 +134,6 @@ distribute_docs: website setup_dist
 	@cp CITATION.cff dist/
 	@cp *.1.md dist/
 	@cp INSTALL.md dist/
-	@cp deployment.md dist/
 	@cp -vR man dist/
 
 dist/Linux-x86_64: .FORCE

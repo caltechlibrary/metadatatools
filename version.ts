@@ -6,13 +6,13 @@ export const appInfo: {[k: string]: string} = {
   appName: "metadatatools",
 
   // Version number of release
-  version: "0.0.0",
+  version: "0.0.1",
 
   // ReleaseDate, the date version.ts was generated
-  releaseDate: "2024-12-06",
+  releaseDate: "2024-12-09",
 
   // ReleaseHash, the Git hash when version.go was generated
-  releaseHash: "18f0352",
+  releaseHash: "eeb2528",
 
   // licenseText holds a copy of the application license text.
   licenseText: `

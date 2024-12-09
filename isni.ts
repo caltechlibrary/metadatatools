@@ -12,7 +12,7 @@ export function normalizeISNI(isni: string): string {
  * @param normalizedISNI - The normalized ISNI used to validate it's checksum (no hyphens, spaces).
  * @returns boolean - True if the checksum is valid, otherwise false.
  */
-export function validateISNIChecksum(normalizedISNI: string): boolean {
+function validateISNIChecksum(normalizedISNI: string): boolean {
   const digits = normalizedISNI.split("").map(Number);
 
   // Calculate the checksum using the first 15 digits

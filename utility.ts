@@ -1,5 +1,6 @@
 export type validatorFunc = (arg0: string) => boolean;
 export type normalizorFunc = (arg0: string) => string;
+export type verifyFunc = (arg0: string) => Promise<boolean>;
 
 /**
  * verifyIdentifier attempts to retrieve an object from a remote source.
