@@ -114,20 +114,21 @@ class="slide section level1">
 <h1>What is the Metadata Tools Project?</h1>
 <ul>
 <li>An ESM (ECMAScript Module) for working with identifiers used by
-libraries and archives</li>
+libraries and archives in TypeScript</li>
 </ul>
 </div>
 <div id="why-create-the-metadata-tools-project"
 class="slide section level1">
 <h1>Why create the Metadata Tools Project?</h1>
 <p>If you working in Python you can use <a
-href="https://idutils.readthedocs.io/">idutils</a>. The problem is it is
-only for Python. I needed a similar capability I can use server side
-(via Deno) and browser side (via transpiled JavaScript). I can even use
-a WASM compiled version of Metadata Tools in other languages, even in
-Python!</p>
-<p>Metadata Tools seeks to be very portable to the langauge or
-environment you need to use it in.</p>
+href="https://idutils.readthedocs.io/">idutils</a>. I needed a similar
+capabilities in non-Python code spaces like my web browser or <a
+href="https://deno.com">Deno</a>. With Metadata Tools perform similar
+function server side (via Deno) and browser side, in other languages via
+compile to WASM or in the web browser via transpilation to
+JavaScript.</p>
+<p>Metadata Tools seeks to be very portable across languages that
+support WASM, native binary executables and in web browsers.</p>
 </div>
 <div id="what-identifiers-does-it-support" class="slide section level1">
 <h1>What identifiers does it support?</h1>
@@ -189,6 +190,15 @@ class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-
 <pre class="shell"><code>ORCID 0000-0003-0900-6903 -&gt; is valid? true -&gt; verfied? true
 ORCID https://ror.org/00mpvse27 -&gt; is valid? true -&gt; verfied? true
 ORCID 10.1128/jmbe.00128-21 -&gt; is valid? true -&gt; verfied? true</code></pre>
+</div>
+<div id="roadmap" class="slide section level1">
+<h1>Roadmap?</h1>
+<p>Metadata Tools is still at the early experimental stage. Some ideas
+for future directions include targetting WASM in additional to a native
+binary for <code>mdt</code> cli. This would allow Metadata Tools to be
+used from languages that can import and run WASM modules (e.g. Rust,
+Python and Go).</p>
+<p>Add additional identifier support as needed.</p>
 </div>
 </body>
 </html>
