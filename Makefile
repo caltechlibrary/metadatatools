@@ -44,7 +44,7 @@ endif
 #PREFIX = /usr/local/bin
 PREFIX = $(HOME)
 
-build: version.ts $(TS_MODS) CITATION.cff about.md bin compile installer.sh installer.ps1 $(HTML_PAGES)
+build: version.ts metadatatools.js $(TS_MODS) CITATION.cff about.md bin compile installer.sh installer.ps1 $(HTML_PAGES)
 
 bin: .FORCE
 	mkdir -p bin
@@ -58,6 +58,12 @@ check: $(TS_MODS)
 
 test: .FORCE
 	deno task test
+
+bundle: metadatatools.js
+
+metadatatools.js: *.ts
+	deno task bundle
+	git add metadatatools.js
 
 version.ts: codemeta.json .FORCE
 	echo '' | pandoc --from t2t --to plain \
