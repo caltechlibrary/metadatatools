@@ -11,9 +11,11 @@ curl https://caltechlibrary.github.io/metadatatools/installer.sh | sh
 
 This will install dataset and datasetd in your $HOME/bin directory.
 
-If you are running Windows 10 or 11 use the Powershell command below.
+If you are running Windows 10 or 11 (x86_64 only) use the Powershell command below.
 
 irm https://caltechlibrary.github.io/metadatatools/installer.ps1 | iex
+
+NOTE: If you want to install on ARM64 Windows, follow the build and install from source instructions below.
 
 If your want to install a specific verions set the PKG_VERSION environment variable then download. E.g. version 0.0.1 in tihs example.
 
@@ -53,5 +55,9 @@ make test
 make install
 ~~~
 
+On Windows 10 or 11 on ARM you can either use the Linux Subsystem for Windows or Powershell.
+If you are using Powershell then you will not be able to use the Makefile since it assumes a
+POSIX system. Instead you can biuld using `deno task build` command. This will generate a `mtd.exe` in
+the bin folder.  You can move the exe file to an appropriate place in your path.
 
 
