@@ -31,7 +31,7 @@ verification
 
 # USAGE
 
-There are two ways to use Metadata Tools. The first is via the command line program `mdt`. This simple command line program accepts three parameters, ACTION, ID_TYPE and IDENTIFIER. See [man page for details](mdt.1.md). An ACTION can be one of three things, "normalize", "validate" and "verify". The second parameter is one of the types listed above. The final parameter the identifier value. "normalize" will accept an identifier in a common format variation and return a consisantly formated result. E.g. The ORCID "https://orcid.org/0000-0003-0900-6903" will be normalize to "0000-0003-0900-6903" where as an ROR of "05dxps055" will normalize to "https://ror.org/05dxps055". The normalization appplied reflects the typical way we handle the idenfier formatting in Caltech Library's repository systems.
+There are three ways to use Metadata Tools. The first is via the command line program `mdt`. This simple command line program accepts three parameters, ACTION, ID_TYPE and IDENTIFIER. See [man page for details](mdt.1.md). An ACTION can be one of three things, "normalize", "validate" and "verify". The second parameter is one of the types listed above. The final parameter the identifier value. "normalize" will accept an identifier in a common format variation and return a consisantly formated result. E.g. The ORCID "https://orcid.org/0000-0003-0900-6903" will be normalize to "0000-0003-0900-6903" where as an ROR of "05dxps055" will normalize to "https://ror.org/05dxps055". The normalization appplied reflects the typical way we handle the idenfier formatting in Caltech Library's repository systems.
 
 "validate" will check of the identifier matches and expected form. E.g. An order looks like four digits dash four digits dash four digits dash for digits. There is some check summing also applied to validate the sequence (like with ISNI).  Validate will make sure the supplied identifier confirms to those types of rules. It **does not verify** the value with the originating organization.
 
@@ -40,6 +40,9 @@ There are two ways to use Metadata Tools. The first is via the command line prog
 Both "validate" and "verfiy" return booleaning true if everything checks out and false otherwise. The command line program `mtd` will also return a non-zero exit code if the validation or verification fails.
 
 The second way Metadata Tools can be use is as a [ESM](https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_%E2%80%93_ECMAScript_2015 "ECMAScript Module") TypeScript module.  The TypeScript module you can use from [Deno](https://deno.com).  The latest version of the Metadata Tools module can be found at <https://github.com/caltechlibrary/metadatatools/latest/release> and on the Caltech Library development group's GitHub website, <https://caltechlibrary.github.io/metadatatools/mod.ts>. The `mod.ts` file will pull in the whole set of identifier normalization, validation and verification routines.
+
+The third way is as a JavaScript bundle called [mdt.js](mdt.js) which you can reference from <https://caltechlibrary.github.io/metadatatools/mdt.js> or copy into your own site from this repository. It can be built using the Deno task `bundle`.
+
 
 ## Installation
 

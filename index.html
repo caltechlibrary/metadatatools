@@ -66,7 +66,7 @@ organizations that supports creating and managing the identifier
 <li>SNAC</li>
 </ul>
 <h1 id="usage">USAGE</h1>
-<p>There are two ways to use Metadata Tools. The first is via the
+<p>There are three ways to use Metadata Tools. The first is via the
 command line program <code>mdt</code>. This simple command line program
 accepts three parameters, ACTION, ID_TYPE and IDENTIFIER. See <a
 href="mdt.1.html">man page for details</a>. An ACTION can be one of
@@ -105,6 +105,12 @@ href="https://caltechlibrary.github.io/metadatatools/mod.ts"
 class="uri">https://caltechlibrary.github.io/metadatatools/mod.ts</a>.
 The <code>mod.ts</code> file will pull in the whole set of identifier
 normalization, validation and verification routines.</p>
+<p>The third way is as a JavaScript bundle called <a
+href="mdt.js">mdt.js</a> which you can reference from <a
+href="https://caltechlibrary.github.io/metadatatools/mdt.js"
+class="uri">https://caltechlibrary.github.io/metadatatools/mdt.js</a> or
+copy into your own site from this repository. It can be built using the
+Deno task <code>bundle</code>.</p>
 <h2 id="installation">Installation</h2>
 <p>The command line program can be installed using installer scripts
 hosted at <a href="https://caltechlibrary.github.io/metadatatools"
