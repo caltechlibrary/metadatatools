@@ -2,7 +2,7 @@ const appInfo = {
     appName: "metadatatools",
     version: "0.0.3",
     releaseDate: "2024-12-11",
-    releaseHash: "a263fc3",
+    releaseHash: "d992ec9",
     licenseText: `
 Copyright (c) 2024, Caltech All rights not granted herein are expressly
 reserved by Caltech.
