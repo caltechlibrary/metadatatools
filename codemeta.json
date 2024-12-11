@@ -10,9 +10,9 @@
   "isAccessibleForFree": true,
   "dateCreated": "2024-12-04",
   "dateModified": "2024-12-09",
-  "releaseDate": "2024-12-09",
+  "releaseDate": "2024-12-11",
   "releaseNotes": "Proof of concept",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "developmentStatus": "concept",
   "author": [
     {

@@ -1,4 +1,4 @@
-export const PMCIDPattern = '^PMC\\d+$';
+export const PMCIDPattern = "^PMC\\d+$";
 export const rePMCID = new RegExp(PMCIDPattern);
 
 export function normalizePMCID(pmcid: string): string {

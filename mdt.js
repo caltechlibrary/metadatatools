@@ -1,8 +1,8 @@
 const appInfo = {
     appName: "metadatatools",
-    version: "0.0.1",
-    releaseDate: "2024-12-09",
-    releaseHash: "b3365df",
+    version: "0.0.2",
+    releaseDate: "2024-12-11",
+    releaseHash: "a62b472",
     licenseText: `
 Copyright (c) 2024, Caltech All rights not granted herein are expressly
 reserved by Caltech.
@@ -36,14 +36,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 `
 };
-const newFormatPattern = /^arxiv:\d{4}\.\d{4,5}(v\d+)?$/i;
-const oldFormatPattern = /^arxiv:[a-z\-]+\/\d{7}(v\d+)?$/i;
+const newARXIVPattern = "^arxiv:\\d{4}\\.\\d{4,5}(v\\d+)?$";
+const reNewARXIV = new RegExp(newARXIVPattern, "i");
+const oldARXIVPattern = "^arxiv:[a-z\\-]+\\/\\d{7}(v\\d+)?$";
+const reOldARXIV = new RegExp(oldARXIVPattern, "i");
 function normalizeArXivID(arxivID) {
     return arxivID.trim().toLowerCase();
 }
 function validateArXivID(arxivID) {
     const normalizedID = normalizeArXivID(arxivID);
-    return newFormatPattern.test(normalizedID) || oldFormatPattern.test(normalizedID);
+    if (reNewARXIV.test(normalizedID)) return true;
+    if (reOldARXIV.test(normalizedID)) return true;
+    return false;
 }
 async function verifyIdentifier(identifier, u, validate) {
     if (validate(identifier)) {
@@ -58,6 +62,8 @@ async function verifyArXivID(arxiv) {
     const normalizedID = normalizeArXivID(arxiv);
     return await verifyIdentifier(arxiv, `https://export.arxiv.org/api/query?id_list=${normalizedID.replace(/^arxiv:/i, "").trim()}`, validateArXivID);
 }
+const DOIPattern = "^10\\.\\d{4,9}\\/[^\\s]+$";
+const reDOI = new RegExp(DOIPattern);
 function normalizeDOI(doi) {
     const lowercaseDOI = doi.toLowerCase().trim();
     if (URL.canParse(lowercaseDOI)) {
@@ -70,8 +76,7 @@ function normalizeDOI(doi) {
 }
 function validateDOI(doi) {
     const normalizedDOI = normalizeDOI(doi);
-    const doiRegex = /^10\.\d{4,9}\/[^\s]+$/;
-    return doiRegex.test(normalizedDOI);
+    return reDOI.test(normalizedDOI);
 }
 async function verifyDOI(doi) {
     const normalizedDOI = normalizeDOI(doi);
@@ -148,38 +153,59 @@ async function verifyISSN(issn) {
     const normalizedISSN = normalizeISSN(issn);
     return await verifyIdentifier(issn, `https://portal.issn.org/resource/ISSN/${encodeURIComponent(normalizedISSN)}`, validateISSN);
 }
-const LCNAFPattern = /^[a-zA-Z0-9]+$/;
+const LCNAFPattern = "^[a-zA-Z0-9]+$";
+const reLCNAF = new RegExp(LCNAFPattern);
 function normalizeLCNAF(id) {
     return id.trim();
 }
 function validateLCNAF(id) {
     const normalizedId = normalizeLCNAF(id);
-    return LCNAFPattern.test(normalizedId);
+    return reLCNAF.test(normalizedId);
 }
 async function verifyLCNAF(id) {
     const normalizedID = normalizeLCNAF(id);
     return await verifyIdentifier(id, `https://id.loc.gov/authorities/names/${normalizedID}.json`, validateLCNAF);
 }
+const ORCIDPattern = "^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$";
+const reORCID = new RegExp(ORCIDPattern);
+function stripORCID(orcid) {
+    return orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "").trim();
+}
 function normalizeORCID(orcid) {
-    let cleanedOrcid = orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "").trim();
-    if (URL.canParse(cleanedOrcid)) {
-        const u = URL.parse(cleanedOrcid);
+    let bareORCID = stripORCID(orcid);
+    if (URL.canParse(bareORCID)) {
+        const u = URL.parse(bareORCID);
         if (u !== undefined && u !== null && u.pathname !== null && u.pathname !== "") {
-            cleanedOrcid = u.pathname.replace(/^\//, "");
+            bareORCID = u.pathname.replace(/^\//, "");
         }
     }
-    return `${cleanedOrcid.slice(0, 4)}-${cleanedOrcid.slice(4, 8)}-${cleanedOrcid.slice(8, 12)}-${cleanedOrcid.slice(12)}`;
+    return `${bareORCID.slice(0, 4)}-${bareORCID.slice(4, 8)}-${bareORCID.slice(8, 12)}-${bareORCID.slice(12)}`;
 }
 function validateORCID(orcid) {
     const normalizedORCID = normalizeORCID(orcid);
-    const orcidRegex = /^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$/;
-    return orcidRegex.test(normalizedORCID);
+    if (!reORCID.test(normalizedORCID)) {
+        return false;
+    }
+    const bareORCID = stripORCID(normalizedORCID);
+    if (bareORCID.length !== 16) {
+        return false;
+    }
+    const baseDigits = bareORCID.slice(0, 15);
+    const checksumChar = bareORCID[15];
+    const checksum = checksumChar === "X" ? 10 : parseInt(checksumChar, 10);
+    let total = 0;
+    for (const digit of baseDigits){
+        total = (total + parseInt(digit, 10)) * 2;
+    }
+    const calculatedChecksum = (12 - total % 11) % 11;
+    return calculatedChecksum === checksum;
 }
 async function verifyORCID(orcid) {
     const normalizedORCID = normalizeORCID(orcid);
     return await verifyIdentifier(orcid, `https://orcid.org/${encodeURIComponent(normalizedORCID)}`, validateORCID);
 }
-const pmcidPattern = /^PMC\d+$/;
+const PMCIDPattern = "^PMC\\d+$";
+const rePMCID = new RegExp(PMCIDPattern);
 function normalizePMCID(pmcid) {
     let cleanedID = pmcid.trim().toUpperCase();
     if (pmcid.startsWith("PMC")) {
@@ -189,69 +215,73 @@ function normalizePMCID(pmcid) {
 }
 function validatePMCID(pmcid) {
     const normalizedID = normalizePMCID(pmcid);
-    return pmcidPattern.test(normalizedID);
+    return rePMCID.test(normalizedID);
 }
 async function verifyPMCID(pmcid) {
     const normalizedID = normalizePMCID(pmcid);
     return await verifyIdentifier(pmcid, `https://www.ncbi.nlm.nih.gov/pmc/articles/${normalizedID}/`, validatePMCID);
 }
-const pubMedIDPattern = /^[0-9]+$/;
+const PMIDPattern = "^[0-9]+$";
+const rePMID = new RegExp(PMIDPattern);
 function normalizePMID(pubMedID) {
     return pubMedID.replace(/pmid:\s+|pmid:/i, "").trim();
 }
 function validatePMID(pubMedID) {
     const normalizedID = normalizePMID(pubMedID);
-    return pubMedIDPattern.test(normalizedID);
+    return rePMID.test(normalizedID);
 }
 async function verifyPMID(pmid) {
     const normalizedID = normalizePMID(pmid);
     return await verifyIdentifier(pmid, `https://pubmed.ncbi.nlm.nih.gov/${normalizedID}/`, validatePMID);
 }
 const rorPrefix = "https://ror.org/";
-const rorPattern = /^https:\/\/ror\.org\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$/;
+const RORPattern = "^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$";
+const reROR = new RegExp(RORPattern, "i");
 function normalizeROR(ror) {
-    let cleanedROR = ror.trim().toLowerCase();
-    if (cleanedROR.startsWith(rorPrefix)) {
-        return cleanedROR;
+    let bareROR = ror.trim().toLowerCase();
+    if (bareROR.startsWith(rorPrefix)) {
+        return bareROR;
     }
-    return `${rorPrefix}${cleanedROR}`;
+    return `${rorPrefix}${bareROR}`;
 }
 function validateROR(ror) {
     const normalizedROR = normalizeROR(ror);
-    return rorPattern.test(normalizedROR);
+    return reROR.test(normalizedROR);
 }
 async function verifyROR(ror) {
     const normalizedROR = normalizeROR(ror);
     return await verifyIdentifier(ror, normalizedROR, validateROR);
 }
-const SNACPattern = /^\d+$/;
+const SNACPattern = "^\\d+$";
+const reSNAC = new RegExp(SNACPattern);
 function normalizeSNAC(id) {
     return id.trim();
 }
 function validateSNAC(id) {
     const normalizedId = normalizeSNAC(id);
-    return SNACPattern.test(normalizedId);
+    return reSNAC.test(normalizedId);
 }
 async function verifySNAC(id) {
     const normalizedID = normalizeSNAC(id);
     return await verifyIdentifier(id, `https://snaccooperative.org/view/${normalizedID}`, validateSNAC);
 }
-const VIAFPattern = /^\d+$/;
+const VIAFPattern = "^\\d+$";
+const reVIAF = new RegExp(VIAFPattern);
 function normalizeVIAF(id) {
     return id.trim();
 }
 function validateVIAF(id) {
     const normalizedID = normalizeVIAF(id);
-    return VIAFPattern.test(normalizedID);
+    return reVIAF.test(normalizedID);
 }
 async function verifyVIAF(id) {
     const normalizedID = normalizeVIAF(id);
     return await verifyIdentifier(id, `https://viaf.org/viaf/${normalizedID}`, validateVIAF);
 }
 export { appInfo as appInfo };
-export { normalizeArXivID as normalizeArXivID, validateArXivID as validateArXivID };
+export { oldARXIVPattern as oldARXIVPattern, newARXIVPattern as newARXIVPattern, reOldARXIV as reOldARXIV, reNewARXIV as reNewARXIV, normalizeArXivID as normalizeArXivID, validateArXivID as validateArXivID };
 export { verifyArXivID as verifyArXivID };
-export { normalizeDOI as normalizeDOI, validateDOI as validateDOI };
+export { DOIPattern as DOIPattern, reDOI as reDOI, normalizeDOI as normalizeDOI, validateDOI as validateDOI };
 export { verifyDOI as verifyDOI };
 export { validateISBN as validateISBN, normalizeISBN as normalizeISBN };
 export { verifyISBN as verifyISBN };
@@ -259,15 +289,15 @@ export { normalizeISNI as normalizeISNI, validateISNI as validateISNI };
 export { verifyISNI as verifyISNI };
 export { validateISSN as validateISSN, normalizeISSN as normalizeISSN };
 export { verifyISSN as verifyISSN };
-export { normalizeLCNAF as normalizeLCNAF, validateLCNAF as validateLCNAF };
+export { LCNAFPattern as LCNAFPattern, reLCNAF as reLCNAF, normalizeLCNAF as normalizeLCNAF, validateLCNAF as validateLCNAF };
 export { verifyLCNAF as verifyLCNAF };
-export { normalizeORCID as normalizeORCID, validateORCID as validateORCID };
+export { ORCIDPattern as ORCIDPattern, reORCID as reORCID, normalizeORCID as normalizeORCID, validateORCID as validateORCID };
 export { verifyORCID as verifyORCID };
 export { normalizePMCID as normalizePMCID, validatePMCID as validatePMCID };
 export { verifyPMCID as verifyPMCID };
-export { normalizePMID as normalizePMID, validatePMID as validatePMID };
+export { PMCIDPattern as PMCIDPattern, rePMCID as rePMCID, normalizePMID as normalizePMID, validatePMID as validatePMID };
 export { verifyPMID as verifyPMID };
-export { normalizeROR as normalizeROR, validateROR as validateROR };
+export { RORPattern as RORPattern, reROR as reROR, normalizeROR as normalizeROR, validateROR as validateROR };
 export { verifyROR as verifyROR };
 export { normalizeSNAC as normalizeSNAC, validateSNAC as validateSNAC };
 export { verifySNAC as verifySNAC };

@@ -1,6 +1,6 @@
-%mtd(1) user manual | 0.0.1 2024-12-09 bcbd549
+%mtd(1) user manual | 0.0.2 2024-12-11 a62b472
 % R. S.Doiel
-% 2024-12-09 bcbd549
+% 2024-12-11 a62b472
     
 # NAME
     

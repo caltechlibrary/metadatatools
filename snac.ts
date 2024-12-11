@@ -1,4 +1,4 @@
-export const SNACPattern = '^\\d+$'; // SNAC IDs are numeric
+export const SNACPattern = "^\\d+$"; // SNAC IDs are numeric
 export const reSNAC = new RegExp(SNACPattern);
 
 /**

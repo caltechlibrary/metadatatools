@@ -1,7 +1,8 @@
 export const rorPrefix = "https://ror.org/";
-export const RORPattern = '^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$';
-export const reROR = new RegExp(RORPattern, 'i');
-  //;
+export const RORPattern =
+  "^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$";
+export const reROR = new RegExp(RORPattern, "i");
+//;
 
 /**
  * normalizeROR takes a string and returns a normalized vesion of the ROR

@@ -1,9 +1,9 @@
-export const ORCIDPattern = '^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$';
+export const ORCIDPattern = "^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$";
 export const reORCID = new RegExp(ORCIDPattern);
 
 function stripORCID(orcid: string): string {
   return orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "")
-  .trim();
+    .trim();
 }
 
 /**
@@ -33,7 +33,7 @@ export function normalizeORCID(orcid: string): string {
  */
 export function validateORCID(orcid: string): boolean {
   const normalizedORCID = normalizeORCID(orcid);
-  if (! reORCID.test(normalizedORCID)) {
+  if (!reORCID.test(normalizedORCID)) {
     return false;
   }
   // Remove hyphens for processing

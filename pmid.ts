@@ -1,4 +1,4 @@
-export const PMIDPattern = '^[0-9]+$'; 
+export const PMIDPattern = "^[0-9]+$";
 export const rePMID = new RegExp(PMIDPattern);
 
 /**
