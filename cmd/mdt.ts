@@ -15,6 +15,7 @@ import {
   normalizePMID,
   normalizeROR,
   normalizeSNAC,
+  normalizeUUID,
   normalizeVIAF,
   normalizorFunc,
   OptionsProcessor,
@@ -29,6 +30,7 @@ import {
   validatePMID,
   validateROR,
   validateSNAC,
+  validateUUID,
   validateVIAF,
   validatorFunc,
   verifyArXivID,
@@ -89,13 +91,14 @@ The following identifier types are supported (type name are case insensitive).
 - ISBN
 - ISSN
 - ISNI
+- LCNAF
 - ORCID
 - PMID
 - PMCID
 - ROR
-- LCNAF
-- VIAF
 - SNAC
+- UUID (NOTE: verification unavailable, returns undefined with exit code 3)
+- VIAF
 
 # OPTIONS
 `,
@@ -136,7 +139,7 @@ ${app_name} verify orcid 0000-0003-0900-6903
 async function action(
   normalize: normalizorFunc,
   validate: validatorFunc,
-  verify: verifyFunc,
+  verify: verifyFunc | undefined,
   verb: string,
   identifier: string,
 ): Promise<number> {
@@ -153,11 +156,16 @@ async function action(
       }
       break;
     case "verify":
-      const ok = await verify(identifier);
-      if (ok) {
-        console.log("true");
+      if (verify === undefined) {
+        console.log('undefined');
+        exitCode = 3;
       } else {
-        console.log("false");
+        const ok = await verify(identifier);
+        if (ok) {
+          console.log("true");
+        } else {
+          console.log("false");
+        }  
       }
       break;
     default:
@@ -229,6 +237,9 @@ async function main() {
     case "isni":
       exitCode = await action(normalizeISNI, validateISNI, verifyISNI, verb, identifier);
       break;
+    case "lcnaf":
+      exitCode = await action(normalizeLCNAF, validateLCNAF, verifyLCNAF, verb, identifier);
+      break;
     case "orcid":
       exitCode = await action(normalizeORCID, validateORCID, verifyORCID, verb, identifier);
       break;
@@ -241,14 +252,14 @@ async function main() {
     case "ror":
       exitCode = await action(normalizeROR, validateROR, verifyROR, verb, identifier);
       break;
-    case "lcnaf":
-      exitCode = await action(normalizeLCNAF, validateLCNAF, verifyLCNAF, verb, identifier);
+    case "snac":
+      exitCode = await action(normalizeSNAC, validateSNAC, verifySNAC, verb, identifier);
+      break;
+    case "uuid":
+      exitCode = await action(normalizeUUID, validateUUID, undefined, verb, identifier);
       break;
     case "viaf":
       exitCode = await action(normalizeVIAF, validateVIAF, verifyVIAF, verb, identifier);
-      break;
-    case "snac":
-      exitCode = await action(normalizeSNAC, validateSNAC, verifySNAC, verb, identifier);
       break;
     default:
       console.log(`ERROR: ${idType} type is not supported`);

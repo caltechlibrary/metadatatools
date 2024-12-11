@@ -16,6 +16,6 @@ maintainers:
     orcid: ""
 
 repository-code: "https://github.com/caltechlibrary/metadatatools"
-version: 0.0.2
+version: 0.0.3
 license-url: "https://caltechlibrary.github.io/metadatatools/LICENSE"
 keywords: [ "metadata", "identifiers" ]

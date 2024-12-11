@@ -143,6 +143,14 @@ export {
    verifySNAC
 } from './snac_record.ts';
 
+// uuid.ts export
+export {
+  normalizeUUID,
+  validateUUID
+} from './uuid.ts';
+
+// NOTE: there is no uuid_record.ts as there is no remote API
+
 // utility.ts export
 export {
    verifyIdentifier,

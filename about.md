@@ -11,7 +11,7 @@ authors:
     orcid: "https://orcid.org/0000-0003-0900-6903"
 
 repository-code: "https://github.com/caltechlibrary/metadatatools"
-version: 0.0.2
+version: 0.0.3
 license-url: "https://caltechlibrary.github.io/metadatatools/LICENSE"
 keywords: [ "metadata", "identifiers" ]
 
@@ -20,7 +20,7 @@ keywords: [ "metadata", "identifiers" ]
 About this software
 ===================
 
-## metadatatools 0.0.2
+## metadatatools 0.0.3
 
 ### Authors
 

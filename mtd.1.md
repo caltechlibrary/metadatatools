@@ -1,6 +1,6 @@
-%mtd(1) user manual | 0.0.2 2024-12-11 a62b472
+%mtd(1) user manual | 0.0.3 2024-12-11 a263fc3
 % R. S.Doiel
-% 2024-12-11 a62b472
+% 2024-12-11 a263fc3
     
 # NAME
     
@@ -28,13 +28,14 @@ The following identifier types are supported (type name are case insensitive).
 - ISBN
 - ISSN
 - ISNI
+- LCNAF
 - ORCID
 - PMID
 - PMCID
 - ROR
-- LCNAF
-- VIAF
 - SNAC
+- UUID (NOTE: verification unavailable, returns undefined with exit code 3)
+- VIAF
 
 # OPTIONS
 
