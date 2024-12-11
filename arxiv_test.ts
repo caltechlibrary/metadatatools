@@ -3,7 +3,7 @@
 //
 import { assertEquals } from "@std/assert";
 
-import { normalizeArXivID, validateArXivID } from "./arxiv.ts";
+import { normalizeArXivID, reNewARXIV, reOldARXIV, validateArXivID } from "./arxiv.ts";
 import { verifyArXivID } from "./arxiv_record.ts";
 
 const varified_ids: string[] = [
@@ -15,7 +15,6 @@ const varified_ids: string[] = [
 for (let id of varified_ids) {
   // Normalize
   let normalized = normalizeArXivID(id);
-  console.log(`Normalized ArXiv: ${normalized}`);
   // Validate
   assertEquals(validateArXivID(id), true);
   // Verify is via arxiv.org

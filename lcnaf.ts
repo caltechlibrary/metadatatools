@@ -1,4 +1,5 @@
-const LCNAFPattern = /^[a-zA-Z0-9]+$/; // Example pattern for LCNAF IDs
+export const LCNAFPattern = '^[a-zA-Z0-9]+$'; // Example pattern for LCNAF IDs
+export const reLCNAF = new RegExp(LCNAFPattern); 
 
 /**
  * normalizeLCNAF
@@ -16,5 +17,5 @@ export function normalizeLCNAF(id: string): string {
  */
 export function validateLCNAF(id: string): boolean {
   const normalizedId = normalizeLCNAF(id);
-  return LCNAFPattern.test(normalizedId);
+  return reLCNAF.test(normalizedId);
 }

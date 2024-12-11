@@ -2,6 +2,9 @@
 // DOI validate and normalize routines.
 //
 
+export const DOIPattern = '^10\\.\\d{4,9}\\/[^\\s]+$';
+export const reDOI = new RegExp(DOIPattern);
+
 /**
  * Normalizes a DOI by removing extraneous characters and enforcing lowercase.
  * @param doi - The DOI string to normalize.
@@ -27,6 +30,5 @@ export function normalizeDOI(doi: string): string {
  */
 export function validateDOI(doi: string): boolean {
   const normalizedDOI = normalizeDOI(doi);
-  const doiRegex = /^10\.\d{4,9}\/[^\s]+$/;
-  return doiRegex.test(normalizedDOI);
+  return reDOI.test(normalizedDOI);
 }

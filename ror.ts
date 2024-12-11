@@ -1,6 +1,7 @@
-const rorPrefix = "https://ror.org/";
-const rorPattern =
-  /^https:\/\/ror\.org\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$/;
+export const rorPrefix = "https://ror.org/";
+export const RORPattern = '^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$';
+export const reROR = new RegExp(RORPattern, 'i');
+  //;
 
 /**
  * normalizeROR takes a string and returns a normalized vesion of the ROR
@@ -8,11 +9,11 @@ const rorPattern =
  * @returns string
  */
 export function normalizeROR(ror: string): string {
-  let cleanedROR = ror.trim().toLowerCase();
-  if (cleanedROR.startsWith(rorPrefix)) {
-    return cleanedROR;
+  let bareROR = ror.trim().toLowerCase();
+  if (bareROR.startsWith(rorPrefix)) {
+    return bareROR;
   }
-  return `${rorPrefix}${cleanedROR}`;
+  return `${rorPrefix}${bareROR}`;
 }
 
 /**
@@ -23,5 +24,5 @@ export function normalizeROR(ror: string): string {
  */
 export function validateROR(ror: string): boolean {
   const normalizedROR = normalizeROR(ror);
-  return rorPattern.test(normalizedROR);
+  return reROR.test(normalizedROR);
 }

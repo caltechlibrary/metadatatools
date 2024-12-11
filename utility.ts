@@ -15,9 +15,7 @@ export async function verifyIdentifier(
   validate: validatorFunc,
 ): Promise<boolean> {
   if (validate(identifier)) {
-    //    console.log(`DEBUG getting response from ${u}`);
     const response = await fetch(u);
-    //    console.log(`DEBUG response -> ${typeof response} -> ${response}`);
     if (response !== undefined && response !== null) {
       return response.ok;
     }
@@ -42,7 +40,6 @@ export async function getObject(
     const response = await fetch(url);
     if (response !== undefined && response !== null && response.ok) {
       const src = await response.text();
-      console.log(`DEBUG src -> ${src}`);
       try {
         return JSON.parse(src);
       } catch {

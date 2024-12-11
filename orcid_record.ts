@@ -1,4 +1,4 @@
-import { getObject, verifyIdentifier } from "./utility.ts";
+import { verifyIdentifier } from "./utility.ts";
 import { normalizeORCID, validateORCID } from "./orcid.ts";
 
 /**

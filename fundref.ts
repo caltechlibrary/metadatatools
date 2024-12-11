@@ -1,4 +1,5 @@
-const fundRefPattern = /^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
+const fundRefPattern = '^10\\.\\d{4,9}\\/[-._;()/:A-Z0-9]+$';
+const reFundRef = new RegExp(fundRefPattern, 'i');
 
 /**
  * normalizeFundRefID
@@ -16,5 +17,5 @@ export function normalizeFundRefID(id: string): string {
  */
 export function validateFundRefID(id: string): boolean {
   const normalizedID = normalizeFundRefID(id);
-  return fundRefPattern.test(normalizedID);
+  return reFundRef.test(normalizedID);
 }

@@ -86,6 +86,8 @@ export {
 
 // orcid.ts export
 export {
+  ORCIDPattern,
+  reORCID,
   normalizeORCID,
   validateORCID
 } from './orcid.ts';
@@ -119,6 +121,8 @@ export {
 
 // ror.ts export
 export {
+  RORPattern,
+  reROR,
   normalizeROR,
   validateROR
 } from './ror.ts';

@@ -1,22 +1,29 @@
+export const ORCIDPattern = '^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$';
+export const reORCID = new RegExp(ORCIDPattern);
+
+function stripORCID(orcid: string): string {
+  return orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "")
+  .trim();
+}
+
 /**
  * Normalizes the given ORCID by removing extra spaces and formatting with hyphens.
  * @param orcid - The ORCID to normalize.
  * @returns string - The normalized ORCID or the supplied string if it can't normalize.
  */
 export function normalizeORCID(orcid: string): string {
-  let cleanedOrcid = orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "")
-    .trim();
-  if (URL.canParse(cleanedOrcid)) {
-    const u = URL.parse(cleanedOrcid);
+  let bareORCID = stripORCID(orcid);
+  if (URL.canParse(bareORCID)) {
+    const u = URL.parse(bareORCID);
     if (
       u !== undefined && u !== null && u.pathname !== null && u.pathname !== ""
     ) {
-      cleanedOrcid = u.pathname.replace(/^\//, "");
+      bareORCID = u.pathname.replace(/^\//, "");
     }
   }
-  return `${cleanedOrcid.slice(0, 4)}-${cleanedOrcid.slice(4, 8)}-${
-    cleanedOrcid.slice(8, 12)
-  }-${cleanedOrcid.slice(12)}`;
+  return `${bareORCID.slice(0, 4)}-${bareORCID.slice(4, 8)}-${
+    bareORCID.slice(8, 12)
+  }-${bareORCID.slice(12)}`;
 }
 
 /**
@@ -26,22 +33,16 @@ export function normalizeORCID(orcid: string): string {
  */
 export function validateORCID(orcid: string): boolean {
   const normalizedORCID = normalizeORCID(orcid);
-  const orcidRegex = /^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$/;
-  return orcidRegex.test(normalizedORCID);
-}
-
-/**
- * Verifies the checksum of the given ORCID using Mod 11-2 algorithm.
- * @param orcid - The ORCID to verify.
- * @returns boolean - `true` if the checksum is valid, otherwise `false`.
- */
-export function verifyORCID(orcid: string): boolean {
+  if (! reORCID.test(normalizedORCID)) {
+    return false;
+  }
   // Remove hyphens for processing
-  const normalizedOrcid = orcid.replace(/-/g, "");
-  if (normalizedOrcid.length !== 16) return false;
-
-  const baseDigits = normalizedOrcid.slice(0, 15);
-  const checksumChar = normalizedOrcid[15];
+  const bareORCID = stripORCID(normalizedORCID);
+  if (bareORCID.length !== 16) {
+    return false;
+  }
+  const baseDigits = bareORCID.slice(0, 15);
+  const checksumChar = bareORCID[15];
   const checksum = checksumChar === "X" ? 10 : parseInt(checksumChar, 10);
 
   let total = 0;
@@ -49,6 +50,5 @@ export function verifyORCID(orcid: string): boolean {
     total = (total + parseInt(digit, 10)) * 2;
   }
   const calculatedChecksum = (12 - (total % 11)) % 11;
-
   return calculatedChecksum === checksum;
 }

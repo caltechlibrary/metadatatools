@@ -1,4 +1,5 @@
-const SNACPattern = /^\d+$/; // SNAC IDs are numeric
+export const SNACPattern = '^\\d+$'; // SNAC IDs are numeric
+export const reSNAC = new RegExp(SNACPattern);
 
 /**
  * normalizeSNAC
@@ -16,5 +17,5 @@ export function normalizeSNAC(id: string): string {
  */
 export function validateSNAC(id: string): boolean {
   const normalizedId = normalizeSNAC(id);
-  return SNACPattern.test(normalizedId);
+  return reSNAC.test(normalizedId);
 }

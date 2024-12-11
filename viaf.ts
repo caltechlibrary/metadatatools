@@ -1,4 +1,5 @@
-const VIAFPattern = /^\d+$/; // VIAF IDs are numeric
+export const VIAFPattern = '^\\d+$'; // VIAF IDs are numeric
+export const reVIAF = new RegExp(VIAFPattern);
 
 /**
  * normalizeVIAF
@@ -16,5 +17,5 @@ export function normalizeVIAF(id: string): string {
  */
 export function validateVIAF(id: string): boolean {
   const normalizedID = normalizeVIAF(id);
-  return VIAFPattern.test(normalizedID);
+  return reVIAF.test(normalizedID);
 }

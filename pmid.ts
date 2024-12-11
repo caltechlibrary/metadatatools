@@ -1,4 +1,5 @@
-const pubMedIDPattern = /^[0-9]+$/;
+export const PMIDPattern = '^[0-9]+$'; 
+export const rePMID = new RegExp(PMIDPattern);
 
 /**
  * normalizePMID normalized the Pub Med ID.
@@ -18,5 +19,5 @@ export function normalizePMID(pubMedID: string): string {
  */
 export function validatePMID(pubMedID: string): boolean {
   const normalizedID = normalizePMID(pubMedID);
-  return pubMedIDPattern.test(normalizedID);
+  return rePMID.test(normalizedID);
 }
