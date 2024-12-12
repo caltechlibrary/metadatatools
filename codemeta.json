@@ -11,8 +11,8 @@
   "dateCreated": "2024-12-04",
   "dateModified": "2024-12-09",
   "releaseDate": "2024-12-11",
-  "releaseNotes": "Proof of concept, adding UUID v1, v3, v4 and v5 support",
-  "version": "0.0.3",
+  "releaseNotes": "Proof of concept, adding UUID v1, v3, v4 and v5; added tel and email types",
+  "version": "0.0.4",
   "developmentStatus": "concept",
   "author": [
     {

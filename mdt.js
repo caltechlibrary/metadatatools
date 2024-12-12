@@ -1,8 +1,8 @@
 const appInfo = {
     appName: "metadatatools",
-    version: "0.0.3",
+    version: "0.0.4",
     releaseDate: "2024-12-11",
-    releaseHash: "d992ec9",
+    releaseHash: "135b003",
     licenseText: `
 Copyright (c) 2024, Caltech All rights not granted herein are expressly
 reserved by Caltech.
@@ -36,6 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 `
 };
+const ARXIVPattern = "^arxiv:(\\d{4}\\.\\d{4,5}(v\\d+)?|[a-z\\-]+\\/\\d{7}(v\\d+)?)$";
+const reARXIV = new RegExp(ARXIVPattern, "i");
 const newARXIVPattern = "^arxiv:\\d{4}\\.\\d{4,5}(v\\d+)?$";
 const reNewARXIV = new RegExp(newARXIVPattern, "i");
 const oldARXIVPattern = "^arxiv:[a-z\\-]+\\/\\d{7}(v\\d+)?$";
@@ -45,9 +47,7 @@ function normalizeArXivID(arxivID) {
 }
 function validateArXivID(arxivID) {
     const normalizedID = normalizeArXivID(arxivID);
-    if (reNewARXIV.test(normalizedID)) return true;
-    if (reOldARXIV.test(normalizedID)) return true;
-    return false;
+    return reARXIV.test(normalizedID);
 }
 async function verifyIdentifier(identifier, u, validate) {
     if (validate(identifier)) {
@@ -83,6 +83,12 @@ async function verifyDOI(doi) {
     const verified = await verifyIdentifier(doi, `https://doi.org/api/handles/${encodeURIComponent(normalizedDOI)}`, validateDOI);
     return verified;
 }
+const ISBN10Pattern = "^(?:\\d[\\ |-]?){9}[\\d|X]$";
+const reISBN10 = new RegExp(ISBN10Pattern, "i");
+const ISBN13Pattern = "^(?:\d[\ |-]?){13}$";
+const reISBN13 = new RegExp(ISBN13Pattern, "i");
+const ISBNPattern = "^((?:\\d[\\ |-]?){9}[\\d|X]|(?:\d[\ |-]?){13})$";
+const reISBN = new RegExp(ISBNPattern, "i");
 function validateISBN10(isbn) {
     const cleanISBN = isbn.replace(/[^0-9X]/gi, "");
     if (cleanISBN.length !== 10) return false;
@@ -103,36 +109,51 @@ function validateISBN(isbn) {
     return false;
 }
 function normalizeISBN(isbn) {
-    return isbn.replace(/[-\s]/g, "").trim();
+    const bareISBN = isbn.replace(/[-\s]/g, "").trim();
+    if (bareISBN.length === 10) {
+        return `${bareISBN.substring(0, 1)}-${bareISBN.substring(1, 4)}-${bareISBN.substring(4, 9)}-${bareISBN.substring(9)}`;
+    } else if (bareISBN.length === 13) {
+        return `${bareISBN.substring(0, 3)}-${bareISBN.substring(3, 4)}-${bareISBN.substring(4, 6)}-${bareISBN.substring(6, 11)}-${bareISBN.substring(11)}`;
+    }
+    return bareISBN;
 }
 async function verifyISBN(isbn) {
     const normalizedISBN = normalizeISBN(isbn);
     return verifyIdentifier(isbn, `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`, validateISBN);
 }
-function normalizeISNI(isni) {
-    return isni.replace(/\D/g, "");
+const ISNIPattern = "$[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3}[0-9X]";
+const reISNI = new RegExp(ISNIPattern);
+function stripISNI(isni) {
+    return isni.toUpperCase().replace(/\s+/g, "").replace(/-/g, "").trim();
 }
-function validateISNIChecksum(normalizedISNI) {
-    const digits = normalizedISNI.split("").map(Number);
+function normalizeISNI(isni) {
+    const bareISNI = stripISNI(isni);
+    return `${bareISNI.slice(0, 4)} ${bareISNI.slice(4, 8)} ${bareISNI.slice(8, 12)} ${bareISNI.slice(12)}`;
+}
+function validateISNIChecksum(isni) {
+    const bareISNI = stripISNI(isni);
+    const digits = bareISNI.split("").map(Number);
     let sum = 0;
     for(let i = 0; i < 15; i++){
         sum = (sum + digits[i]) * 2 % 11;
     }
     const calculatedChecksum = (12 - sum % 11) % 11;
     if (calculatedChecksum === 10) {
-        return normalizedISNI[15] === "X";
+        return bareISNI[15] === "X";
     }
     return digits[15] === calculatedChecksum;
 }
 function validateISNI(isni) {
-    const normalizedISNI = normalizeISNI(isni);
-    if (!/^\d{16}$/.test(normalizedISNI)) return false;
-    return validateISNIChecksum(normalizedISNI);
+    const bareISNI = stripISNI(isni);
+    if (!/^\d{16}$/.test(bareISNI)) return false;
+    return validateISNIChecksum(bareISNI);
 }
 async function verifyISNI(isni) {
-    const normalizedISNI = normalizeISNI(isni);
-    return await verifyIdentifier(isni, `https://isni.org/isni/${encodeURIComponent(normalizedISNI)}`, validateISNI);
+    const bareISNI = normalizeISNI(isni).replaceAll(" ", "");
+    return await verifyIdentifier(isni, `https://isni.org/isni/${encodeURIComponent(bareISNI)}`, validateISNI);
 }
+const ISSNPattern = "^ISSN\s+?(\d{4})-(\d{3}[\dX])$";
+const reISSN = new RegExp(ISSNPattern, "i");
 function validateISSNChecksum(issn) {
     if (issn.length !== 8) return false;
     const digits = issn.slice(0, 7);
@@ -141,13 +162,17 @@ function validateISSNChecksum(issn) {
     const expectedCheckDigit = checksum === 0 ? "0" : checksum === 1 ? "X" : `${11 - checksum}`;
     return checkDigit === expectedCheckDigit;
 }
+function stripISSN(issn) {
+    return issn.toUpperCase().replaceAll(/\D|X/g, "");
+}
 function validateISSN(issn) {
-    const normalizedISSN = normalizeISSN(issn);
-    if (!/^\d{7}[0-9X]$/.test(normalizedISSN)) return false;
-    return validateISSNChecksum(normalizedISSN);
+    const bareISSN = stripISSN(issn);
+    return validateISSNChecksum(bareISSN);
 }
 function normalizeISSN(issn) {
-    return issn.replace(/[^0-9X]/gi, "").toUpperCase();
+    const bareISSN = stripISSN(issn);
+    console.log(`DEBUG bareISSN -> ${bareISSN}`);
+    return `${bareISSN.substring(0, 4)}-${bareISSN.substring(4)}`;
 }
 async function verifyISSN(issn) {
     const normalizedISSN = normalizeISSN(issn);
@@ -278,29 +303,65 @@ async function verifyVIAF(id) {
     const normalizedID = normalizeVIAF(id);
     return await verifyIdentifier(id, `https://viaf.org/viaf/${normalizedID}`, validateVIAF);
 }
+const TELPattern = '^\\+?(\\d{1,3})?[-.\\s]?(\\(?\\d{1,4}\\)?)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$';
+const reTEL = new RegExp(TELPattern);
+function stripTEL(tel) {
+    return tel.trim().replaceAll(/\D/gi, '');
+}
+function normalizeTEL(tel) {
+    const bareTel = stripTEL(tel);
+    switch(bareTel.length){
+        case 7:
+            return `${bareTel.substring(0, 3)}-${bareTel.substring(3)}`;
+        case 10:
+            return `(${bareTel.substring(0, 3)}) ${bareTel.substring(3, 6)}-${bareTel.substring(6)}`;
+        case 11:
+            return `+00${bareTel.substring(0, 1)} (${bareTel.substring(1, 4)}) ${bareTel.substring(4, 7)}-${bareTel.substring(7)}`;
+        case 12:
+            return `+0${bareTel.substring(0, 2)} (${bareTel.substring(2, 5)}) ${bareTel.substring(5, 8)}-${bareTel.substring(8)}`;
+        case 13:
+            return `+${bareTel.substring(0, 3)} (${bareTel.substring(3, 6)}) ${bareTel.substring(6, 9)}-${bareTel.substring(9)}`;
+        default:
+            return tel;
+    }
+}
+function validateTEL(tel) {
+    return reTEL.test(tel);
+}
+const EMAILPattern = '^(?:"?([^"]*)"?\\s)?(?:<?(.+@[^>]+)>?)$';
+const reEMAIL = new RegExp(EMAILPattern);
+function normalizeEMAIL(email) {
+    return email.trim().replaceAll(/\s+/g, '').trim();
+}
+function validateEMAIL(email) {
+    const normalized = normalizeEMAIL(email);
+    return reEMAIL.test(normalized);
+}
 export { appInfo as appInfo };
-export { oldARXIVPattern as oldARXIVPattern, newARXIVPattern as newARXIVPattern, reOldARXIV as reOldARXIV, reNewARXIV as reNewARXIV, normalizeArXivID as normalizeArXivID, validateArXivID as validateArXivID };
+export { ARXIVPattern as ARXIVPattern, newARXIVPattern as newARXIVPattern, normalizeArXivID as normalizeArXivID, oldARXIVPattern as oldARXIVPattern, reARXIV as reARXIV, reNewARXIV as reNewARXIV, reOldARXIV as reOldARXIV, validateArXivID as validateArXivID };
 export { verifyArXivID as verifyArXivID };
-export { DOIPattern as DOIPattern, reDOI as reDOI, normalizeDOI as normalizeDOI, validateDOI as validateDOI };
+export { DOIPattern as DOIPattern, normalizeDOI as normalizeDOI, reDOI as reDOI, validateDOI as validateDOI };
 export { verifyDOI as verifyDOI };
-export { validateISBN as validateISBN, normalizeISBN as normalizeISBN };
+export { ISBN10Pattern as ISBN10Pattern, ISBN13Pattern as ISBN13Pattern, ISBNPattern as ISBNPattern, normalizeISBN as normalizeISBN, reISBN as reISBN, reISBN10 as reISBN10, reISBN13 as reISBN13, validateISBN as validateISBN };
 export { verifyISBN as verifyISBN };
-export { normalizeISNI as normalizeISNI, validateISNI as validateISNI };
+export { ISNIPattern as ISNIPattern, normalizeISNI as normalizeISNI, reISNI as reISNI, validateISNI as validateISNI };
 export { verifyISNI as verifyISNI };
-export { validateISSN as validateISSN, normalizeISSN as normalizeISSN };
+export { ISSNPattern as ISSNPattern, reISSN as reISSN, normalizeISSN as normalizeISSN, validateISSN as validateISSN };
 export { verifyISSN as verifyISSN };
-export { LCNAFPattern as LCNAFPattern, reLCNAF as reLCNAF, normalizeLCNAF as normalizeLCNAF, validateLCNAF as validateLCNAF };
+export { LCNAFPattern as LCNAFPattern, normalizeLCNAF as normalizeLCNAF, reLCNAF as reLCNAF, validateLCNAF as validateLCNAF };
 export { verifyLCNAF as verifyLCNAF };
-export { ORCIDPattern as ORCIDPattern, reORCID as reORCID, normalizeORCID as normalizeORCID, validateORCID as validateORCID };
+export { normalizeORCID as normalizeORCID, ORCIDPattern as ORCIDPattern, reORCID as reORCID, validateORCID as validateORCID };
 export { verifyORCID as verifyORCID };
-export { normalizePMCID as normalizePMCID, validatePMCID as validatePMCID };
+export { PMCIDPattern as PMCIDPattern, rePMCID as rePMCID, normalizePMCID as normalizePMCID, validatePMCID as validatePMCID };
 export { verifyPMCID as verifyPMCID };
-export { PMCIDPattern as PMCIDPattern, rePMCID as rePMCID, normalizePMID as normalizePMID, validatePMID as validatePMID };
+export { PMIDPattern as PMIDPattern, rePMID as rePMID, normalizePMID as normalizePMID, validatePMID as validatePMID };
 export { verifyPMID as verifyPMID };
-export { RORPattern as RORPattern, reROR as reROR, normalizeROR as normalizeROR, validateROR as validateROR };
+export { reROR as reROR, RORPattern as RORPattern, normalizeROR as normalizeROR, validateROR as validateROR };
 export { verifyROR as verifyROR };
-export { normalizeSNAC as normalizeSNAC, validateSNAC as validateSNAC };
+export { SNACPattern as SNACPattern, reSNAC as reSNAC, normalizeSNAC as normalizeSNAC, validateSNAC as validateSNAC };
 export { verifySNAC as verifySNAC };
-export { normalizeVIAF as normalizeVIAF, validateVIAF as validateVIAF };
+export { VIAFPattern as VIAFPattern, reVIAF as reVIAF, normalizeVIAF as normalizeVIAF, validateVIAF as validateVIAF };
 export { verifyVIAF as verifyVIAF };
+export { TELPattern as TELPattern, reTEL as reTEL, normalizeTEL as normalizeTEL, validateTEL as validateTEL };
+export { EMAILPattern as EMAILPattern, reEMAIL as reEMAIL, normalizeEMAIL as normalizeEMAIL, validateEMAIL as validateEMAIL };
 

@@ -13,7 +13,7 @@ const varified_ids: string[] = [
 
 for (let id of varified_ids) {
   // Normalize
-  let normalized = normalizeISSN(id);
+  const normalized = normalizeISSN(id);
   console.log(`Normalized ISSN: ${normalized}`);
   // Validate
   assertEquals(validateISSN(id), true);

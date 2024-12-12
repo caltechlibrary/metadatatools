@@ -7,10 +7,10 @@ import { normalizeISNI, validateISNI } from "./isni.ts";
  * @returns Promise<boolean> - True if the ISNI exists, otherwise false.
  */
 export async function verifyISNI(isni: string): Promise<boolean> {
-  const normalizedISNI = normalizeISNI(isni);
+  const bareISNI = normalizeISNI(isni).replaceAll(" ", "");
   return await verifyIdentifier(
     isni,
-    `https://isni.org/isni/${encodeURIComponent(normalizedISNI)}`,
+    `https://isni.org/isni/${encodeURIComponent(bareISNI)}`,
     validateISNI,
   );
 }

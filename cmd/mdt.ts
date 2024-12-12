@@ -6,6 +6,7 @@ import {
   appInfo,
   normalizeArXivID,
   normalizeDOI,
+  normalizeEMAIL,
   normalizeISBN,
   normalizeISNI,
   normalizeISSN,
@@ -15,12 +16,14 @@ import {
   normalizePMID,
   normalizeROR,
   normalizeSNAC,
+  normalizeTEL,
   normalizeUUID,
   normalizeVIAF,
   normalizorFunc,
   OptionsProcessor,
   validateArXivID,
   validateDOI,
+  validateEMAIL,
   validateISBN,
   validateISNI,
   validateISSN,
@@ -30,6 +33,7 @@ import {
   validatePMID,
   validateROR,
   validateSNAC,
+  validateTEL,
   validateUUID,
   validateVIAF,
   validatorFunc,
@@ -88,6 +92,7 @@ The following identifier types are supported (type name are case insensitive).
 
 - ArXiv
 - DOI
+- EMAIL (email address, verification unavailable)
 - ISBN
 - ISSN
 - ISNI
@@ -97,8 +102,12 @@ The following identifier types are supported (type name are case insensitive).
 - PMCID
 - ROR
 - SNAC
-- UUID (NOTE: verification unavailable, returns undefined with exit code 3)
+- TEL (telphone number, verification unavailable)
+- UUID (NOTE: verification unavailable)
 - VIAF
+
+NOTE: for identifier types with unavailable varification they will return
+the text "undefined" and exit code of 3.
 
 # OPTIONS
 `,
@@ -228,6 +237,9 @@ async function main() {
     case "doi":
       exitCode = await action(normalizeDOI, validateDOI, verifyDOI, verb, identifier);
       break;
+    case "email":
+      exitCode = await action(normalizeEMAIL, validateEMAIL, undefined, verb, identifier);
+      break;
     case "isbn":
       exitCode = await action(normalizeISBN, validateISBN, verifyISBN, verb, identifier);
       break;
@@ -255,6 +267,9 @@ async function main() {
     case "snac":
       exitCode = await action(normalizeSNAC, validateSNAC, verifySNAC, verb, identifier);
       break;
+    case "tel":
+      exitCode = await action(normalizeTEL, validateTEL, undefined, verb, identifier);
+      break;  
     case "uuid":
       exitCode = await action(normalizeUUID, validateUUID, undefined, verb, identifier);
       break;

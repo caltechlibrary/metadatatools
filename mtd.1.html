@@ -39,6 +39,7 @@ insensitive).</p>
 <ul>
 <li>ArXiv</li>
 <li>DOI</li>
+<li>EMAIL (email address, verification unavailable)</li>
 <li>ISBN</li>
 <li>ISSN</li>
 <li>ISNI</li>
@@ -48,10 +49,12 @@ insensitive).</p>
 <li>PMCID</li>
 <li>ROR</li>
 <li>SNAC</li>
-<li>UUID (NOTE: verification unavailable, returns undefined with exit
-code 3)</li>
+<li>TEL (telphone number, verification unavailable)</li>
+<li>UUID (NOTE: verification unavailable)</li>
 <li>VIAF</li>
 </ul>
+<p>NOTE: for identifier types with unavailable varification they will
+return the text “undefined” and exit code of 3.</p>
 <h1 id="options">OPTIONS</h1>
 <dl>
 <dt>help</dt>

@@ -28,6 +28,12 @@ export {
   validateEAN
 } from './ean.ts';
 
+// email.ts export
+export {
+  normalizeEMAIL,
+  validateEMAIL,
+} from './email.ts';
+
 // fundref.ts export
 export {
   normalizeFundRefID,
@@ -53,6 +59,8 @@ export {
 
 // isni.ts export
 export {
+  ISNIPattern,
+  reISNI,
   normalizeISNI,
   validateISNI
 } from './isni.ts';
@@ -142,6 +150,12 @@ export {
 export {
    verifySNAC
 } from './snac_record.ts';
+
+// tel.ts
+export {
+  normalizeTEL,
+  validateTEL,
+} from './tel.ts';
 
 // uuid.ts export
 export {

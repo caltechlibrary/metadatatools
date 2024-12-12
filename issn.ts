@@ -1,3 +1,6 @@
+export const ISSNPattern = "^ISSN\s+?(\d{4})-(\d{3}[\dX])$";
+export const reISSN = new RegExp(ISSNPattern, "i");
+
 /**
  * Validates the checksum of an ISSN.
  * @param issn - The normalized ISSN string (without hyphen).
@@ -22,15 +25,18 @@ function validateISSNChecksum(issn: string): boolean {
   return checkDigit === expectedCheckDigit;
 }
 
+function stripISSN(issn: string): string {
+  return issn.toUpperCase().replaceAll(/\D|X/g, "");
+}
+
 /**
  * Validates the format and checksum of an ISSN.
  * @param issn - The ISSN string to validate.
  * @returns boolean - True if the ISSN is valid, otherwise false.
  */
 export function validateISSN(issn: string): boolean {
-  const normalizedISSN = normalizeISSN(issn);
-  if (!/^\d{7}[0-9X]$/.test(normalizedISSN)) return false;
-  return validateISSNChecksum(normalizedISSN);
+  const bareISSN = stripISSN(issn);
+  return validateISSNChecksum(bareISSN);
 }
 
 /**
@@ -39,5 +45,7 @@ export function validateISSN(issn: string): boolean {
  * @returns string - The normalized ISSN string (without hyphen).
  */
 export function normalizeISSN(issn: string): string {
-  return issn.replace(/[^0-9X]/gi, "").toUpperCase();
+  const bareISSN = stripISSN(issn);
+  console.log(`DEBUG bareISSN -> ${bareISSN}`);
+  return `${bareISSN.substring(0, 4)}-${bareISSN.substring(4)}`;
 }
