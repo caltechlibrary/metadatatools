@@ -46,6 +46,6 @@ export function validateISSN(issn: string): boolean {
  */
 export function normalizeISSN(issn: string): string {
   const bareISSN = stripISSN(issn);
-  console.log(`DEBUG bareISSN -> ${bareISSN}`);
+  //console.log(`DEBUG bareISSN -> ${bareISSN}`);
   return `${bareISSN.substring(0, 4)}-${bareISSN.substring(4)}`;
 }

@@ -1,6 +1,6 @@
-%mtd(1) user manual | 0.0.0 2024-12-09 eeb2528
+%mtd(1) user manual | 0.0.4 2024-12-11 61b3a27
 % R. S.Doiel
-% 2024-12-09 eeb2528
+% 2024-12-11 61b3a27
     
 # NAME
     
@@ -25,16 +25,22 @@ The following identifier types are supported (type name are case insensitive).
 
 - ArXiv
 - DOI
+- EMAIL (email address, verification unavailable)
 - ISBN
 - ISSN
 - ISNI
+- LCNAF
 - ORCID
 - PMID
 - PMCID
 - ROR
-- LCNAF
-- VIAF
 - SNAC
+- TEL (telphone number, verification unavailable)
+- UUID (NOTE: verification unavailable)
+- VIAF
+
+NOTE: for identifier types with unavailable varification they will return
+the text "undefined" and exit code of 3.
 
 # OPTIONS
 

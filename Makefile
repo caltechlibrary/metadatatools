@@ -52,7 +52,7 @@ bin: .FORCE
 
 compile: check $(TS_MODS)
 	deno task build
-	./bin/mdt$(EXT) --help >mtd.1.md
+	./bin/mdt$(EXT) --help >mdt.1.md
 
 check: $(TS_MODS)
 

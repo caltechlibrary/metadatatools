@@ -3,7 +3,7 @@
     "build": "deno compile --allow-net --output=bin/mdt cmd/mdt.ts",
     "bundle": "deno run --allow-import --allow-net --allow-env --allow-read ancillary/bundle.ts >mdt.js",
     "reference_docs": "pandoc -t html5 -f markdown -s --output chatgpt_dialog.html chatgpt_dialog.md",
-    "test": "deno test --allow-net --allow-read",
+    "test": "deno test --allow-net --allow-read --coverage",
     "release_linux_x86_64": "deno compile --allow-import --allow-read --allow-net --target x86_64-unknown-linux-gnu --output dist/bin/mdt cmd/mdt.ts",
     "release_linux_aarch64": "deno compile --allow-import --allow-read --allow-net --target aarch64-unknown-linux-gnu --output dist/bin/mdt cmd/mdt.ts",
     "release_macos_x86_64": "deno compile --allow-import --allow-read --allow-net --target x86_64-apple-darwin --output dist/bin/mdt cmd/mdt.ts",
