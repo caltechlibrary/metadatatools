@@ -12,10 +12,32 @@
     "release_macos_x86_64": "deno compile --allow-import --allow-read --allow-net --target x86_64-apple-darwin --output dist/bin/mdt cmd/mdt.ts",
     "release_macos_aarch64": "deno compile --allow-import --allow-read --allow-net --target aarch64-apple-darwin --output dist/bin/mdt cmd/mdt.ts",
     "release_windows_x86_64": "deno compile --allow-import --allow-read --allow-net --target x86_64-pc-windows-msvc --output dist/bin/mdt.exe cmd/mdt.ts",
-    "release_windows_arm64": "deno compile --allow-import --allow-read --allow-net --target arm64-pc-windows-msvc --output dist/bin/mdt.exe cmd/mdt.ts",
+    "release_windows_arm64": "deno compile --allow-import --allow-read --allow-net --target arm64-pc-windows-msvc --output dist/bin/mdt.exe cmd/mdt.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.8",
+    "@std/cli": "jsr:@std/cli@^1.0.17",
     "@std/uuid": "jsr:@std/uuid@^1.0.4"
+  },
+  "lint": {
+    "exclude": [
+      "dist/",
+      "pagefind/",
+	  "ancillary/"
+    ]
+  },
+  "check": {
+    "exclude": [
+      "dist/",
+      "pagefind/",
+	  "ancillary/"
+    ]
+  },
+  "publish": {
+    "exclude": [
+      "dist/",
+      "pagefind/",
+	  "ancillary/"
+    ]
   }
 }

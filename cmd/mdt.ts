@@ -2,8 +2,14 @@
  * mdts.ts - this is a command line program exposing the functionality of metadata tools to
  * the shell on POSIX systems.
  */
+import { parseArgs } from "@std/cli/parse-args";
 import {
-  appInfo,
+  version,
+  licenseText,
+  releaseDate,
+  releaseHash,
+  helpText,
+  fmtHelp,
   normalizeArXivID,
   normalizeDOI,
   normalizeEMAIL,
@@ -19,8 +25,7 @@ import {
   normalizeTEL,
   normalizeUUID,
   normalizeVIAF,
-  normalizorFunc,
-  OptionsProcessor,
+  type normalizorFunc,
   validateArXivID,
   validateDOI,
   validateEMAIL,
@@ -36,10 +41,10 @@ import {
   validateTEL,
   validateUUID,
   validateVIAF,
-  validatorFunc,
+  type validatorFunc,
   verifyArXivID,
   verifyDOI,
-  verifyFunc,
+  type verifyFunc,
   verifyISBN,
   verifyISNI,
   verifyISSN,
@@ -52,87 +57,6 @@ import {
   verifyVIAF,
 } from "../deps.ts";
 
-const app_name = "mtd";
-
-/**
- * helpText assembles the help information for Metadata Tools.
- *
- * @param helpOpt {[k: string]: string} helpOpt holds the help options defined for the app.
- */
-function helpText(helpOpt: { [k: string]: string }): string {
-  const version = appInfo.version;
-  const release_date = appInfo.releaseDate;
-  const release_hash = appInfo.releaseHash;
-
-  const txt: string[] = [
-    `%${app_name}(1) user manual | ${version} ${release_date} ${release_hash}
-% R. S.Doiel
-% ${release_date} ${release_hash}
-    
-# NAME
-    
-${app_name}
-    
-# SYNOPSIS
-    
-${app_name} [OPTIONS] normalize|validate|verify ID_TYPE IDENTIFIER
-    
-# DESCRIPTION
-    
-${app_name} will normalize, validate or verify the identifier provided
-based on the type provided. Validate and verify it will return the text
-'true' or 'false' and set an error level. Normalize will return the
-normalized string.
-
-NOTE: verify requires network access.
-
-# ID_TYPE
-
-The following identifier types are supported (type name are case insensitive).
-
-- ArXiv
-- DOI
-- EMAIL (email address, verification unavailable)
-- ISBN
-- ISSN
-- ISNI
-- LCNAF
-- ORCID
-- PMID
-- PMCID
-- ROR
-- SNAC
-- TEL (telphone number, verification unavailable)
-- UUID (NOTE: verification unavailable)
-- VIAF
-
-NOTE: for identifier types with unavailable varification they will return
-the text "undefined" and exit code of 3.
-
-# OPTIONS
-`,
-  ];
-
-  for (let attr in helpOpt) {
-    const msg = helpOpt[attr];
-    txt.push(`${attr}
-  : ${msg}
-`);
-  }
-  txt.push(`
-# EXAMPLE
-
-${app_name} used to normalize, validate and verify an ORCID.
-
-~~~shell
-${app_name} normalize orcid 0000-0003-0900-6903
-${app_name} validate orcid 0000-0003-0900-6903
-${app_name} verify orcid 0000-0003-0900-6903
-~~~
-  
-`);
-  return txt.join("\n");
-}
 
 /**
  * action dispatches the verb using the identifier provided. It will set the exite code and display results
@@ -166,7 +90,7 @@ async function action(
       break;
     case "verify":
       if (verify === undefined) {
-        console.log('undefined');
+        console.log("undefined");
         exitCode = 3;
       } else {
         const ok = await verify(identifier);
@@ -174,14 +98,14 @@ async function action(
           console.log("true");
         } else {
           console.log("false");
-        }  
+        }
       }
       break;
     default:
       console.log(`ERROR: ${verb} action is not supported`);
       exitCode = 1;
       break;
-    }
+  }
   return exitCode;
 }
 
@@ -189,43 +113,54 @@ async function action(
  * main() - this is the main entry point for the command line program.
  */
 async function main() {
-  const op: OptionsProcessor = new OptionsProcessor();
+  const appName = "mtd";
+  const app = parseArgs(Deno.args, {
+    alias: {
+      help: "h",
+      license: "l",
+      version: "v",
+      format: "f",
+      deno: "d",
+      init: "i",
+    },
+    default: {
+      help: false,
+      version: false,
+      license: false,
+      format: "",
+      deno: false,
+      init: "",
+    },
+  });
+  const args = app._;
 
-  op.booleanVar("help", false, "display help");
-  op.booleanVar("license", false, "display license");
-  op.booleanVar("version", false, "display version");
- 
-  op.parse(Deno.args);
 
-  const options = op.options;
-  const args = op.args;
-
-  if (options.help) {
-    console.log(helpText(op.help));
+  if (app.help) {
+    console.log(fmtHelp(helpText, appName, version, releaseDate, releaseHash));
     Deno.exit(0);
   }
-  if (options.license) {
-    console.log(appInfo.licenseText);
+  if (app.license) {
+    console.log(licenseText);
     Deno.exit(0);
   }
-  if (options.version) {
-    console.log(`${appInfo.appName} ${appInfo.version} ${appInfo.releaseHash}`);
+  if (app.version) {
+    console.log(`${appName} ${version} ${releaseHash}`);
     Deno.exit(0);
   }
 
   if (args.length !== 3) {
     console.log(
-      `UPDATE: ${app_name} normalize|validate|verify ID_TYPE IDENTIFIER`,
+      `UPDATE: ${appName} normalize|validate|verify ID_TYPE IDENTIFIER`,
     );
     Deno.exit(1);
   }
   // dispatch the request to the appropriate method and data type.
-  const verb: string = args[0].toLocaleLowerCase().trim();
-  const idType: string = args[1].toLocaleLowerCase().trim();
-  const identifier: string = args[2].toLocaleLowerCase().trim();
+  const verb: string = `${args[0]}`.toLocaleLowerCase().trim();
+  const idType: string = `${args[1]}`.toLocaleLowerCase().trim();
+  const identifier: string = `${args[2]}`.toLocaleLowerCase().trim();
   let exitCode = 1;
   switch (idType) {
-    case 'arxiv':
+    case "arxiv":
       exitCode = await action(
         normalizeArXivID,
         validateArXivID,
@@ -235,46 +170,130 @@ async function main() {
       );
       break;
     case "doi":
-      exitCode = await action(normalizeDOI, validateDOI, verifyDOI, verb, identifier);
+      exitCode = await action(
+        normalizeDOI,
+        validateDOI,
+        verifyDOI,
+        verb,
+        identifier,
+      );
       break;
     case "email":
-      exitCode = await action(normalizeEMAIL, validateEMAIL, undefined, verb, identifier);
+      exitCode = await action(
+        normalizeEMAIL,
+        validateEMAIL,
+        undefined,
+        verb,
+        identifier,
+      );
       break;
     case "isbn":
-      exitCode = await action(normalizeISBN, validateISBN, verifyISBN, verb, identifier);
+      exitCode = await action(
+        normalizeISBN,
+        validateISBN,
+        verifyISBN,
+        verb,
+        identifier,
+      );
       break;
     case "issn":
-      exitCode = await action(normalizeISSN, validateISSN, verifyISSN, verb, identifier);
+      exitCode = await action(
+        normalizeISSN,
+        validateISSN,
+        verifyISSN,
+        verb,
+        identifier,
+      );
       break;
     case "isni":
-      exitCode = await action(normalizeISNI, validateISNI, verifyISNI, verb, identifier);
+      exitCode = await action(
+        normalizeISNI,
+        validateISNI,
+        verifyISNI,
+        verb,
+        identifier,
+      );
       break;
     case "lcnaf":
-      exitCode = await action(normalizeLCNAF, validateLCNAF, verifyLCNAF, verb, identifier);
+      exitCode = await action(
+        normalizeLCNAF,
+        validateLCNAF,
+        verifyLCNAF,
+        verb,
+        identifier,
+      );
       break;
     case "orcid":
-      exitCode = await action(normalizeORCID, validateORCID, verifyORCID, verb, identifier);
+      exitCode = await action(
+        normalizeORCID,
+        validateORCID,
+        verifyORCID,
+        verb,
+        identifier,
+      );
       break;
     case "pmid":
-      exitCode = await action(normalizePMID, validatePMID, verifyPMID, verb, identifier);
+      exitCode = await action(
+        normalizePMID,
+        validatePMID,
+        verifyPMID,
+        verb,
+        identifier,
+      );
       break;
     case "pmcid":
-      exitCode = await action(normalizePMCID, validatePMCID, verifyPMCID, verb, identifier);
+      exitCode = await action(
+        normalizePMCID,
+        validatePMCID,
+        verifyPMCID,
+        verb,
+        identifier,
+      );
       break;
     case "ror":
-      exitCode = await action(normalizeROR, validateROR, verifyROR, verb, identifier);
+      exitCode = await action(
+        normalizeROR,
+        validateROR,
+        verifyROR,
+        verb,
+        identifier,
+      );
       break;
     case "snac":
-      exitCode = await action(normalizeSNAC, validateSNAC, verifySNAC, verb, identifier);
+      exitCode = await action(
+        normalizeSNAC,
+        validateSNAC,
+        verifySNAC,
+        verb,
+        identifier,
+      );
       break;
     case "tel":
-      exitCode = await action(normalizeTEL, validateTEL, undefined, verb, identifier);
-      break;  
+      exitCode = await action(
+        normalizeTEL,
+        validateTEL,
+        undefined,
+        verb,
+        identifier,
+      );
+      break;
     case "uuid":
-      exitCode = await action(normalizeUUID, validateUUID, undefined, verb, identifier);
+      exitCode = await action(
+        normalizeUUID,
+        validateUUID,
+        undefined,
+        verb,
+        identifier,
+      );
       break;
     case "viaf":
-      exitCode = await action(normalizeVIAF, validateVIAF, verifyVIAF, verb, identifier);
+      exitCode = await action(
+        normalizeVIAF,
+        validateVIAF,
+        verifyVIAF,
+        verb,
+        identifier,
+      );
       break;
     default:
       console.log(`ERROR: ${idType} type is not supported`);

@@ -2,8 +2,8 @@
 // DOI validate and normalize routines.
 //
 
-export const DOIPattern = "^10\\.\\d{4,9}\\/[^\\s]+$";
-export const reDOI = new RegExp(DOIPattern);
+export const DOIPattern: string = "^10\\.\\d{4,9}\\/[^\\s]+$";
+export const reDOI: RegExp = new RegExp(DOIPattern);
 
 /**
  * Normalizes a DOI by removing extraneous characters and enforcing lowercase.

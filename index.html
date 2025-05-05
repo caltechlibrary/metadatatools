@@ -1,134 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>COLD (Controlled Object List and Datum (Concept))</title>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans"
+      rel="stylesheet"
+      type="text/css"
+    >
     <link rel="stylesheet" href="https://caltechlibrary.github.io/css/site.css">
-</head>
-<body>
-<header>
-<a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="https://caltechlibrary.github.io/assets/liblogo.gif" alt="Caltech Library logo"></a>
-</header>
-<nav>
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="index.html">README</a></li>
-    <li><a href="LICENSE">LICENSE</a></li>
-    <li><a href="INSTALL.html">INSTALL</a></li>
-    <li><a href="user_manual.html">User Manual</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="https://github.com/caltechlibrary/metadatatools">GitHub</a></li>
-</ul>
-</nav>
+  </head>
+  <body>
+    <header>
+      <a
+        href="http://library.caltech.edu"
+        title="link to Caltech Library Homepage"
+      ><img
+          src="https://caltechlibrary.github.io/assets/liblogo.gif"
+          alt="Caltech Library logo"
+        ></a>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="index.html">README</a></li>
+        <li><a href="LICENSE">LICENSE</a></li>
+        <li><a href="INSTALL.html">INSTALL</a></li>
+        <li><a href="user_manual.html">User Manual</a></li>
+        <li><a href="about.html">About</a></li>
+        <li>
+          <a href="https://github.com/caltechlibrary/metadatatools">GitHub</a>
+        </li>
+      </ul>
+    </nav>
 
-<section>
-<h1 id="metadata-tools">Metadata Tools</h1>
-<p>This project was inspired by the <a
-href="https://idutils.readthedocs.io/en/latest/">idutils</a> Python
-package. <strong>This package is not a port of the Python
-idutils</strong>. This project focuses on the identifiers Caltech
-Library needs for the <a
-href="https://github.com/caltechlibrary/cold">COLD</a> project.</p>
-<p>For each supported identifier three types of methods are
-implemented.</p>
-<dl>
-<dt>normalization</dt>
-<dd>
-this will return a valid identifier into a regularize format for
-validation and verification
-</dd>
-<dt>validation</dt>
-<dd>
-this checks if the form of the identifier string makes sense, e.g. does
-it look like an ORCID is expected to look?
-</dd>
-<dt>verification</dt>
-<dd>
-verification checks with the authoritative organization to see if data
-is available for the identifier. In most cases that means the
-organizations that supports creating and managing the identifier
-(e.g. orcid.org, isni.org, ror.org).
-</dd>
-</dl>
-<h2 id="supported-identifiers">Supported identifiers</h2>
-<ul>
-<li>ArXiv ID</li>
-<li>DOI</li>
-<li>ISBN</li>
-<li>ISSN</li>
-<li>ISNI</li>
-<li>ORCID</li>
-<li>PMID</li>
-<li>PMCID</li>
-<li>ROR</li>
-<li>LCNAF</li>
-<li>VIAF</li>
-<li>SNAC</li>
-</ul>
-<h1 id="usage">USAGE</h1>
-<p>There are three ways to use Metadata Tools. The first is via the
-command line program <code>mdt</code>. This simple command line program
-accepts three parameters, ACTION, ID_TYPE and IDENTIFIER. See <a
-href="mdt.1.html">man page for details</a>. An ACTION can be one of
-three things, “normalize”, “validate” and “verify”. The second parameter
-is one of the types listed above. The final parameter the identifier
-value. “normalize” will accept an identifier in a common format
-variation and return a consisantly formated result. E.g. The ORCID
-“https://orcid.org/0000-0003-0900-6903” will be normalize to
-“0000-0003-0900-6903” where as an ROR of “05dxps055” will normalize to
-“https://ror.org/05dxps055”. The normalization appplied reflects the
-typical way we handle the idenfier formatting in Caltech Library’s
-repository systems.</p>
-<p>“validate” will check of the identifier matches and expected form.
-E.g. An order looks like four digits dash four digits dash four digits
-dash for digits. There is some check summing also applied to validate
-the sequence (like with ISNI). Validate will make sure the supplied
-identifier confirms to those types of rules. It <strong>does not
-verify</strong> the value with the originating organization.</p>
-<p>“verify” will validate the identifier supplied then check via a web
-service if the identifier is known to the sponsoring organization or
-authority control. As a result it requires network access and will fail
-if the sponsoring organization’s website or service is unavailable.</p>
-<p>Both “validate” and “verfiy” return booleaning true if everything
-checks out and false otherwise. The command line program
-<code>mtd</code> will also return a non-zero exit code if the validation
-or verification fails.</p>
-<p>The second way Metadata Tools can be use is as a <a
-href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_%E2%80%93_ECMAScript_2015"
-title="ECMAScript Module">ESM</a> TypeScript module. The TypeScript
-module you can use from <a href="https://deno.com">Deno</a>. The latest
-version of the Metadata Tools module can be found at <a
-href="https://github.com/caltechlibrary/metadatatools/latest/release"
-class="uri">https://github.com/caltechlibrary/metadatatools/latest/release</a>
-and on the Caltech Library development group’s GitHub website, <a
-href="https://caltechlibrary.github.io/metadatatools/mod.ts"
-class="uri">https://caltechlibrary.github.io/metadatatools/mod.ts</a>.
-The <code>mod.ts</code> file will pull in the whole set of identifier
-normalization, validation and verification routines.</p>
-<p>The third way is as a JavaScript bundle called <a
-href="mdt.js">mdt.js</a> which you can reference from <a
-href="https://caltechlibrary.github.io/metadatatools/mdt.js"
-class="uri">https://caltechlibrary.github.io/metadatatools/mdt.js</a> or
-copy into your own site from this repository. It can be built using the
-Deno task <code>bundle</code>.</p>
-<h2 id="installation">Installation</h2>
-<p>The command line program can be installed using installer scripts
-hosted at <a href="https://caltechlibrary.github.io/metadatatools"
-class="uri">https://caltechlibrary.github.io/metadatatools</a>. See <a
-href="INSTALL.html">INSTALL.md</a> for details.</p>
-<p>While Metadata Tools should be considered experimental binaries are
-being provided for macOS (x86_64 and M series processes), Windows 11
-running on x86_64 processors and for Linux on x86_64 and aarch64
-processesor.</p>
-<h2 id="license">License</h2>
-<p>See <a href="./LICENSE">LICENSE</a> for license details.</p>
-</section>
+    <section>
+      <h1 id="metadata-tools">Metadata Tools</h1>
+      <p>
+        This project was inspired by the <a
+          href="https://idutils.readthedocs.io/en/latest/"
+        >idutils</a> Python package. <strong>This package is not a port of the
+          Python idutils</strong>. This project focuses on the identifiers
+        Caltech Library needs for the <a
+          href="https://github.com/caltechlibrary/cold"
+        >COLD</a> project.
+      </p>
+      <p>
+        For each supported identifier three types of methods are implemented.
+      </p>
+      <dl>
+        <dt>normalization</dt>
+        <dd>
+          this will return a valid identifier into a regularize format for
+          validation and verification
+        </dd>
+        <dt>validation</dt>
+        <dd>
+          this checks if the form of the identifier string makes sense,
+          e.g. does it look like an ORCID is expected to look?
+        </dd>
+        <dt>verification</dt>
+        <dd>
+          verification checks with the authoritative organization to see if data
+          is available for the identifier. In most cases that means the
+          organizations that supports creating and managing the identifier
+          (e.g. orcid.org, isni.org, ror.org).
+        </dd>
+      </dl>
+      <h2 id="supported-identifiers">Supported identifiers</h2>
+      <ul>
+        <li>ArXiv ID</li>
+        <li>DOI</li>
+        <li>ISBN</li>
+        <li>ISSN</li>
+        <li>ISNI</li>
+        <li>ORCID</li>
+        <li>PMID</li>
+        <li>PMCID</li>
+        <li>ROR</li>
+        <li>LCNAF</li>
+        <li>VIAF</li>
+        <li>SNAC</li>
+      </ul>
+      <h1 id="usage">USAGE</h1>
+      <p>
+        There are three ways to use Metadata Tools. The first is via the command
+        line program <code>mdt</code>. This simple command line program accepts
+        three parameters, ACTION, ID_TYPE and IDENTIFIER. See <a
+          href="mdt.1.html"
+        >man page for details</a>. An ACTION can be one of three things,
+        “normalize”, “validate” and “verify”. The second parameter is one of the
+        types listed above. The final parameter the identifier value.
+        “normalize” will accept an identifier in a common format variation and
+        return a consisantly formated result. E.g. The ORCID
+        “https://orcid.org/0000-0003-0900-6903” will be normalize to
+        “0000-0003-0900-6903” where as an ROR of “05dxps055” will normalize to
+        “https://ror.org/05dxps055”. The normalization appplied reflects the
+        typical way we handle the idenfier formatting in Caltech Library’s
+        repository systems.
+      </p>
+      <p>
+        “validate” will check of the identifier matches and expected form. E.g.
+        An order looks like four digits dash four digits dash four digits dash
+        for digits. There is some check summing also applied to validate the
+        sequence (like with ISNI). Validate will make sure the supplied
+        identifier confirms to those types of rules. It <strong>does not
+          verify</strong> the value with the originating organization.
+      </p>
+      <p>
+        “verify” will validate the identifier supplied then check via a web
+        service if the identifier is known to the sponsoring organization or
+        authority control. As a result it requires network access and will fail
+        if the sponsoring organization’s website or service is unavailable.
+      </p>
+      <p>
+        Both “validate” and “verfiy” return booleaning true if everything checks
+        out and false otherwise. The command line program
+        <code>mtd</code> will also return a non-zero exit code if the validation
+        or verification fails.
+      </p>
+      <p>
+        The second way Metadata Tools can be use is as a <a
+          href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_%E2%80%93_ECMAScript_2015"
+          title="ECMAScript Module"
+        >ESM</a> TypeScript module. The TypeScript module you can use from <a
+          href="https://deno.com"
+        >Deno</a>. The latest version of the Metadata Tools module can be found
+        at <a
+          href="https://github.com/caltechlibrary/metadatatools/latest/release"
+          class="uri"
+        >https://github.com/caltechlibrary/metadatatools/latest/release</a>
+        and on the Caltech Library development group’s GitHub website, <a
+          href="https://caltechlibrary.github.io/metadatatools/mod.ts"
+          class="uri"
+        >https://caltechlibrary.github.io/metadatatools/mod.ts</a>. The <code
+        >mod.ts</code> file will pull in the whole set of identifier
+        normalization, validation and verification routines.
+      </p>
+      <p>
+        The third way is as a JavaScript bundle called <a href="mdt.js"
+        >mdt.js</a> which you can reference from <a
+          href="https://caltechlibrary.github.io/metadatatools/mdt.js"
+          class="uri"
+        >https://caltechlibrary.github.io/metadatatools/mdt.js</a> or copy into
+        your own site from this repository. It can be built using the Deno task
+        <code>bundle</code>.
+      </p>
+      <h2 id="installation">Installation</h2>
+      <p>
+        The command line program can be installed using installer scripts hosted
+        at <a href="https://caltechlibrary.github.io/metadatatools" class="uri"
+        >https://caltechlibrary.github.io/metadatatools</a>. See <a
+          href="INSTALL.html"
+        >INSTALL.md</a> for details.
+      </p>
+      <p>
+        While Metadata Tools should be considered experimental binaries are
+        being provided for macOS (x86_64 and M series processes), Windows 11
+        running on x86_64 processors and for Linux on x86_64 and aarch64
+        processesor.
+      </p>
+      <h2 id="license">License</h2>
+      <p>See <a href="./LICENSE">LICENSE</a> for license details.</p>
+    </section>
 
-<footer>
-<span>&copy; 2022 <a href="https://www.library.caltech.edu/copyright">Caltech Library</a></span>
-<address>1200 E California Blvd, Mail Code 1-32, Pasadena, CA 91125-3200</address>
-<span><a href="mailto:library@caltech.edu">Email Us</a></span>
-<span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
-</footer>
-</body>
+    <footer>
+      <span>&copy; 2022 <a href="https://www.library.caltech.edu/copyright"
+        >Caltech Library</a></span>
+      <address>
+        1200 E California Blvd, Mail Code 1-32, Pasadena, CA 91125-3200
+      </address>
+      <span><a href="mailto:library@caltech.edu">Email Us</a></span>
+      <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
+    </footer>
+  </body>
 </html>

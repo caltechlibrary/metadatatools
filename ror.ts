@@ -1,7 +1,7 @@
-export const rorPrefix = "https://ror.org/";
-export const RORPattern =
+export const rorPrefix: string = "https://ror.org/";
+export const RORPattern: string =
   "^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$";
-export const reROR = new RegExp(RORPattern, "i");
+export const reROR: RegExp = new RegExp(RORPattern, "i");
 //;
 
 /**
@@ -10,7 +10,7 @@ export const reROR = new RegExp(RORPattern, "i");
  * @returns string
  */
 export function normalizeROR(ror: string): string {
-  let bareROR = ror.trim().toLowerCase();
+  const bareROR = ror.trim().toLowerCase();
   if (bareROR.startsWith(rorPrefix)) {
     return bareROR;
   }

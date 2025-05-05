@@ -4,29 +4,38 @@ title: ChatGPT Dialog
 
 # Reference material for implement identifier validation, verification and normalization
 
-The following is an edited transcript of a dialog with ChatGPT for implementing various identifier type functions and CiteProc functions which are useful for libraries and archives.  The original transcript is available at <https://chatgpt.com/share/6750f3c6-8a54-8001-bc85-ed8a69d6a364>
+The following is an edited transcript of a dialog with ChatGPT for implementing
+various identifier type functions and CiteProc functions which are useful for
+libraries and archives. The original transcript is available at
+<https://chatgpt.com/share/6750f3c6-8a54-8001-bc85-ed8a69d6a364>
 
-The ruff draft was generated from [generator_questions.ts](generator_questions.ts) with the result being lightly edited to created this document with answers supplied by the LLM.
+The ruff draft was generated from
+[generator_questions.ts](generator_questions.ts) with the result being lightly
+edited to created this document with answers supplied by the LLM.
 
 ## 1. How do I write a validator, verifier and normalize functions for ISBN in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing a Validator, Verifier, and Normalize Functions for ISBN in Deno and TypeScript
 
-**ISBN** (International Standard Book Number) comes in two formats: **ISBN-10** and **ISBN-13**. A well-written implementation should:
+**ISBN** (International Standard Book Number) comes in two formats: **ISBN-10**
+and **ISBN-13**. A well-written implementation should:
 
 1. Validate that the ISBN conforms to either format.
 2. Normalize the ISBN by ensuring consistency (e.g., removing hyphens).
-3. Optionally verify its validity using online services like ISBNdb or Open Library.
+3. Optionally verify its validity using online services like ISBNdb or Open
+   Library.
 
 ---
 
 ### Implementation
 
-Here’s how to implement the validator, verifier, and normalizer for ISBN in Deno and TypeScript.
+Here’s how to implement the validator, verifier, and normalizer for ISBN in Deno
+and TypeScript.
 
 #### 1. Validator
 
 The validator checks:
+
 - The length (10 or 13 characters).
 - The structure (numeric characters and possible "X" for ISBN-10).
 - The checksum for correctness.
@@ -38,15 +47,17 @@ The validator checks:
  * @returns boolean - True if valid, false otherwise.
  */
 function validateISBN10(isbn: string): boolean {
-  const cleanISBN = isbn.replace(/[^0-9X]/gi, '');
+  const cleanISBN = isbn.replace(/[^0-9X]/gi, "");
   if (cleanISBN.length !== 10) return false;
 
   const checksum = cleanISBN
-    .split('')
+    .split("")
     .slice(0, 9)
     .reduce((sum, char, index) => sum + (parseInt(char) * (10 - index)), 0);
 
-  const checkDigit = cleanISBN[9].toUpperCase() === 'X' ? 10 : parseInt(cleanISBN[9]);
+  const checkDigit = cleanISBN[9].toUpperCase() === "X"
+    ? 10
+    : parseInt(cleanISBN[9]);
   return (checksum + checkDigit) % 11 === 0;
 }
 
@@ -56,15 +67,14 @@ function validateISBN10(isbn: string): boolean {
  * @returns boolean - True if valid, false otherwise.
  */
 function validateISBN13(isbn: string): boolean {
-  const cleanISBN = isbn.replace(/[^0-9]/g, '');
+  const cleanISBN = isbn.replace(/[^0-9]/g, "");
   if (cleanISBN.length !== 13) return false;
 
   const checksum = cleanISBN
-    .split('')
+    .split("")
     .reduce(
-      (sum, char, index) =>
-        sum + parseInt(char) * (index % 2 === 0 ? 1 : 3),
-      0
+      (sum, char, index) => sum + parseInt(char) * (index % 2 === 0 ? 1 : 3),
+      0,
     );
 
   return checksum % 10 === 0;
@@ -76,7 +86,7 @@ function validateISBN13(isbn: string): boolean {
  * @returns boolean - True if valid, false otherwise.
  */
 export function validateISBN(isbn: string): boolean {
-  const cleanISBN = isbn.replace(/[^0-9X]/gi, '');
+  const cleanISBN = isbn.replace(/[^0-9X]/gi, "");
   if (cleanISBN.length === 10) return validateISBN10(cleanISBN);
   if (cleanISBN.length === 13) return validateISBN13(cleanISBN);
   return false;
@@ -96,7 +106,7 @@ The normalizer ensures the ISBN is consistent (e.g., removes spaces or hyphens).
  * @returns string - The normalized ISBN string.
  */
 export function normalizeISBN(isbn: string): string {
-  return isbn.replace(/[-\s]/g, '').trim();
+  return isbn.replace(/[-\s]/g, "").trim();
 }
 ```
 
@@ -104,7 +114,8 @@ export function normalizeISBN(isbn: string): string {
 
 #### 3. Verifier
 
-The verifier checks if the ISBN exists using external APIs. For example, you can use the **Open Library API**.
+The verifier checks if the ISBN exists using external APIs. For example, you can
+use the **Open Library API**.
 
 ```typescript
 /**
@@ -117,7 +128,7 @@ export async function verifyISBN(isbn: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`
+      `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`,
     );
     return response.ok;
   } catch {
@@ -131,7 +142,7 @@ export async function verifyISBN(isbn: string): Promise<boolean> {
 #### 4. Example Usage
 
 ```typescript
-import { validateISBN, normalizeISBN, verifyISBN } from './isbnUtils.ts';
+import { normalizeISBN, validateISBN, verifyISBN } from "./isbnUtils.ts";
 
 const isbn = "978-3-16-148410-0";
 
@@ -154,23 +165,31 @@ verifyISBN(normalized).then((exists) => {
 ### Copyright and Attribution Requirements
 
 1. **ISBN Format**:
-   - The ISBN standard itself is not subject to copyright and can be implemented freely.
+   - The ISBN standard itself is not subject to copyright and can be implemented
+     freely.
 
 2. **Checksum Algorithm**:
    - The algorithms for ISBN-10 and ISBN-13 are in the public domain.
 
 3. **API Usage**:
-   - If you use APIs like **Open Library**, comply with their [terms of service](https://openlibrary.org/publishers) or relevant usage policies.
-   - Provide attribution where required (e.g., mention that Open Library was used for ISBN verification).
+   - If you use APIs like **Open Library**, comply with their
+     [terms of service](https://openlibrary.org/publishers) or relevant usage
+     policies.
+   - Provide attribution where required (e.g., mention that Open Library was
+     used for ISBN verification).
 
 4. **Open Source Licensing**:
-   - If you redistribute your code, consider including a permissive license (e.g., MIT or Apache 2.0).
+   - If you redistribute your code, consider including a permissive license
+     (e.g., MIT or Apache 2.0).
 
-This implementation adheres to ISBN standards while allowing for validation, normalization, and optional verification with external services.
+This implementation adheres to ISBN standards while allowing for validation,
+normalization, and optional verification with external services.
 
 ## 2. How do I write a validator, verifier and normalize functions for ISSN in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
-To create a **validator**, **verifier**, and **normalize functions** for **ISSN (International Standard Serial Number)** in **Deno** and **TypeScript**, follow these steps:
+To create a **validator**, **verifier**, and **normalize functions** for **ISSN
+(International Standard Serial Number)** in **Deno** and **TypeScript**, follow
+these steps:
 
 ---
 
@@ -180,7 +199,8 @@ To create a **validator**, **verifier**, and **normalize functions** for **ISSN 
   - Exactly 8 digits split by a hyphen.
   - May include an "X" as a check digit for validation.
 - **Validation**: Uses a checksum algorithm to ensure correctness.
-- **Normalization**: Removes extraneous characters (e.g., spaces or invalid separators).
+- **Normalization**: Removes extraneous characters (e.g., spaces or invalid
+  separators).
 - **Verification**: Checks against external databases like the ISSN Portal.
 
 ---
@@ -190,6 +210,7 @@ To create a **validator**, **verifier**, and **normalize functions** for **ISSN 
 #### 1. Validator
 
 The ISSN validator ensures:
+
 - The format conforms to `XXXX-XXXX`.
 - The checksum is valid.
 
@@ -205,13 +226,16 @@ function validateISSNChecksum(issn: string): boolean {
   const digits = issn.slice(0, 7);
   const checkDigit = issn[7].toUpperCase();
 
-  const checksum =
-    digits
-      .split('')
-      .reduce((sum, char, index) => sum + parseInt(char) * (8 - index), 0) %
+  const checksum = digits
+    .split("")
+    .reduce((sum, char, index) => sum + parseInt(char) * (8 - index), 0) %
     11;
 
-  const expectedCheckDigit = checksum === 0 ? '0' : checksum === 1 ? 'X' : `${11 - checksum}`;
+  const expectedCheckDigit = checksum === 0
+    ? "0"
+    : checksum === 1
+    ? "X"
+    : `${11 - checksum}`;
   return checkDigit === expectedCheckDigit;
 }
 
@@ -231,7 +255,8 @@ export function validateISSN(issn: string): boolean {
 
 #### 2. Normalizer
 
-The normalizer ensures the ISSN has a consistent format, removing invalid characters (e.g., spaces or extra hyphens).
+The normalizer ensures the ISSN has a consistent format, removing invalid
+characters (e.g., spaces or extra hyphens).
 
 ```typescript
 /**
@@ -240,7 +265,7 @@ The normalizer ensures the ISSN has a consistent format, removing invalid charac
  * @returns string - The normalized ISSN string (without hyphen).
  */
 export function normalizeISSN(issn: string): string {
-  return issn.replace(/[^0-9X]/gi, '').toUpperCase();
+  return issn.replace(/[^0-9X]/gi, "").toUpperCase();
 }
 ```
 
@@ -248,7 +273,8 @@ export function normalizeISSN(issn: string): string {
 
 #### 3. Verifier
 
-The verifier checks the ISSN against an external database like the **ISSN Portal** (if publicly accessible).
+The verifier checks the ISSN against an external database like the **ISSN
+Portal** (if publicly accessible).
 
 Example: Querying the ISSN Portal's API.
 
@@ -263,7 +289,7 @@ export async function verifyISSN(issn: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://portal.issn.org/api/issn/${encodeURIComponent(normalizedISSN)}`
+      `https://portal.issn.org/api/issn/${encodeURIComponent(normalizedISSN)}`,
     );
     return response.ok;
   } catch {
@@ -277,7 +303,7 @@ export async function verifyISSN(issn: string): Promise<boolean> {
 #### 4. Example Usage
 
 ```typescript
-import { validateISSN, normalizeISSN, verifyISSN } from './issnUtils.ts';
+import { normalizeISSN, validateISSN, verifyISSN } from "./issnUtils.ts";
 
 const issn = "2049-3630";
 
@@ -300,37 +326,50 @@ verifyISSN(normalized).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **ISSN Format**
-   - The ISSN standard is a globally recognized public standard and does not require attribution to implement its validation or normalization logic.
+
+- The ISSN standard is a globally recognized public standard and does not
+  require attribution to implement its validation or normalization logic.
 
 #### 2. **Checksum Algorithm**
-   - The checksum calculation for ISSN is part of the public domain.
+
+- The checksum calculation for ISSN is part of the public domain.
 
 #### 3. **API Usage**
-   - If you use the **ISSN Portal API**, follow their terms of service. For example:
-     - Attribution may be required.
-     - Respect API usage limits or licensing agreements.
+
+- If you use the **ISSN Portal API**, follow their terms of service. For
+  example:
+  - Attribution may be required.
+  - Respect API usage limits or licensing agreements.
 
 #### 4. **Open Source Licensing**
-   - If redistributing your code:
-     - Use a permissive license (e.g., MIT or Apache 2.0).
-     - Attribute external libraries, if any, used in your implementation.
 
-By following these steps, you’ll have a robust system to validate, verify, and normalize ISSNs in compliance with relevant standards and licensing requirements.
+- If redistributing your code:
+  - Use a permissive license (e.g., MIT or Apache 2.0).
+  - Attribute external libraries, if any, used in your implementation.
+
+By following these steps, you’ll have a robust system to validate, verify, and
+normalize ISSNs in compliance with relevant standards and licensing
+requirements.
 
 ## 3. How do I write a validator, verifier (via CrossRef and DataCite) and normalize functions for DOI in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
-To create **validator**, **verifier**, and **normalize functions** for **DOI (Digital Object Identifier)** in **Deno** and **TypeScript**, follow these steps:
+To create **validator**, **verifier**, and **normalize functions** for **DOI
+(Digital Object Identifier)** in **Deno** and **TypeScript**, follow these
+steps:
 
 ---
 
 ### DOI Overview
 
-- A DOI is a unique alphanumeric string used to identify digital content. 
-- It typically follows this format: `10.<registrant_code>/<suffix>`, e.g., `10.1000/182`.
-- The prefix `10.` is mandatory, and the suffix can contain alphanumeric characters and symbols.
+- A DOI is a unique alphanumeric string used to identify digital content.
+- It typically follows this format: `10.<registrant_code>/<suffix>`, e.g.,
+  `10.1000/182`.
+- The prefix `10.` is mandatory, and the suffix can contain alphanumeric
+  characters and symbols.
 - **Validation** checks format and characters.
 - **Normalization** ensures consistent formatting.
-- **Verification** checks the DOI against services like **CrossRef** and **DataCite**.
+- **Verification** checks the DOI against services like **CrossRef** and
+  **DataCite**.
 
 ---
 
@@ -339,6 +378,7 @@ To create **validator**, **verifier**, and **normalize functions** for **DOI (Di
 #### 1. Validator
 
 The validator ensures the DOI:
+
 - Starts with `10.`.
 - Has a valid structure and allowed characters.
 
@@ -360,6 +400,7 @@ export function validateDOI(doi: string): boolean {
 #### 2. Normalizer
 
 The normalizer ensures:
+
 - Removes extraneous characters (like spaces or incorrect schemes like `doi:`).
 - Converts the DOI to lowercase for consistency.
 
@@ -370,7 +411,7 @@ The normalizer ensures:
  * @returns string - The normalized DOI string.
  */
 export function normalizeDOI(doi: string): string {
-  return doi.trim().replace(/^doi:\s*/i, '').toLowerCase();
+  return doi.trim().replace(/^doi:\s*/i, "").toLowerCase();
 }
 ```
 
@@ -394,7 +435,7 @@ export async function verifyDOIWithCrossRef(doi: string): Promise<boolean> {
   const normalizedDOI = normalizeDOI(doi);
   try {
     const response = await fetch(
-      `https://api.crossref.org/works/${encodeURIComponent(normalizedDOI)}`
+      `https://api.crossref.org/works/${encodeURIComponent(normalizedDOI)}`,
     );
     return response.ok;
   } catch {
@@ -417,7 +458,7 @@ export async function verifyDOIWithDataCite(doi: string): Promise<boolean> {
   const normalizedDOI = normalizeDOI(doi);
   try {
     const response = await fetch(
-      `https://api.datacite.org/dois/${encodeURIComponent(normalizedDOI)}`
+      `https://api.datacite.org/dois/${encodeURIComponent(normalizedDOI)}`,
     );
     return response.ok;
   } catch {
@@ -432,11 +473,11 @@ export async function verifyDOIWithDataCite(doi: string): Promise<boolean> {
 
 ```typescript
 import {
-  validateDOI,
   normalizeDOI,
+  validateDOI,
   verifyDOIWithCrossRef,
   verifyDOIWithDataCite,
-} from './doiUtils.ts';
+} from "./doiUtils.ts";
 
 const doi = "DOI: 10.1000/xyz123";
 
@@ -464,28 +505,41 @@ verifyDOIWithDataCite(normalized).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. DOI Specification
-- The DOI system and specification are **standards** and are publicly accessible, so no copyright applies to validating or normalizing DOI formats.
+
+- The DOI system and specification are **standards** and are publicly
+  accessible, so no copyright applies to validating or normalizing DOI formats.
 
 #### 2. API Usage
+
 - **CrossRef API**:
   - CrossRef provides free API access for DOI metadata queries.
-  - Respect their [terms of use](https://www.crossref.org/services/metadata-delivery/rest-api/), including rate limits.
-  - Attribution is not required for simple lookups, but helpful in metadata-heavy integrations.
+  - Respect their
+    [terms of use](https://www.crossref.org/services/metadata-delivery/rest-api/),
+    including rate limits.
+  - Attribution is not required for simple lookups, but helpful in
+    metadata-heavy integrations.
 - **DataCite API**:
-  - DataCite provides API access for DOI queries. 
+  - DataCite provides API access for DOI queries.
   - Review their [API terms](https://support.datacite.org/docs/api).
 
 #### 3. Open Source Licensing
-- If redistributing your code, consider using an open-source license such as MIT or Apache 2.0.
-- Attribute any external libraries or codebases you adapt for your implementation.
 
-By implementing these functions, you’ll have a robust system for DOI validation, normalization, and verification that adheres to the DOI standard and integrates with CrossRef and DataCite services.
+- If redistributing your code, consider using an open-source license such as MIT
+  or Apache 2.0.
+- Attribute any external libraries or codebases you adapt for your
+  implementation.
+
+By implementing these functions, you’ll have a robust system for DOI validation,
+normalization, and verification that adheres to the DOI standard and integrates
+with CrossRef and DataCite services.
 
 ## 4. How do I write a validator, verifier and normalize functions for ISNI in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing a Validator, Verifier, and Normalize Functions for ISNI in Deno and TypeScript
 
-**ISNI (International Standard Name Identifier)** is a 16-digit identifier used to uniquely identify names of individuals or organizations. Its structure and validation rely on specific standards like the ISO 27729.
+**ISNI (International Standard Name Identifier)** is a 16-digit identifier used
+to uniquely identify names of individuals or organizations. Its structure and
+validation rely on specific standards like the ISO 27729.
 
 ---
 
@@ -494,7 +548,8 @@ By implementing these functions, you’ll have a robust system for DOI validatio
 1. **Format**:
    - ISNI is a 16-digit numeric identifier, e.g., `0000 0001 2103 2683`.
    - Digits are often grouped into four sets of four for readability.
-   - A checksum digit (last digit) is calculated using the ISO/IEC 7064 Mod 11-2 algorithm.
+   - A checksum digit (last digit) is calculated using the ISO/IEC 7064 Mod 11-2
+     algorithm.
 
 2. **Validation**:
    - Check the length (16 characters, including spaces).
@@ -514,6 +569,7 @@ By implementing these functions, you’ll have a robust system for DOI validatio
 #### 1. Validator
 
 The validator ensures that:
+
 - The ISNI has the correct format.
 - The checksum is valid.
 
@@ -524,7 +580,7 @@ The validator ensures that:
  * @returns boolean - True if the checksum is valid, otherwise false.
  */
 function validateISNIChecksum(isni: string): boolean {
-  const digits = isni.slice(0, 15).split('').map(Number);
+  const digits = isni.slice(0, 15).split("").map(Number);
   const checksumDigit = parseInt(isni[15]);
 
   let sum = 0;
@@ -558,6 +614,7 @@ export function validateISNI(isni: string): boolean {
 #### 2. Normalizer
 
 The normalizer ensures:
+
 - Removes all non-numeric characters.
 - Outputs a consistent format (16 digits).
 
@@ -568,7 +625,7 @@ The normalizer ensures:
  * @returns string - The normalized ISNI string (16 digits).
  */
 export function normalizeISNI(isni: string): string {
-  return isni.replace(/\D/g, '');
+  return isni.replace(/\D/g, "");
 }
 ```
 
@@ -576,7 +633,8 @@ export function normalizeISNI(isni: string): string {
 
 #### 3. Verifier
 
-Use the **ISNI Registry API** to check if the ISNI exists in the official database.
+Use the **ISNI Registry API** to check if the ISNI exists in the official
+database.
 
 ```typescript
 /**
@@ -589,7 +647,7 @@ export async function verifyISNI(isni: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://isni.org/isni/${encodeURIComponent(normalizedISNI)}`
+      `https://isni.org/isni/${encodeURIComponent(normalizedISNI)}`,
     );
     return response.ok;
   } catch {
@@ -603,7 +661,7 @@ export async function verifyISNI(isni: string): Promise<boolean> {
 #### 4. Example Usage
 
 ```typescript
-import { validateISNI, normalizeISNI, verifyISNI } from './isniUtils.ts';
+import { normalizeISNI, validateISNI, verifyISNI } from "./isniUtils.ts";
 
 const isni = "0000 0001 2103 2683";
 
@@ -626,28 +684,37 @@ verifyISNI(normalized).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **ISNI Specification**
-- The ISNI standard is public, so there are no restrictions on implementing validation or normalization.
+
+- The ISNI standard is public, so there are no restrictions on implementing
+  validation or normalization.
 - The checksum algorithm (ISO/IEC 7064 Mod 11-2) is also in the public domain.
 
 #### 2. **API Usage**
+
 - The **ISNI Registry API**:
   - If using the official API, comply with their terms of service.
-  - Typically, attribution or acknowledgment may be required when integrating their API.
+  - Typically, attribution or acknowledgment may be required when integrating
+    their API.
   - Avoid exceeding API usage limits or performing unauthorized scraping.
 
 #### 3. **Redistributing Your Code**
-- Use a permissive license like MIT or Apache 2.0 if publishing your implementation.
+
+- Use a permissive license like MIT or Apache 2.0 if publishing your
+  implementation.
 - Attribute any libraries or external resources used (if applicable).
 
 ---
 
-By implementing these functions, you’ll have a complete system to validate, verify, and normalize ISNIs, ensuring compliance with the ISNI standard and enabling interoperability with official services.
+By implementing these functions, you’ll have a complete system to validate,
+verify, and normalize ISNIs, ensuring compliance with the ISNI standard and
+enabling interoperability with official services.
 
 ## 5. How do I write a validator, verifier and normalize functions for ORCID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
-Creating a validator, verifier, and normalizer for ORCID (Open Researcher and Contributor ID) in Deno and TypeScript involves a few steps:
+Creating a validator, verifier, and normalizer for ORCID (Open Researcher and
+Contributor ID) in Deno and TypeScript involves a few steps:
 
-1. **Understand the ORCID structure:**  
+1. **Understand the ORCID structure:**\
    ORCID IDs are 16-character strings in the format `0000-0002-1825-0097`. They:
    - Comply with the ISO 7064 Mod 11-2 standard for checksum verification.
    - Consist of four groups of four digits separated by hyphens.
@@ -656,7 +723,8 @@ Creating a validator, verifier, and normalizer for ORCID (Open Researcher and Co
 2. **Functions:**
    - **Validator**: Checks if the input matches the ORCID format.
    - **Verifier**: Ensures the checksum is valid using the Mod 11-2 algorithm.
-   - **Normalizer**: Converts input (e.g., with extra spaces or without hyphens) to a standard format.
+   - **Normalizer**: Converts input (e.g., with extra spaces or without hyphens)
+     to a standard format.
 
 ---
 
@@ -680,12 +748,12 @@ export function validateORCID(orcid: string): boolean {
  */
 export function verifyORCID(orcid: string): boolean {
   // Remove hyphens for processing
-  const normalizedOrcid = orcid.replace(/-/g, '');
+  const normalizedOrcid = orcid.replace(/-/g, "");
   if (normalizedOrcid.length !== 16) return false;
 
   const baseDigits = normalizedOrcid.slice(0, 15);
   const checksumChar = normalizedOrcid[15];
-  const checksum = checksumChar === 'X' ? 10 : parseInt(checksumChar, 10);
+  const checksum = checksumChar === "X" ? 10 : parseInt(checksumChar, 10);
 
   let total = 0;
   for (const digit of baseDigits) {
@@ -702,11 +770,13 @@ export function verifyORCID(orcid: string): boolean {
  * @returns string | null - The normalized ORCID or `null` if the input is invalid.
  */
 export function normalizeORCID(orcid: string): string | null {
-  const cleanedOrcid = orcid.replace(/\s+/g, '').replace(/-/g, '');
+  const cleanedOrcid = orcid.replace(/\s+/g, "").replace(/-/g, "");
   if (cleanedOrcid.length !== 16 || !/^\d{15}[\dX]$/.test(cleanedOrcid)) {
     return null;
   }
-  return `${cleanedOrcid.slice(0, 4)}-${cleanedOrcid.slice(4, 8)}-${cleanedOrcid.slice(8, 12)}-${cleanedOrcid.slice(12)}`;
+  return `${cleanedOrcid.slice(0, 4)}-${cleanedOrcid.slice(4, 8)}-${
+    cleanedOrcid.slice(8, 12)
+  }-${cleanedOrcid.slice(12)}`;
 }
 ```
 
@@ -715,18 +785,18 @@ export function normalizeORCID(orcid: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateORCID, verifyORCID, normalizeORCID } from './orcidUtils.ts';
+import { normalizeORCID, validateORCID, verifyORCID } from "./orcidUtils.ts";
 
-const input = '0000-0002-1825-0097';
+const input = "0000-0002-1825-0097";
 
 if (validateORCID(input)) {
   if (verifyORCID(input)) {
-    console.log('Valid ORCID:', normalizeORCID(input));
+    console.log("Valid ORCID:", normalizeORCID(input));
   } else {
-    console.log('Invalid ORCID checksum.');
+    console.log("Invalid ORCID checksum.");
   }
 } else {
-  console.log('Invalid ORCID format.');
+  console.log("Invalid ORCID format.");
 }
 ```
 
@@ -734,13 +804,23 @@ if (validateORCID(input)) {
 
 ### Copyright and Attribution Requirements
 
-The ORCID identifier structure and checksum algorithm are publicly documented, and you can implement them without requiring specific copyright permissions. However, here are some guidelines:
+The ORCID identifier structure and checksum algorithm are publicly documented,
+and you can implement them without requiring specific copyright permissions.
+However, here are some guidelines:
 
-1. **Algorithm Documentation**: If your implementation references or is based on ORCID's documentation, it's good practice to credit ORCID in comments/documentation.
-2. **Open Source Licensing**: If you plan to distribute your code, choose an appropriate open-source license (e.g., MIT, Apache 2.0). Clearly mention that the ORCID specification is publicly available and cite the ORCID website (https://orcid.org/).
-3. **Trademarks**: The ORCID logo and name are trademarked. Ensure your implementation does not mislead users into thinking it is officially endorsed by ORCID unless you have explicit permission.
+1. **Algorithm Documentation**: If your implementation references or is based on
+   ORCID's documentation, it's good practice to credit ORCID in
+   comments/documentation.
+2. **Open Source Licensing**: If you plan to distribute your code, choose an
+   appropriate open-source license (e.g., MIT, Apache 2.0). Clearly mention that
+   the ORCID specification is publicly available and cite the ORCID website
+   (https://orcid.org/).
+3. **Trademarks**: The ORCID logo and name are trademarked. Ensure your
+   implementation does not mislead users into thinking it is officially endorsed
+   by ORCID unless you have explicit permission.
 
-For more information on ORCID's policies, consult their [terms and conditions](https://info.orcid.org/terms-and-conditions/).
+For more information on ORCID's policies, consult their
+[terms and conditions](https://info.orcid.org/terms-and-conditions/).
 
 ## 6. How do I write a validator, verifier and normalize functions for ROR in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -748,12 +828,15 @@ For more information on ORCID's policies, consult their [terms and conditions](h
 
 #### Understanding ROR IDs
 
-- **Format**: ROR IDs are in the format `https://ror.org/<ROR-ID>`, where `<ROR-ID>` is a 9-character alphanumeric string with a checksum character.
+- **Format**: ROR IDs are in the format `https://ror.org/<ROR-ID>`, where
+  `<ROR-ID>` is a 9-character alphanumeric string with a checksum character.
 - **Structure**:
   - Starts with `https://ror.org/`.
-  - `<ROR-ID>` is a 9-character string consisting of 8 base-32 alphanumeric characters followed by a checksum.
+  - `<ROR-ID>` is a 9-character string consisting of 8 base-32 alphanumeric
+    characters followed by a checksum.
 
-ROR uses a variation of the **ISO 7064 Mod 37-2** algorithm for checksum verification.
+ROR uses a variation of the **ISO 7064 Mod 37-2** algorithm for checksum
+verification.
 
 ---
 
@@ -785,7 +868,7 @@ export function verifyROR(ror: string): boolean {
   const baseChars = rorId.slice(0, 8);
   const checksumChar = rorId[8];
 
-  const mod37Charset = '0123456789abcdefghijklmnopqrstuvwxyz';
+  const mod37Charset = "0123456789abcdefghijklmnopqrstuvwxyz";
 
   // Calculate checksum
   let total = 0;
@@ -793,7 +876,7 @@ export function verifyROR(ror: string): boolean {
     total = (total + mod37Charset.indexOf(char.toLowerCase())) % 37;
     total *= 2;
   }
-  const calculatedChecksum = mod37Charset[(total % 37)];
+  const calculatedChecksum = mod37Charset[total % 37];
 
   return calculatedChecksum === checksumChar.toLowerCase();
 }
@@ -820,18 +903,18 @@ export function normalizeROR(ror: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateROR, verifyROR, normalizeROR } from './rorUtils.ts';
+import { normalizeROR, validateROR, verifyROR } from "./rorUtils.ts";
 
-const input = 'https://ror.org/03yrm5c26';
+const input = "https://ror.org/03yrm5c26";
 
 if (validateROR(input)) {
   if (verifyROR(input)) {
-    console.log('Valid ROR:', normalizeROR(input));
+    console.log("Valid ROR:", normalizeROR(input));
   } else {
-    console.log('Invalid ROR checksum.');
+    console.log("Invalid ROR checksum.");
   }
 } else {
-  console.log('Invalid ROR format.');
+  console.log("Invalid ROR format.");
 }
 ```
 
@@ -841,20 +924,28 @@ if (validateROR(input)) {
 
 #### **Using ROR Specifications**
 
-The ROR organization provides the format and checksum algorithm as part of its public documentation. You can freely implement this functionality in your code without explicit permissions. However:
+The ROR organization provides the format and checksum algorithm as part of its
+public documentation. You can freely implement this functionality in your code
+without explicit permissions. However:
 
 1. **Credit and Attribution**:
-   - Acknowledge the ROR project in your comments or documentation if the implementation is based on their public specifications.
-   - Include a link to the [ROR website](https://ror.org/) as a reference for users.
+   - Acknowledge the ROR project in your comments or documentation if the
+     implementation is based on their public specifications.
+   - Include a link to the [ROR website](https://ror.org/) as a reference for
+     users.
 
 2. **Open Source Considerations**:
-   - If redistributing the code, use a permissive open-source license (e.g., MIT, Apache 2.0) and clarify that ROR specifications are used.
-   - Avoid misleading users about endorsements or official connections unless you have explicit permission from ROR.
+   - If redistributing the code, use a permissive open-source license (e.g.,
+     MIT, Apache 2.0) and clarify that ROR specifications are used.
+   - Avoid misleading users about endorsements or official connections unless
+     you have explicit permission from ROR.
 
 3. **Trademark Notes**:
-   - The name "ROR" and its logo are trademarks of the ROR project. Do not imply official affiliation unless authorized.
+   - The name "ROR" and its logo are trademarks of the ROR project. Do not imply
+     official affiliation unless authorized.
 
-For further details, consult the [ROR Terms and Conditions](https://ror.org/terms).
+For further details, consult the
+[ROR Terms and Conditions](https://ror.org/terms).
 
 ## 7. How do I write a validator, verifier and normalize functions for ISTC (International Standard Text Code) in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -862,10 +953,12 @@ For further details, consult the [ROR Terms and Conditions](https://ror.org/term
 
 #### Understanding ISTC
 
-- **Format**: ISTC is a 16-character alphanumeric identifier divided into four groups of four characters, separated by hyphens (e.g., `ABCD-1234-5678-EFGH`).
+- **Format**: ISTC is a 16-character alphanumeric identifier divided into four
+  groups of four characters, separated by hyphens (e.g., `ABCD-1234-5678-EFGH`).
 - **Structure**:
   - Each ISTC consists of uppercase alphanumeric characters (A–Z, 0–9).
-  - A checksum ensures validity, calculated using the ISO 7064 Mod 11-2 algorithm.
+  - A checksum ensures validity, calculated using the ISO 7064 Mod 11-2
+    algorithm.
 
 ---
 
@@ -889,7 +982,7 @@ export function validateISTC(istc: string): boolean {
  */
 export function verifyISTC(istc: string): boolean {
   // Remove hyphens for checksum calculation
-  const normalizedIstc = istc.replace(/-/g, '');
+  const normalizedIstc = istc.replace(/-/g, "");
   if (normalizedIstc.length !== 16) return false;
 
   const baseChars = normalizedIstc.slice(0, 15);
@@ -897,13 +990,17 @@ export function verifyISTC(istc: string): boolean {
 
   let total = 0;
   for (const char of baseChars) {
-    const value = isNaN(Number(char)) ? char.charCodeAt(0) - 55 : parseInt(char, 10);
+    const value = isNaN(Number(char))
+      ? char.charCodeAt(0) - 55
+      : parseInt(char, 10);
     total = (total + value) * 2;
   }
   const remainder = total % 11;
   const calculatedChecksum = (12 - remainder) % 11;
 
-  const expectedChecksum = calculatedChecksum === 10 ? 'X' : calculatedChecksum.toString();
+  const expectedChecksum = calculatedChecksum === 10
+    ? "X"
+    : calculatedChecksum.toString();
 
   return checksumChar === expectedChecksum;
 }
@@ -914,11 +1011,13 @@ export function verifyISTC(istc: string): boolean {
  * @returns string | null - The normalized ISTC or `null` if the input is invalid.
  */
 export function normalizeISTC(istc: string): string | null {
-  const cleanedIstc = istc.replace(/\s+/g, '').replace(/-/g, '').toUpperCase();
+  const cleanedIstc = istc.replace(/\s+/g, "").replace(/-/g, "").toUpperCase();
   if (cleanedIstc.length !== 16 || !/^[A-Z0-9]{16}$/.test(cleanedIstc)) {
     return null;
   }
-  return `${cleanedIstc.slice(0, 4)}-${cleanedIstc.slice(4, 8)}-${cleanedIstc.slice(8, 12)}-${cleanedIstc.slice(12)}`;
+  return `${cleanedIstc.slice(0, 4)}-${cleanedIstc.slice(4, 8)}-${
+    cleanedIstc.slice(8, 12)
+  }-${cleanedIstc.slice(12)}`;
 }
 ```
 
@@ -927,18 +1026,18 @@ export function normalizeISTC(istc: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateISTC, verifyISTC, normalizeISTC } from './istcUtils.ts';
+import { normalizeISTC, validateISTC, verifyISTC } from "./istcUtils.ts";
 
-const input = 'ABCD-1234-5678-EFGH';
+const input = "ABCD-1234-5678-EFGH";
 
 if (validateISTC(input)) {
   if (verifyISTC(input)) {
-    console.log('Valid ISTC:', normalizeISTC(input));
+    console.log("Valid ISTC:", normalizeISTC(input));
   } else {
-    console.log('Invalid ISTC checksum.');
+    console.log("Invalid ISTC checksum.");
   }
 } else {
-  console.log('Invalid ISTC format.');
+  console.log("Invalid ISTC format.");
 }
 ```
 
@@ -948,18 +1047,25 @@ if (validateISTC(input)) {
 
 #### **Using ISTC Specifications**
 
-The ISTC (International Standard Text Code) is defined in public standards documentation, specifically ISO 21047. The algorithm for the checksum (ISO 7064 Mod 11-2) is also a publicly available specification.
+The ISTC (International Standard Text Code) is defined in public standards
+documentation, specifically ISO 21047. The algorithm for the checksum (ISO 7064
+Mod 11-2) is also a publicly available specification.
 
 1. **Credit and Attribution**:
-   - Mention that your implementation adheres to the ISTC standard and uses the ISO 7064 checksum algorithm.
-   - Provide a reference to the ISTC website or the ISO 21047 standard in your documentation.
+   - Mention that your implementation adheres to the ISTC standard and uses the
+     ISO 7064 checksum algorithm.
+   - Provide a reference to the ISTC website or the ISO 21047 standard in your
+     documentation.
 
 2. **Open Source Licensing**:
-   - Use an open-source license like MIT, Apache 2.0, or similar when redistributing your code.
-   - State that your code implements publicly available specifications and does not require proprietary permissions.
+   - Use an open-source license like MIT, Apache 2.0, or similar when
+     redistributing your code.
+   - State that your code implements publicly available specifications and does
+     not require proprietary permissions.
 
 3. **Trademark Notes**:
-   - The ISTC name may be trademarked in some jurisdictions. Avoid implying official endorsement unless authorized by the ISTC governing body.
+   - The ISTC name may be trademarked in some jurisdictions. Avoid implying
+     official endorsement unless authorized by the ISTC governing body.
 
 For further clarification, consult the ISTC guidelines or governing body.
 
@@ -969,22 +1075,28 @@ For further clarification, consult the ISTC guidelines or governing body.
 
 #### Understanding Handle Identifiers
 
-Handle identifiers are unique and persistent identifiers for digital objects, such as `10.12345/abcde`.
+Handle identifiers are unique and persistent identifiers for digital objects,
+such as `10.12345/abcde`.
 
 - **Format**:
   - Composed of a prefix and a suffix separated by `/`.
-  - Prefix: Typically numeric, representing the namespace or registrant (e.g., `10.12345`).
+  - Prefix: Typically numeric, representing the namespace or registrant (e.g.,
+    `10.12345`).
   - Suffix: Alphanumeric, identifying the specific object (e.g., `abcde`).
 - **Structure**:
   - Follows the general pattern: `<prefix>/<suffix>` where:
     - `<prefix>` is one or more digits followed by a period and more digits.
-    - `<suffix>` can contain alphanumeric characters, hyphens, dots, or underscores.
+    - `<suffix>` can contain alphanumeric characters, hyphens, dots, or
+      underscores.
 
 #### Functions
 
 1. **Validator**: Ensures the identifier matches the standard format.
-2. **Verifier**: Optionally, you could implement a resolution check to verify if the handle exists, though this requires querying the Handle System or a specific resolver like `doi.org`.
-3. **Normalizer**: Standardizes the identifier by trimming spaces and ensuring consistent casing (if applicable).
+2. **Verifier**: Optionally, you could implement a resolution check to verify if
+   the handle exists, though this requires querying the Handle System or a
+   specific resolver like `doi.org`.
+3. **Normalizer**: Standardizes the identifier by trimming spaces and ensuring
+   consistent casing (if applicable).
 
 ---
 
@@ -1014,7 +1126,7 @@ export async function verifyHandle(handle: string): Promise<boolean> {
   // Optionally, resolve the handle using an HTTP request (e.g., via `doi.org` for DOIs).
   try {
     const response = await fetch(`https://hdl.handle.net/${handle}`, {
-      method: 'HEAD',
+      method: "HEAD",
     });
     return response.ok;
   } catch {
@@ -1041,20 +1153,24 @@ export function normalizeHandle(handle: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateHandle, verifyHandle, normalizeHandle } from './handleUtils.ts';
+import {
+  normalizeHandle,
+  validateHandle,
+  verifyHandle,
+} from "./handleUtils.ts";
 
-const input = ' 10.12345/abcde ';
+const input = " 10.12345/abcde ";
 
 if (validateHandle(input)) {
   verifyHandle(input).then((isValid) => {
     if (isValid) {
-      console.log('Valid Handle Identifier:', normalizeHandle(input));
+      console.log("Valid Handle Identifier:", normalizeHandle(input));
     } else {
-      console.log('Handle Identifier cannot be resolved.');
+      console.log("Handle Identifier cannot be resolved.");
     }
   });
 } else {
-  console.log('Invalid Handle Identifier format.');
+  console.log("Invalid Handle Identifier format.");
 }
 ```
 
@@ -1064,22 +1180,30 @@ if (validateHandle(input)) {
 
 #### **Using Handle System Specifications**
 
-The Handle System, including its format and resolution methods, is an open standard managed by the Corporation for National Research Initiatives (CNRI). Implementing functions for Handle Identifiers does not require specific permissions, but you should consider the following:
+The Handle System, including its format and resolution methods, is an open
+standard managed by the Corporation for National Research Initiatives (CNRI).
+Implementing functions for Handle Identifiers does not require specific
+permissions, but you should consider the following:
 
 1. **Credit and Attribution**:
    - Acknowledge the Handle System in your comments or documentation.
-   - Provide a reference to the Handle System website ([handle.net](https://handle.net)) for more information.
+   - Provide a reference to the Handle System website
+     ([handle.net](https://handle.net)) for more information.
 
 2. **Open Source Licensing**:
    - Use a permissive open-source license (e.g., MIT, Apache 2.0) for your code.
-   - Clarify that your implementation follows publicly documented standards and does not infringe proprietary rights.
+   - Clarify that your implementation follows publicly documented standards and
+     does not infringe proprietary rights.
 
 3. **Trademark Notes**:
-   - The term "Handle System" and related terms may be trademarked by CNRI. Avoid implying endorsement or affiliation unless authorized.
+   - The term "Handle System" and related terms may be trademarked by CNRI.
+     Avoid implying endorsement or affiliation unless authorized.
 
 #### Optional: Verifying Resolution
 
-If your implementation relies on querying a resolver like `hdl.handle.net` or `doi.org`, ensure compliance with their terms of service. Always cache responses appropriately to reduce load on their servers.
+If your implementation relies on querying a resolver like `hdl.handle.net` or
+`doi.org`, ensure compliance with their terms of service. Always cache responses
+appropriately to reduce load on their servers.
 
 ## 9. How do I write a validator, verifier and normalize functions for EAN (International Article Number (EAN-13 or EAN-8)) in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1087,11 +1211,14 @@ If your implementation relies on querying a resolver like `hdl.handle.net` or `d
 
 #### Understanding EAN
 
-EAN (European Article Number) is a barcode standard widely used in retail. Common formats include:
+EAN (European Article Number) is a barcode standard widely used in retail.
+Common formats include:
+
 - **EAN-13**: 13 digits.
 - **EAN-8**: 8 digits.
 
-EANs use a checksum to validate the number's integrity. The checksum is calculated using a weighted sum of the digits and the Mod 10 algorithm.
+EANs use a checksum to validate the number's integrity. The checksum is
+calculated using a weighted sum of the digits and the Mod 10 algorithm.
 
 ---
 
@@ -1118,14 +1245,16 @@ export function verifyEAN(ean: string): boolean {
     return false;
   }
 
-  const digits = ean.split('').map(Number);
+  const digits = ean.split("").map(Number);
   const length = digits.length;
 
   // Calculate checksum using Mod 10
   const checksum = digits
     .slice(0, length - 1)
     .reduce((sum, digit, index) => {
-      const weight = length === 13 ? (index % 2 === 0 ? 1 : 3) : (index % 2 === 0 ? 3 : 1);
+      const weight = length === 13
+        ? (index % 2 === 0 ? 1 : 3)
+        : (index % 2 === 0 ? 3 : 1);
       return sum + digit * weight;
     }, 0);
 
@@ -1139,7 +1268,7 @@ export function verifyEAN(ean: string): boolean {
  * @returns string | null - The normalized EAN or `null` if the input is invalid.
  */
 export function normalizeEAN(ean: string): string | null {
-  const cleanedEan = ean.replace(/\D/g, '').trim();
+  const cleanedEan = ean.replace(/\D/g, "").trim();
   return validateEAN(cleanedEan) ? cleanedEan : null;
 }
 ```
@@ -1149,18 +1278,18 @@ export function normalizeEAN(ean: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateEAN, verifyEAN, normalizeEAN } from './eanUtils.ts';
+import { normalizeEAN, validateEAN, verifyEAN } from "./eanUtils.ts";
 
-const input = '4006381333931'; // Example EAN-13
+const input = "4006381333931"; // Example EAN-13
 
 if (validateEAN(input)) {
   if (verifyEAN(input)) {
-    console.log('Valid EAN:', normalizeEAN(input));
+    console.log("Valid EAN:", normalizeEAN(input));
   } else {
-    console.log('Invalid EAN checksum.');
+    console.log("Invalid EAN checksum.");
   }
 } else {
-  console.log('Invalid EAN format.');
+  console.log("Invalid EAN format.");
 }
 ```
 
@@ -1173,10 +1302,12 @@ if (validateEAN(input)) {
 2. **Verifier**:
    - Computes the checksum using the Mod 10 algorithm:
      - Multiply alternating digits by weights of 1 and 3.
-     - Sum the results, compute the remainder when divided by 10, and subtract from 10.
+     - Sum the results, compute the remainder when divided by 10, and subtract
+       from 10.
    - Compares the calculated checksum to the last digit of the input.
 3. **Normalizer**:
-   - Removes non-numeric characters and trims spaces to produce a clean EAN string.
+   - Removes non-numeric characters and trims spaces to produce a clean EAN
+     string.
 
 ---
 
@@ -1184,20 +1315,28 @@ if (validateEAN(input)) {
 
 #### **Using EAN Standards**
 
-The EAN system is a publicly documented standard maintained by GS1. Writing functions to validate, verify, and normalize EANs does not require explicit permission. However, follow these guidelines:
+The EAN system is a publicly documented standard maintained by GS1. Writing
+functions to validate, verify, and normalize EANs does not require explicit
+permission. However, follow these guidelines:
 
 1. **Credit and Attribution**:
-   - Mention in your comments or documentation that your implementation adheres to the EAN/GS1 standards.
-   - Reference the GS1 website ([gs1.org](https://www.gs1.org)) for additional information.
+   - Mention in your comments or documentation that your implementation adheres
+     to the EAN/GS1 standards.
+   - Reference the GS1 website ([gs1.org](https://www.gs1.org)) for additional
+     information.
 
 2. **Open Source Licensing**:
-   - Use an open-source license (e.g., MIT, Apache 2.0) if you distribute the code.
+   - Use an open-source license (e.g., MIT, Apache 2.0) if you distribute the
+     code.
    - Clarify that your implementation is based on publicly documented standards.
 
 3. **Trademarks**:
-   - The term "EAN" and related terms are associated with GS1. Avoid using their trademarks in ways that imply endorsement or official affiliation unless explicitly authorized.
+   - The term "EAN" and related terms are associated with GS1. Avoid using their
+     trademarks in ways that imply endorsement or official affiliation unless
+     explicitly authorized.
 
-For more details, refer to GS1's [terms and conditions](https://www.gs1.org/terms-conditions).
+For more details, refer to GS1's
+[terms and conditions](https://www.gs1.org/terms-conditions).
 
 ## 10. How do I write a validator, verifier and normalize functions for URL in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1205,7 +1344,11 @@ For more details, refer to GS1's [terms and conditions](https://www.gs1.org/term
 
 #### URLs Overview
 
-A URL (Uniform Resource Locator) follows a specific syntax defined by the IETF in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). To handle URLs effectively, the validation should check structure and scheme, the verification should optionally check resolution, and normalization should standardize case and structure.
+A URL (Uniform Resource Locator) follows a specific syntax defined by the IETF
+in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). To handle URLs
+effectively, the validation should check structure and scheme, the verification
+should optionally check resolution, and normalization should standardize case
+and structure.
 
 ---
 
@@ -1239,7 +1382,7 @@ export async function verifyURL(url: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(url, { method: 'HEAD' });
+    const response = await fetch(url, { method: "HEAD" });
     return response.ok;
   } catch {
     return false;
@@ -1256,9 +1399,11 @@ export function normalizeURL(url: string): string | null {
     const parsedURL = new URL(url.trim());
     // Convert hostname to lowercase and remove default port (if any)
     parsedURL.hostname = parsedURL.hostname.toLowerCase();
-    if ((parsedURL.protocol === 'http:' && parsedURL.port === '80') ||
-        (parsedURL.protocol === 'https:' && parsedURL.port === '443')) {
-      parsedURL.port = '';
+    if (
+      (parsedURL.protocol === "http:" && parsedURL.port === "80") ||
+      (parsedURL.protocol === "https:" && parsedURL.port === "443")
+    ) {
+      parsedURL.port = "";
     }
     return parsedURL.toString();
   } catch {
@@ -1272,20 +1417,20 @@ export function normalizeURL(url: string): string | null {
 #### Usage Example
 
 ```typescript
-import { validateURL, verifyURL, normalizeURL } from './urlUtils.ts';
+import { normalizeURL, validateURL, verifyURL } from "./urlUtils.ts";
 
-const input = '  HTTPS://Example.COM:443/some/path?query=1 ';
+const input = "  HTTPS://Example.COM:443/some/path?query=1 ";
 
 if (validateURL(input)) {
   verifyURL(input).then((isResolvable) => {
     if (isResolvable) {
-      console.log('Valid and resolvable URL:', normalizeURL(input));
+      console.log("Valid and resolvable URL:", normalizeURL(input));
     } else {
-      console.log('Valid URL, but cannot be resolved.');
+      console.log("Valid URL, but cannot be resolved.");
     }
   });
 } else {
-  console.log('Invalid URL format.');
+  console.log("Invalid URL format.");
 }
 ```
 
@@ -1294,8 +1439,10 @@ if (validateURL(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses the built-in `URL` constructor to check if the input conforms to URL syntax.
-   - Handles edge cases such as invalid schemes, missing components, or malformed URLs.
+   - Uses the built-in `URL` constructor to check if the input conforms to URL
+     syntax.
+   - Handles edge cases such as invalid schemes, missing components, or
+     malformed URLs.
 
 2. **Verifier**:
    - Performs an HTTP `HEAD` request to check if the URL is resolvable.
@@ -1303,7 +1450,8 @@ if (validateURL(input)) {
 
 3. **Normalizer**:
    - Trims extra spaces.
-   - Converts the hostname to lowercase (as URLs are case-insensitive except for the path/query/fragment).
+   - Converts the hostname to lowercase (as URLs are case-insensitive except for
+     the path/query/fragment).
    - Removes default ports (`:80` for HTTP, `:443` for HTTPS).
    - Ensures the URL is in its canonical form.
 
@@ -1312,19 +1460,27 @@ if (validateURL(input)) {
 ### Copyright and Attribution Requirements
 
 1. **Using URL Standards**:
-   - The syntax and behavior of URLs are defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and [WHATWG URL](https://url.spec.whatwg.org/).
-   - These standards are public and open, so you can implement functions without requiring specific permission.
+   - The syntax and behavior of URLs are defined in
+     [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and
+     [WHATWG URL](https://url.spec.whatwg.org/).
+   - These standards are public and open, so you can implement functions without
+     requiring specific permission.
 
 2. **Attribution**:
-   - Mention in your documentation or comments that the implementation adheres to RFC 3986 or WHATWG URL specifications.
-   - Optionally, provide a link to the relevant documentation for user reference.
+   - Mention in your documentation or comments that the implementation adheres
+     to RFC 3986 or WHATWG URL specifications.
+   - Optionally, provide a link to the relevant documentation for user
+     reference.
 
 3. **Open Source Licensing**:
-   - If redistributing the code, use a permissive open-source license like MIT, Apache 2.0, or similar.
-   - Clarify that the implementation is based on publicly documented URL standards.
+   - If redistributing the code, use a permissive open-source license like MIT,
+     Apache 2.0, or similar.
+   - Clarify that the implementation is based on publicly documented URL
+     standards.
 
 4. **Trademarks**:
-   - Terms like "URL" are generic and not trademarked. No special permissions are needed to use these terms in your project.
+   - Terms like "URL" are generic and not trademarked. No special permissions
+     are needed to use these terms in your project.
 
 ## 11. How do I write a validator, verifier and normalize functions for URI in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1332,7 +1488,9 @@ if (validateURL(input)) {
 
 #### Understanding URI
 
-A URI (Uniform Resource Identifier) is a string that uniquely identifies a resource. It may include a scheme, authority, path, query, and fragment, as defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
+A URI (Uniform Resource Identifier) is a string that uniquely identifies a
+resource. It may include a scheme, authority, path, query, and fragment, as
+defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
 
 - Examples:
   - **Absolute URI**: `https://example.com/path?query=value`
@@ -1367,8 +1525,8 @@ export async function verifyURI(uri: string): Promise<boolean> {
 
   // Attempt a network resolution for absolute URIs (like HTTP/HTTPS)
   try {
-    if (uri.startsWith('http:') || uri.startsWith('https:')) {
-      const response = await fetch(uri, { method: 'HEAD' });
+    if (uri.startsWith("http:") || uri.startsWith("https:")) {
+      const response = await fetch(uri, { method: "HEAD" });
       return response.ok;
     }
     // For other schemes like `urn:`, no verification is possible in this implementation.
@@ -1392,10 +1550,10 @@ export function normalizeURI(uri: string): string | null {
 
     // Remove default ports (80 for HTTP, 443 for HTTPS)
     if (
-      (parsedURL.protocol === 'http:' && parsedURL.port === '80') ||
-      (parsedURL.protocol === 'https:' && parsedURL.port === '443')
+      (parsedURL.protocol === "http:" && parsedURL.port === "80") ||
+      (parsedURL.protocol === "https:" && parsedURL.port === "443")
     ) {
-      parsedURL.port = '';
+      parsedURL.port = "";
     }
     return parsedURL.toString();
   } catch {
@@ -1409,20 +1567,20 @@ export function normalizeURI(uri: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateURI, verifyURI, normalizeURI } from './uriUtils.ts';
+import { normalizeURI, validateURI, verifyURI } from "./uriUtils.ts";
 
-const input = '  HTTPS://Example.COM:443/path?query=value ';
+const input = "  HTTPS://Example.COM:443/path?query=value ";
 
 if (validateURI(input)) {
   verifyURI(input).then((isResolvable) => {
     if (isResolvable) {
-      console.log('Valid and resolvable URI:', normalizeURI(input));
+      console.log("Valid and resolvable URI:", normalizeURI(input));
     } else {
-      console.log('Valid URI, but cannot be resolved.');
+      console.log("Valid URI, but cannot be resolved.");
     }
   });
 } else {
-  console.log('Invalid URI format.');
+  console.log("Invalid URI format.");
 }
 ```
 
@@ -1431,16 +1589,20 @@ if (validateURI(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regex to check if the string follows the basic URI syntax as per RFC 3986.
+   - Uses a regex to check if the string follows the basic URI syntax as per
+     RFC 3986.
    - The regex covers absolute URIs, relative URIs, and URNs.
 
 2. **Verifier**:
-   - For `http:` and `https:` URIs, performs an HTTP `HEAD` request to check resource availability.
-   - For other schemes (like `urn:`), assumes validity since resolution is context-dependent.
+   - For `http:` and `https:` URIs, performs an HTTP `HEAD` request to check
+     resource availability.
+   - For other schemes (like `urn:`), assumes validity since resolution is
+     context-dependent.
 
 3. **Normalizer**:
    - Trims whitespace and resolves case sensitivity issues.
-   - Canonicalizes HTTP/HTTPS URLs by lowercasing schemes/hostnames and removing default ports.
+   - Canonicalizes HTTP/HTTPS URLs by lowercasing schemes/hostnames and removing
+     default ports.
    - Falls back to returning a trimmed URI for non-URL URIs.
 
 ---
@@ -1449,24 +1611,34 @@ if (validateURI(input)) {
 
 #### **Using URI Standards**
 
-The URI syntax and behavior are defined in publicly available standards like [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and [WHATWG URL](https://url.spec.whatwg.org/). Implementing code based on these standards is not restricted.
+The URI syntax and behavior are defined in publicly available standards like
+[RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) and
+[WHATWG URL](https://url.spec.whatwg.org/). Implementing code based on these
+standards is not restricted.
 
 1. **Credit and Attribution**:
-   - Acknowledge in your comments or documentation that your implementation follows the URI syntax defined in RFC 3986.
+   - Acknowledge in your comments or documentation that your implementation
+     follows the URI syntax defined in RFC 3986.
    - Optionally, provide links to the relevant standards.
 
 2. **Open Source Licensing**:
-   - Use a permissive open-source license (e.g., MIT, Apache 2.0) when redistributing your code.
-   - Clarify that the code is based on publicly available standards and does not include proprietary elements.
+   - Use a permissive open-source license (e.g., MIT, Apache 2.0) when
+     redistributing your code.
+   - Clarify that the code is based on publicly available standards and does not
+     include proprietary elements.
 
 3. **Trademarks**:
-   - The term "URI" is generic and not trademarked. No special permissions are required to use this term.
+   - The term "URI" is generic and not trademarked. No special permissions are
+     required to use this term.
 
 ## 12. How do I write a validator, verifier and normalize functions for URL in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Validator, Verifier, and Normalizer for URLs in Deno and TypeScript
 
-A **URL (Uniform Resource Locator)** is a specific type of URI that specifies the location of a resource. It follows the structure defined by the [WHATWG URL Standard](https://url.spec.whatwg.org/) and [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). 
+A **URL (Uniform Resource Locator)** is a specific type of URI that specifies
+the location of a resource. It follows the structure defined by the
+[WHATWG URL Standard](https://url.spec.whatwg.org/) and
+[RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
 
 ---
 
@@ -1500,7 +1672,7 @@ export async function verifyURL(url: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(url, { method: 'HEAD' });
+    const response = await fetch(url, { method: "HEAD" });
     return response.ok;
   } catch {
     return false;
@@ -1519,9 +1691,11 @@ export function normalizeURL(url: string): string | null {
     parsedURL.hostname = parsedURL.hostname.toLowerCase();
 
     // Remove default ports (if any)
-    if ((parsedURL.protocol === 'http:' && parsedURL.port === '80') ||
-        (parsedURL.protocol === 'https:' && parsedURL.port === '443')) {
-      parsedURL.port = '';
+    if (
+      (parsedURL.protocol === "http:" && parsedURL.port === "80") ||
+      (parsedURL.protocol === "https:" && parsedURL.port === "443")
+    ) {
+      parsedURL.port = "";
     }
 
     // Ensure the URL is in canonical form
@@ -1537,28 +1711,28 @@ export function normalizeURL(url: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateURL, verifyURL, normalizeURL } from './urlUtils.ts';
+import { normalizeURL, validateURL, verifyURL } from "./urlUtils.ts";
 
-const input = '  HTTPS://Example.COM:443/Some/Path?query=value ';
+const input = "  HTTPS://Example.COM:443/Some/Path?query=value ";
 
 // Validate URL
 if (validateURL(input)) {
-  console.log('URL format is valid.');
+  console.log("URL format is valid.");
 
   // Verify URL resolution
   verifyURL(input).then((isResolvable) => {
     if (isResolvable) {
-      console.log('URL is resolvable.');
+      console.log("URL is resolvable.");
     } else {
-      console.log('URL is valid but not resolvable.');
+      console.log("URL is valid but not resolvable.");
     }
   });
 
   // Normalize URL
   const normalized = normalizeURL(input);
-  console.log('Normalized URL:', normalized);
+  console.log("Normalized URL:", normalized);
 } else {
-  console.log('Invalid URL format.');
+  console.log("Invalid URL format.");
 }
 ```
 
@@ -1567,10 +1741,12 @@ if (validateURL(input)) {
 ### Explanation
 
 1. **Validator**:
-   - The `URL` constructor is used to validate URL syntax. If the input is invalid, it throws an error, which is caught and returns `false`.
+   - The `URL` constructor is used to validate URL syntax. If the input is
+     invalid, it throws an error, which is caught and returns `false`.
 
 2. **Verifier**:
-   - Performs an HTTP `HEAD` request to check the existence and accessibility of the resource.
+   - Performs an HTTP `HEAD` request to check the existence and accessibility of
+     the resource.
    - Handles network errors gracefully with a `try/catch`.
 
 3. **Normalizer**:
@@ -1587,20 +1763,27 @@ if (validateURL(input)) {
 #### **Using URL Standards**
 
 1. **Public Standards**:
-   - URLs follow publicly available standards defined by [WHATWG](https://url.spec.whatwg.org/) and [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). These are open standards, so you can write code based on them without any restrictions.
+   - URLs follow publicly available standards defined by
+     [WHATWG](https://url.spec.whatwg.org/) and
+     [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986). These are open
+     standards, so you can write code based on them without any restrictions.
 
 2. **Attribution**:
-   - It is good practice to include a comment or documentation in your code acknowledging that it follows the WHATWG URL standard or RFC 3986.
+   - It is good practice to include a comment or documentation in your code
+     acknowledging that it follows the WHATWG URL standard or RFC 3986.
    - You can optionally provide links to the relevant specifications.
 
 3. **Open Source Licensing**:
-   - Use an open-source license (e.g., MIT, Apache 2.0) if you distribute your code.
+   - Use an open-source license (e.g., MIT, Apache 2.0) if you distribute your
+     code.
    - Mention that your implementation is based on publicly available standards.
 
 4. **Trademarks**:
-   - "URL" is a generic term and not trademarked, so no special permissions are needed to use this term in your code or documentation. 
+   - "URL" is a generic term and not trademarked, so no special permissions are
+     needed to use this term in your code or documentation.
 
-This ensures that your implementation is compliant with attribution and licensing practices while adhering to established URL standards.
+This ensures that your implementation is compliant with attribution and
+licensing practices while adhering to established URL standards.
 
 ## 13. How do I write a validator, verifier and normalize functions for PURL in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1608,11 +1791,14 @@ This ensures that your implementation is compliant with attribution and licensin
 
 #### Understanding PURL
 
-A **PURL (Persistent Uniform Resource Locator)** is a URL that acts as a permanent identifier for a resource. It allows resource locations to change over time while maintaining a consistent identifier. A typical PURL might look like:
+A **PURL (Persistent Uniform Resource Locator)** is a URL that acts as a
+permanent identifier for a resource. It allows resource locations to change over
+time while maintaining a consistent identifier. A typical PURL might look like:
 
 - `http://purl.org/example/resource`
 
-PURLs follow standard URL formatting rules, so the `URL` API in TypeScript can handle much of the validation and normalization.
+PURLs follow standard URL formatting rules, so the `URL` API in TypeScript can
+handle much of the validation and normalization.
 
 ---
 
@@ -1630,7 +1816,7 @@ export function validatePURL(purl: string): boolean {
   try {
     const url = new URL(purl);
     // Validate that the URL uses the PURL domain or scheme
-    return url.hostname.endsWith('purl.org');
+    return url.hostname.endsWith("purl.org");
   } catch {
     return false;
   }
@@ -1647,7 +1833,7 @@ export async function verifyPURL(purl: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(purl, { method: 'HEAD' });
+    const response = await fetch(purl, { method: "HEAD" });
     return response.ok;
   } catch {
     return false;
@@ -1666,9 +1852,11 @@ export function normalizePURL(purl: string): string | null {
     parsedURL.hostname = parsedURL.hostname.toLowerCase();
 
     // Remove default ports for HTTP/HTTPS
-    if ((parsedURL.protocol === 'http:' && parsedURL.port === '80') ||
-        (parsedURL.protocol === 'https:' && parsedURL.port === '443')) {
-      parsedURL.port = '';
+    if (
+      (parsedURL.protocol === "http:" && parsedURL.port === "80") ||
+      (parsedURL.protocol === "https:" && parsedURL.port === "443")
+    ) {
+      parsedURL.port = "";
     }
 
     return parsedURL.toString();
@@ -1683,22 +1871,22 @@ export function normalizePURL(purl: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validatePURL, verifyPURL, normalizePURL } from './purlUtils.ts';
+import { normalizePURL, validatePURL, verifyPURL } from "./purlUtils.ts";
 
-const input = 'HTTP://PURL.ORG/example/resource';
+const input = "HTTP://PURL.ORG/example/resource";
 
 if (validatePURL(input)) {
-  console.log('Valid PURL format.');
+  console.log("Valid PURL format.");
 
   verifyPURL(input).then((isResolvable) => {
     if (isResolvable) {
-      console.log('PURL is resolvable:', normalizePURL(input));
+      console.log("PURL is resolvable:", normalizePURL(input));
     } else {
-      console.log('PURL is valid but not resolvable.');
+      console.log("PURL is valid but not resolvable.");
     }
   });
 } else {
-  console.log('Invalid PURL format.');
+  console.log("Invalid PURL format.");
 }
 ```
 
@@ -1725,21 +1913,30 @@ if (validatePURL(input)) {
 ### Copyright and Attribution Requirements
 
 1. **Using PURL Standards**:
-   - PURLs are based on the [URL specification](https://url.spec.whatwg.org/) and follow its rules. 
-   - The concept of PURLs originated from OCLC (Online Computer Library Center) and is public knowledge. There are no restrictions on implementing functions to handle PURLs.
+   - PURLs are based on the [URL specification](https://url.spec.whatwg.org/)
+     and follow its rules.
+   - The concept of PURLs originated from OCLC (Online Computer Library Center)
+     and is public knowledge. There are no restrictions on implementing
+     functions to handle PURLs.
 
 2. **Attribution**:
-   - In comments or documentation, mention that your implementation adheres to the URL standards and PURL conventions.
-   - Reference the PURL homepage ([http://purl.org/](http://purl.org/)) for more information.
+   - In comments or documentation, mention that your implementation adheres to
+     the URL standards and PURL conventions.
+   - Reference the PURL homepage ([http://purl.org/](http://purl.org/)) for more
+     information.
 
 3. **Open Source Licensing**:
-   - If redistributing the code, use a permissive license such as MIT or Apache 2.0.
-   - Clearly state that the code is based on publicly available URL and PURL standards.
+   - If redistributing the code, use a permissive license such as MIT or Apache
+     2.0.
+   - Clearly state that the code is based on publicly available URL and PURL
+     standards.
 
 4. **Trademarks**:
-   - "PURL" is not trademarked. No special permissions are needed to use the term in your project. 
+   - "PURL" is not trademarked. No special permissions are needed to use the
+     term in your project.
 
-This approach ensures adherence to standards and provides robust functionality for validating, verifying, and normalizing PURLs.
+This approach ensures adherence to standards and provides robust functionality
+for validating, verifying, and normalizing PURLs.
 
 ## 14. How do I write a validator, verifier and normalize functions for ADS bibliographic code in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1747,21 +1944,28 @@ This approach ensures adherence to standards and provides robust functionality f
 
 #### Understanding ADS Bibliographic Code
 
-The **ADS Bibliographic Code** is a unique identifier used by the [Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu/) to reference scientific papers and astronomical data. It has the format:
+The **ADS Bibliographic Code** is a unique identifier used by the
+[Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu/) to reference
+scientific papers and astronomical data. It has the format:
 
 ```
 YYYYJJJJJVVVVMPPPPA
 ```
 
 Where:
+
 - **YYYY**: Year (4 digits)
-- **JJJJJ**: Journal abbreviation (up to 5 characters, padded with dots if shorter)
+- **JJJJJ**: Journal abbreviation (up to 5 characters, padded with dots if
+  shorter)
 - **VVVV**: Volume number (4 digits, padded with dots if shorter)
-- **M**: Publication type (1 character, e.g., "L" for letters, "." for regular articles)
-- **PPPPP**: Page number or article number (5 digits, padded with dots if shorter)
+- **M**: Publication type (1 character, e.g., "L" for letters, "." for regular
+  articles)
+- **PPPPP**: Page number or article number (5 digits, padded with dots if
+  shorter)
 - **A**: First letter of the last name of the first author (1 character)
 
 Examples:
+
 - `2024ApJ...123L0001A`
 - `1998Natur.123..456B`
 
@@ -1788,15 +1992,21 @@ export function validateADSCode(code: string): boolean {
  * @param apiKey - Your ADS API key for authentication.
  * @returns Promise<boolean> - `true` if the code exists, otherwise `false`.
  */
-export async function verifyADSCode(code: string, apiKey: string): Promise<boolean> {
+export async function verifyADSCode(
+  code: string,
+  apiKey: string,
+): Promise<boolean> {
   if (!validateADSCode(code)) {
     return false;
   }
 
   try {
-    const response = await fetch(`https://ui.adsabs.harvard.edu/v1/bib/${code}`, {
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
+    const response = await fetch(
+      `https://ui.adsabs.harvard.edu/v1/bib/${code}`,
+      {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      },
+    );
     return response.ok;
   } catch {
     return false;
@@ -1814,10 +2024,10 @@ export function normalizeADSCode(code: string): string | null {
   }
 
   const year = code.slice(0, 4);
-  const journal = code.slice(4, 9).padEnd(5, '.');
-  const volume = code.slice(9, 13).padEnd(4, '.');
+  const journal = code.slice(4, 9).padEnd(5, ".");
+  const volume = code.slice(9, 13).padEnd(4, ".");
   const type = code[13];
-  const page = code.slice(14, 19).padEnd(5, '.');
+  const page = code.slice(14, 19).padEnd(5, ".");
   const author = code[19];
 
   return `${year}${journal}${volume}${type}${page}${author}`;
@@ -1829,25 +2039,29 @@ export function normalizeADSCode(code: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateADSCode, verifyADSCode, normalizeADSCode } from './adsUtils.ts';
+import {
+  normalizeADSCode,
+  validateADSCode,
+  verifyADSCode,
+} from "./adsUtils.ts";
 
-const apiKey = 'your_ads_api_key'; // Replace with your ADS API key
-const input = '2024ApJ123L0001A';
+const apiKey = "your_ads_api_key"; // Replace with your ADS API key
+const input = "2024ApJ123L0001A";
 
 // Validate ADS Code
 if (validateADSCode(input)) {
-  console.log('Valid ADS Code format.');
+  console.log("Valid ADS Code format.");
 
   // Verify ADS Code existence
   verifyADSCode(input, apiKey).then((exists) => {
     if (exists) {
-      console.log('ADS Code exists:', normalizeADSCode(input));
+      console.log("ADS Code exists:", normalizeADSCode(input));
     } else {
-      console.log('ADS Code does not exist.');
+      console.log("ADS Code does not exist.");
     }
   });
 } else {
-  console.log('Invalid ADS Code format.');
+  console.log("Invalid ADS Code format.");
 }
 ```
 
@@ -1856,16 +2070,20 @@ if (validateADSCode(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regular expression to ensure the input adheres to the ADS bibliographic code format.
-   - Checks each component (year, journal abbreviation, volume, type, page, author) for correct length and format.
+   - Uses a regular expression to ensure the input adheres to the ADS
+     bibliographic code format.
+   - Checks each component (year, journal abbreviation, volume, type, page,
+     author) for correct length and format.
 
 2. **Verifier**:
-   - Sends a request to the ADS API to verify if the bibliographic code exists in their database.
+   - Sends a request to the ADS API to verify if the bibliographic code exists
+     in their database.
    - Requires an API key for authentication.
    - Returns `true` if the resource exists, and `false` otherwise.
 
 3. **Normalizer**:
-   - Standardizes the code format by padding shorter components with dots as per the ADS format requirements.
+   - Standardizes the code format by padding shorter components with dots as per
+     the ADS format requirements.
    - Ensures consistency across representations of the same bibliographic code.
 
 ---
@@ -1873,21 +2091,31 @@ if (validateADSCode(input)) {
 ### Copyright and Attribution Requirements
 
 1. **ADS Bibliographic Code Standards**:
-   - The ADS bibliographic code format is publicly documented and used in academic and research contexts. No copyright restrictions apply to using this format for validation or utility functions.
+   - The ADS bibliographic code format is publicly documented and used in
+     academic and research contexts. No copyright restrictions apply to using
+     this format for validation or utility functions.
 
 2. **Using the ADS API**:
-   - The ADS API has usage terms. Ensure you comply with their [API documentation](https://ui.adsabs.harvard.edu/help/api/) and terms of service.
-   - Attribution to ADS is typically required when using their API, so include a note in your documentation or code.
+   - The ADS API has usage terms. Ensure you comply with their
+     [API documentation](https://ui.adsabs.harvard.edu/help/api/) and terms of
+     service.
+   - Attribution to ADS is typically required when using their API, so include a
+     note in your documentation or code.
 
 3. **Attribution**:
-   - Mention in your code or documentation that the implementation follows the ADS bibliographic code format.
-   - Provide a link to the [ADS Bibliographic Code description](https://ui.adsabs.harvard.edu/help/actions/bibcodes) for user reference.
+   - Mention in your code or documentation that the implementation follows the
+     ADS bibliographic code format.
+   - Provide a link to the
+     [ADS Bibliographic Code description](https://ui.adsabs.harvard.edu/help/actions/bibcodes)
+     for user reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if redistributing your code.
+   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if
+     redistributing your code.
    - Clarify that the implementation is based on publicly available standards.
 
-By adhering to these principles, your implementation will be compliant with both technical and legal standards.
+By adhering to these principles, your implementation will be compliant with both
+technical and legal standards.
 
 ## 15. How do I write a validator, verifier and normalize functions for arXiv ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -1895,7 +2123,8 @@ By adhering to these principles, your implementation will be compliant with both
 
 #### Understanding arXiv ID
 
-The **arXiv ID** is a unique identifier used by the [arXiv](https://arxiv.org) preprint repository to reference papers. It comes in two formats:
+The **arXiv ID** is a unique identifier used by the [arXiv](https://arxiv.org)
+preprint repository to reference papers. It comes in two formats:
 
 1. **Old-style IDs**:
    - Format: `<archive>/<YYMMNNN>` (e.g., `hep-th/9702001`)
@@ -1965,22 +2194,26 @@ export function normalizeArxivID(id: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateArxivID, verifyArxivID, normalizeArxivID } from './arxivUtils.ts';
+import {
+  normalizeArxivID,
+  validateArxivID,
+  verifyArxivID,
+} from "./arxivUtils.ts";
 
-const input = ' hep-th/9702001 ';
+const input = " hep-th/9702001 ";
 
 if (validateArxivID(input)) {
-  console.log('Valid arXiv ID format.');
+  console.log("Valid arXiv ID format.");
 
   verifyArxivID(input).then((exists) => {
     if (exists) {
-      console.log('arXiv ID exists:', normalizeArxivID(input));
+      console.log("arXiv ID exists:", normalizeArxivID(input));
     } else {
-      console.log('arXiv ID does not exist.');
+      console.log("arXiv ID does not exist.");
     }
   });
 } else {
-  console.log('Invalid arXiv ID format.');
+  console.log("Invalid arXiv ID format.");
 }
 ```
 
@@ -1993,7 +2226,8 @@ if (validateArxivID(input)) {
    - Ensures the format adheres to the conventions set by arXiv.
 
 2. **Verifier**:
-   - Sends a `GET` request to the arXiv website (e.g., `https://arxiv.org/abs/<id>`).
+   - Sends a `GET` request to the arXiv website (e.g.,
+     `https://arxiv.org/abs/<id>`).
    - If the response status is `200`, the ID is valid and exists.
 
 3. **Normalizer**:
@@ -2005,21 +2239,31 @@ if (validateArxivID(input)) {
 ### Copyright and Attribution Requirements
 
 1. **arXiv ID Standards**:
-   - The arXiv ID format is publicly documented and widely used in academic contexts. There are no copyright restrictions on implementing functions to handle these IDs.
+   - The arXiv ID format is publicly documented and widely used in academic
+     contexts. There are no copyright restrictions on implementing functions to
+     handle these IDs.
 
 2. **Using the arXiv Website/API**:
-   - Accessing the arXiv website for verification purposes is permissible under their [Terms of Use](https://arxiv.org/terms-of-use).
-   - You can cite arXiv in your documentation as the source of the ID system and API if desired.
+   - Accessing the arXiv website for verification purposes is permissible under
+     their [Terms of Use](https://arxiv.org/terms-of-use).
+   - You can cite arXiv in your documentation as the source of the ID system and
+     API if desired.
 
 3. **Attribution**:
-   - In your code or documentation, mention that the implementation adheres to the arXiv ID format and conventions.
-   - Include a link to the [arXiv documentation on IDs](https://arxiv.org/help/arxiv_identifier) for reference.
+   - In your code or documentation, mention that the implementation adheres to
+     the arXiv ID format and conventions.
+   - Include a link to the
+     [arXiv documentation on IDs](https://arxiv.org/help/arxiv_identifier) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if redistributing your code.
-   - Clearly state that the implementation is based on publicly available standards.
+   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if
+     redistributing your code.
+   - Clearly state that the implementation is based on publicly available
+     standards.
 
-By adhering to these principles, your implementation will respect technical and legal standards while providing robust functionality.
+By adhering to these principles, your implementation will respect technical and
+legal standards while providing robust functionality.
 
 ## 16. How do I write a validator, verifier and normalize functions for PubMed ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2027,10 +2271,14 @@ By adhering to these principles, your implementation will respect technical and 
 
 #### Understanding PubMed ID
 
-The **PubMed ID (PMID)** is a unique integer identifier used by PubMed to reference biomedical and life sciences journal articles. Key characteristics of PMIDs:
+The **PubMed ID (PMID)** is a unique integer identifier used by PubMed to
+reference biomedical and life sciences journal articles. Key characteristics of
+PMIDs:
+
 - They are positive integers (e.g., `12345678`).
 - There are no specific formatting rules apart from being a non-negative number.
-- PMIDs are used to access articles via the PubMed system, e.g., `https://pubmed.ncbi.nlm.nih.gov/<PMID>`.
+- PMIDs are used to access articles via the PubMed system, e.g.,
+  `https://pubmed.ncbi.nlm.nih.gov/<PMID>`.
 
 ---
 
@@ -2061,7 +2309,7 @@ export async function verifyPMID(pmid: string): Promise<boolean> {
 
   try {
     const response = await fetch(`https://pubmed.ncbi.nlm.nih.gov/${pmid}/`, {
-      method: 'HEAD',
+      method: "HEAD",
     });
     return response.ok;
   } catch {
@@ -2088,24 +2336,24 @@ export function normalizePMID(pmid: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validatePMID, verifyPMID, normalizePMID } from './pmidUtils.ts';
+import { normalizePMID, validatePMID, verifyPMID } from "./pmidUtils.ts";
 
-const input = ' 12345678 ';
+const input = " 12345678 ";
 
 // Validate PubMed ID
 if (validatePMID(input)) {
-  console.log('Valid PubMed ID format.');
+  console.log("Valid PubMed ID format.");
 
   // Verify PubMed ID existence
   verifyPMID(input).then((exists) => {
     if (exists) {
-      console.log('PubMed ID exists:', normalizePMID(input));
+      console.log("PubMed ID exists:", normalizePMID(input));
     } else {
-      console.log('PubMed ID does not exist.');
+      console.log("PubMed ID does not exist.");
     }
   });
 } else {
-  console.log('Invalid PubMed ID format.');
+  console.log("Invalid PubMed ID format.");
 }
 ```
 
@@ -2118,7 +2366,8 @@ if (validatePMID(input)) {
    - Excludes non-numeric characters or zero-prefixed numbers.
 
 2. **Verifier**:
-   - Sends a `HEAD` request to the PubMed website (`https://pubmed.ncbi.nlm.nih.gov/<PMID>`).
+   - Sends a `HEAD` request to the PubMed website
+     (`https://pubmed.ncbi.nlm.nih.gov/<PMID>`).
    - If the response status is `200`, the PMID exists.
 
 3. **Normalizer**:
@@ -2130,20 +2379,31 @@ if (validatePMID(input)) {
 ### Copyright and Attribution Requirements
 
 1. **PubMed ID Standards**:
-   - The concept and format of PMIDs are publicly documented by the [National Library of Medicine (NLM)](https://www.nlm.nih.gov/bsd/licensee.html). There are no restrictions on using the format for validation or utility functions.
+   - The concept and format of PMIDs are publicly documented by the
+     [National Library of Medicine (NLM)](https://www.nlm.nih.gov/bsd/licensee.html).
+     There are no restrictions on using the format for validation or utility
+     functions.
 
 2. **Using the PubMed Website/API**:
-   - Accessing the PubMed website for verification purposes complies with their [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/). Use of automated tools (like API requests) may have additional restrictions, so refer to their terms if needed.
+   - Accessing the PubMed website for verification purposes complies with their
+     [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/).
+     Use of automated tools (like API requests) may have additional
+     restrictions, so refer to their terms if needed.
 
 3. **Attribution**:
-   - In your code or documentation, acknowledge that the implementation follows the PubMed ID standard.
-   - Include a link to PubMed ([https://pubmed.ncbi.nlm.nih.gov](https://pubmed.ncbi.nlm.nih.gov)) for reference.
+   - In your code or documentation, acknowledge that the implementation follows
+     the PubMed ID standard.
+   - Include a link to PubMed
+     ([https://pubmed.ncbi.nlm.nih.gov](https://pubmed.ncbi.nlm.nih.gov)) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if redistributing your code.
+   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if
+     redistributing your code.
    - Note that the implementation is based on publicly available information.
 
-This ensures your implementation adheres to PubMed ID standards and is legally compliant while providing robust functionality.
+This ensures your implementation adheres to PubMed ID standards and is legally
+compliant while providing robust functionality.
 
 ## 17. How do I write a validator, verifier and normalize functions for PubMed Central ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2151,13 +2411,15 @@ This ensures your implementation adheres to PubMed ID standards and is legally c
 
 #### Understanding PubMed Central ID (PMCID)
 
-The **PubMed Central ID (PMCID)** is a unique identifier used to reference articles archived in PubMed Central (PMC). The PMCID has the following format:
+The **PubMed Central ID (PMCID)** is a unique identifier used to reference
+articles archived in PubMed Central (PMC). The PMCID has the following format:
 
 ```
 PMC########
 ```
 
 Where:
+
 - It always begins with `PMC`.
 - The numeric part consists of 1 to 9 digits (e.g., `PMC123456`).
 
@@ -2189,9 +2451,12 @@ export async function verifyPMCID(pmcid: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(`https://www.ncbi.nlm.nih.gov/pmc/articles/${pmcid}/`, {
-      method: 'HEAD',
-    });
+    const response = await fetch(
+      `https://www.ncbi.nlm.nih.gov/pmc/articles/${pmcid}/`,
+      {
+        method: "HEAD",
+      },
+    );
     return response.ok;
   } catch {
     return false;
@@ -2217,24 +2482,24 @@ export function normalizePMCID(pmcid: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validatePMCID, verifyPMCID, normalizePMCID } from './pmcidUtils.ts';
+import { normalizePMCID, validatePMCID, verifyPMCID } from "./pmcidUtils.ts";
 
-const input = ' pmc123456 ';
+const input = " pmc123456 ";
 
 // Validate PMCID
 if (validatePMCID(input)) {
-  console.log('Valid PMCID format.');
+  console.log("Valid PMCID format.");
 
   // Verify PMCID existence
   verifyPMCID(input).then((exists) => {
     if (exists) {
-      console.log('PMCID exists:', normalizePMCID(input));
+      console.log("PMCID exists:", normalizePMCID(input));
     } else {
-      console.log('PMCID does not exist.');
+      console.log("PMCID does not exist.");
     }
   });
 } else {
-  console.log('Invalid PMCID format.');
+  console.log("Invalid PMCID format.");
 }
 ```
 
@@ -2243,36 +2508,49 @@ if (validatePMCID(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regular expression to ensure the PMCID starts with `PMC` and is followed by 1 to 9 digits.
-   - Rejects invalid formats such as those with incorrect prefixes or non-numeric characters.
+   - Uses a regular expression to ensure the PMCID starts with `PMC` and is
+     followed by 1 to 9 digits.
+   - Rejects invalid formats such as those with incorrect prefixes or
+     non-numeric characters.
 
 2. **Verifier**:
-   - Sends a `HEAD` request to the PubMed Central article page URL (`https://www.ncbi.nlm.nih.gov/pmc/articles/<PMCID>/`).
+   - Sends a `HEAD` request to the PubMed Central article page URL
+     (`https://www.ncbi.nlm.nih.gov/pmc/articles/<PMCID>/`).
    - If the response status is `200`, the PMCID exists.
 
 3. **Normalizer**:
    - Trims leading and trailing whitespace.
-   - Converts the PMCID to uppercase to ensure consistency (PubMed IDs are case-insensitive).
+   - Converts the PMCID to uppercase to ensure consistency (PubMed IDs are
+     case-insensitive).
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **PubMed Central ID Standards**:
-   - The format of PMCIDs is publicly documented and widely used. There are no copyright restrictions on implementing functions to handle this format.
+   - The format of PMCIDs is publicly documented and widely used. There are no
+     copyright restrictions on implementing functions to handle this format.
 
 2. **Using the PubMed Central Website/API**:
-   - Accessing PubMed Central for verification purposes is allowed under their [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/). Ensure compliance with any restrictions on automated requests if using the website for frequent lookups.
+   - Accessing PubMed Central for verification purposes is allowed under their
+     [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/).
+     Ensure compliance with any restrictions on automated requests if using the
+     website for frequent lookups.
 
 3. **Attribution**:
-   - In your code or documentation, mention that the implementation follows the PMCID format as documented by PubMed Central.
-   - Include a link to the [PubMed Central website](https://www.ncbi.nlm.nih.gov/pmc/) for user reference.
+   - In your code or documentation, mention that the implementation follows the
+     PMCID format as documented by PubMed Central.
+   - Include a link to the
+     [PubMed Central website](https://www.ncbi.nlm.nih.gov/pmc/) for user
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if redistributing your code.
+   - Use a permissive open-source license (e.g., MIT, Apache 2.0) if
+     redistributing your code.
    - Note that the implementation is based on publicly available standards.
 
-By following these guidelines, you ensure your code complies with legal and technical standards while providing robust functionality.
+By following these guidelines, you ensure your code complies with legal and
+technical standards while providing robust functionality.
 
 ## 18. How do I write a validator, verifier and normalize functions for GND Identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2280,13 +2558,16 @@ By following these guidelines, you ensure your code complies with legal and tech
 
 #### Understanding GND Identifiers
 
-The **GND Identifier (Gemeinsame Normdatei)** is a unique identifier used in the Integrated Authority File maintained by the German National Library. GND IDs are used to uniquely identify entities such as authors, organizations, and subjects.
+The **GND Identifier (Gemeinsame Normdatei)** is a unique identifier used in the
+Integrated Authority File maintained by the German National Library. GND IDs are
+used to uniquely identify entities such as authors, organizations, and subjects.
 
 #### GND Identifier Characteristics
 
 - Format: A 9-digit number followed by a check digit (10 digits total).
 - The check digit is computed using a **modulo-11 algorithm**.
-- The identifier can optionally include the `gnd:` prefix (e.g., `gnd:123456789X`).
+- The identifier can optionally include the `gnd:` prefix (e.g.,
+  `gnd:123456789X`).
 
 For details, refer to the [GND documentation](https://www.dnb.de/EN).
 
@@ -2304,12 +2585,12 @@ For details, refer to the [GND documentation](https://www.dnb.de/EN).
  */
 function computeCheckDigit(base: string): string {
   const weights = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const sum = base.split('')
+  const sum = base.split("")
     .map((digit, index) => parseInt(digit, 10) * weights[index])
     .reduce((a, b) => a + b, 0);
   const remainder = sum % 11;
 
-  if (remainder === 10) return 'X';
+  if (remainder === 10) return "X";
   return remainder.toString();
 }
 
@@ -2323,7 +2604,7 @@ export function validateGND(gnd: string): boolean {
   if (!regex.test(gnd)) return false;
 
   // Remove the optional prefix for validation
-  const id = gnd.replace(/^gnd:/, '');
+  const id = gnd.replace(/^gnd:/, "");
 
   // Validate the check digit
   const base = id.slice(0, 9); // First 9 digits
@@ -2341,10 +2622,10 @@ export async function verifyGND(gnd: string): Promise<boolean> {
     return false;
   }
 
-  const id = gnd.replace(/^gnd:/, ''); // Remove optional prefix
+  const id = gnd.replace(/^gnd:/, ""); // Remove optional prefix
   try {
     const response = await fetch(`https://d-nb.info/gnd/${id}`, {
-      method: 'HEAD',
+      method: "HEAD",
     });
     return response.ok;
   } catch {
@@ -2362,7 +2643,7 @@ export function normalizeGND(gnd: string): string | null {
     return null;
   }
 
-  const id = gnd.replace(/^gnd:/, '').trim(); // Remove prefix and whitespace
+  const id = gnd.replace(/^gnd:/, "").trim(); // Remove prefix and whitespace
   return `gnd:${id}`;
 }
 ```
@@ -2372,24 +2653,24 @@ export function normalizeGND(gnd: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateGND, verifyGND, normalizeGND } from './gndUtils.ts';
+import { normalizeGND, validateGND, verifyGND } from "./gndUtils.ts";
 
-const input = ' gnd:123456789X ';
+const input = " gnd:123456789X ";
 
 // Validate GND identifier
 if (validateGND(input)) {
-  console.log('Valid GND identifier.');
+  console.log("Valid GND identifier.");
 
   // Verify GND identifier existence
   verifyGND(input).then((exists) => {
     if (exists) {
-      console.log('GND identifier exists:', normalizeGND(input));
+      console.log("GND identifier exists:", normalizeGND(input));
     } else {
-      console.log('GND identifier does not exist.');
+      console.log("GND identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid GND identifier.');
+  console.log("Invalid GND identifier.");
 }
 ```
 
@@ -2402,31 +2683,41 @@ if (validateGND(input)) {
    - Validates the check digit using the **modulo-11 algorithm**.
 
 2. **Verifier**:
-   - Sends a `HEAD` request to the German National Library's GND service (`https://d-nb.info/gnd/<ID>`).
+   - Sends a `HEAD` request to the German National Library's GND service
+     (`https://d-nb.info/gnd/<ID>`).
    - A `200 OK` response indicates the ID exists.
 
 3. **Normalizer**:
-   - Ensures a consistent format by removing whitespace and enforcing the `gnd:` prefix.
+   - Ensures a consistent format by removing whitespace and enforcing the `gnd:`
+     prefix.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **GND Identifier Standards**:
-   - The GND format and check digit algorithm are publicly documented. There are no copyright restrictions for implementing functions based on these standards.
+   - The GND format and check digit algorithm are publicly documented. There are
+     no copyright restrictions for implementing functions based on these
+     standards.
 
 2. **Using the GND Service**:
-   - Accessing the GND service for verification is compliant with their terms. For heavy usage, consider contacting the German National Library to confirm any rate limits.
+   - Accessing the GND service for verification is compliant with their terms.
+     For heavy usage, consider contacting the German National Library to confirm
+     any rate limits.
 
 3. **Attribution**:
-   - Mention in your documentation that the implementation is based on the GND standards.
-   - Include a link to the [GND documentation](https://www.dnb.de/EN) for user reference.
+   - Mention in your documentation that the implementation is based on the GND
+     standards.
+   - Include a link to the [GND documentation](https://www.dnb.de/EN) for user
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the code.
+   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the
+     code.
    - Indicate that the implementation is based on publicly available standards.
 
-This approach ensures robust validation, verification, and normalization of GND identifiers while adhering to legal and technical requirements.
+This approach ensures robust validation, verification, and normalization of GND
+identifiers while adhering to legal and technical requirements.
 
 ## 19. How do I write a validator, verifier and normalize functions for SRA accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2434,7 +2725,10 @@ This approach ensures robust validation, verification, and normalization of GND 
 
 #### Understanding SRA Accession Identifiers
 
-The **SRA Accession Identifier** is used by the Sequence Read Archive (SRA) at the National Center for Biotechnology Information (NCBI) to identify datasets and related entities in genomics. These identifiers follow specific patterns, depending on the type of entity:
+The **SRA Accession Identifier** is used by the Sequence Read Archive (SRA) at
+the National Center for Biotechnology Information (NCBI) to identify datasets
+and related entities in genomics. These identifiers follow specific patterns,
+depending on the type of entity:
 
 1. **Prefixes**:
    - `SRR` - Sequence Read Records
@@ -2443,7 +2737,8 @@ The **SRA Accession Identifier** is used by the Sequence Read Archive (SRA) at t
    - `SRX` - Sequence Read Experiments
 
 2. **Format**:
-   - A prefix (`SRR`, `SRP`, `SRS`, `SRX`) followed by 6 to 9 digits, e.g., `SRR123456`, `SRP987654321`.
+   - A prefix (`SRR`, `SRP`, `SRS`, `SRX`) followed by 6 to 9 digits, e.g.,
+     `SRR123456`, `SRP987654321`.
 
 ---
 
@@ -2473,9 +2768,12 @@ export async function verifySRA(sraId: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(`https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=${sraId}`, {
-      method: 'HEAD',
-    });
+    const response = await fetch(
+      `https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=${sraId}`,
+      {
+        method: "HEAD",
+      },
+    );
     return response.ok;
   } catch {
     return false;
@@ -2501,24 +2799,24 @@ export function normalizeSRA(sraId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateSRA, verifySRA, normalizeSRA } from './sraUtils.ts';
+import { normalizeSRA, validateSRA, verifySRA } from "./sraUtils.ts";
 
-const input = ' srr123456 ';
+const input = " srr123456 ";
 
 // Validate SRA accession identifier
 if (validateSRA(input)) {
-  console.log('Valid SRA identifier.');
+  console.log("Valid SRA identifier.");
 
   // Verify SRA identifier existence
   verifySRA(input).then((exists) => {
     if (exists) {
-      console.log('SRA identifier exists:', normalizeSRA(input));
+      console.log("SRA identifier exists:", normalizeSRA(input));
     } else {
-      console.log('SRA identifier does not exist.');
+      console.log("SRA identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid SRA identifier.');
+  console.log("Invalid SRA identifier.");
 }
 ```
 
@@ -2528,34 +2826,47 @@ if (validateSRA(input)) {
 
 1. **Validator**:
    - Uses a regex to ensure the input matches the expected SRA format.
-   - Checks the prefix (`SRR`, `SRP`, `SRS`, or `SRX`) and the length of the numeric part (6–9 digits).
+   - Checks the prefix (`SRR`, `SRP`, `SRS`, or `SRX`) and the length of the
+     numeric part (6–9 digits).
 
 2. **Verifier**:
-   - Queries the NCBI SRA database using a `HEAD` request to check if the SRA ID exists.
+   - Queries the NCBI SRA database using a `HEAD` request to check if the SRA ID
+     exists.
    - A `200 OK` response indicates the ID is valid.
 
 3. **Normalizer**:
-   - Trims unnecessary whitespace and converts the identifier to uppercase for consistency.
+   - Trims unnecessary whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **SRA Identifier Standards**:
-   - The SRA identifier format is publicly documented by NCBI. There are no restrictions on implementing validation and utility functions for these identifiers.
+   - The SRA identifier format is publicly documented by NCBI. There are no
+     restrictions on implementing validation and utility functions for these
+     identifiers.
 
 2. **Using the NCBI Website**:
-   - Accessing the NCBI website for verification is allowed under their [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/). For frequent or automated lookups, consider checking their API or terms for additional guidelines.
+   - Accessing the NCBI website for verification is allowed under their
+     [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/).
+     For frequent or automated lookups, consider checking their API or terms for
+     additional guidelines.
 
 3. **Attribution**:
-   - Acknowledge that the implementation follows the SRA identifier format provided by NCBI.
-   - Include a link to the [NCBI SRA page](https://www.ncbi.nlm.nih.gov/sra) for reference.
+   - Acknowledge that the implementation follows the SRA identifier format
+     provided by NCBI.
+   - Include a link to the [NCBI SRA page](https://www.ncbi.nlm.nih.gov/sra) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) for your code if it will be redistributed.
-   - Mention that the code is based on publicly available information about SRA accession identifiers.
+   - Use a permissive license (e.g., MIT, Apache 2.0) for your code if it will
+     be redistributed.
+   - Mention that the code is based on publicly available information about SRA
+     accession identifiers.
 
-This approach ensures compliance with NCBI guidelines while providing robust functionality for working with SRA accession identifiers.
+This approach ensures compliance with NCBI guidelines while providing robust
+functionality for working with SRA accession identifiers.
 
 ## 20. How do I write a validator, verifier and normalize functions for BioProject accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2563,7 +2874,9 @@ This approach ensures compliance with NCBI guidelines while providing robust fun
 
 #### Understanding BioProject Accession Identifiers
 
-The **BioProject Accession Identifier** is used by NCBI's BioProject database to identify research projects related to genomics and other biological data. These identifiers follow a specific format:
+The **BioProject Accession Identifier** is used by NCBI's BioProject database to
+identify research projects related to genomics and other biological data. These
+identifiers follow a specific format:
 
 1. **Prefixes**:
    - `PRJNA` (projects submitted from North America)
@@ -2571,7 +2884,8 @@ The **BioProject Accession Identifier** is used by NCBI's BioProject database to
    - `PRJDB` (projects submitted to the DNA Data Bank of Japan)
 
 2. **Format**:
-   - A prefix (`PRJNA`, `PRJEB`, or `PRJDB`) followed by 1 to 6 digits, e.g., `PRJNA123456`.
+   - A prefix (`PRJNA`, `PRJEB`, or `PRJDB`) followed by 1 to 6 digits, e.g.,
+     `PRJNA123456`.
 
 ---
 
@@ -2601,9 +2915,12 @@ export async function verifyBioProject(bioprojectId: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(`https://www.ncbi.nlm.nih.gov/bioproject/${bioprojectId}`, {
-      method: 'HEAD',
-    });
+    const response = await fetch(
+      `https://www.ncbi.nlm.nih.gov/bioproject/${bioprojectId}`,
+      {
+        method: "HEAD",
+      },
+    );
     return response.ok;
   } catch {
     return false;
@@ -2629,24 +2946,28 @@ export function normalizeBioProject(bioprojectId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateBioProject, verifyBioProject, normalizeBioProject } from './bioprojectUtils.ts';
+import {
+  normalizeBioProject,
+  validateBioProject,
+  verifyBioProject,
+} from "./bioprojectUtils.ts";
 
-const input = ' prjna123456 ';
+const input = " prjna123456 ";
 
 // Validate BioProject accession identifier
 if (validateBioProject(input)) {
-  console.log('Valid BioProject identifier.');
+  console.log("Valid BioProject identifier.");
 
   // Verify BioProject identifier existence
   verifyBioProject(input).then((exists) => {
     if (exists) {
-      console.log('BioProject identifier exists:', normalizeBioProject(input));
+      console.log("BioProject identifier exists:", normalizeBioProject(input));
     } else {
-      console.log('BioProject identifier does not exist.');
+      console.log("BioProject identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid BioProject identifier.');
+  console.log("Invalid BioProject identifier.");
 }
 ```
 
@@ -2656,34 +2977,48 @@ if (validateBioProject(input)) {
 
 1. **Validator**:
    - Uses a regex to ensure the input matches the expected BioProject format.
-   - Checks the prefix (`PRJNA`, `PRJEB`, or `PRJDB`) and the length of the numeric part (1–6 digits).
+   - Checks the prefix (`PRJNA`, `PRJEB`, or `PRJDB`) and the length of the
+     numeric part (1–6 digits).
 
 2. **Verifier**:
-   - Sends a `HEAD` request to the NCBI BioProject page (`https://www.ncbi.nlm.nih.gov/bioproject/<ID>`).
+   - Sends a `HEAD` request to the NCBI BioProject page
+     (`https://www.ncbi.nlm.nih.gov/bioproject/<ID>`).
    - A `200 OK` response indicates the ID exists.
 
 3. **Normalizer**:
-   - Trims unnecessary whitespace and converts the identifier to uppercase for consistency.
+   - Trims unnecessary whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **BioProject Identifier Standards**:
-   - The format of BioProject identifiers is publicly documented by NCBI. There are no restrictions on implementing functions to validate, verify, and normalize these identifiers.
+   - The format of BioProject identifiers is publicly documented by NCBI. There
+     are no restrictions on implementing functions to validate, verify, and
+     normalize these identifiers.
 
 2. **Using the NCBI Website**:
-   - Accessing NCBI for verification purposes is allowed under their [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/). For frequent or automated queries, ensure compliance with their rate limits.
+   - Accessing NCBI for verification purposes is allowed under their
+     [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/).
+     For frequent or automated queries, ensure compliance with their rate
+     limits.
 
 3. **Attribution**:
-   - Mention that the implementation is based on the BioProject accession identifier standards provided by NCBI.
-   - Include a link to the [NCBI BioProject website](https://www.ncbi.nlm.nih.gov/bioproject/) for reference.
+   - Mention that the implementation is based on the BioProject accession
+     identifier standards provided by NCBI.
+   - Include a link to the
+     [NCBI BioProject website](https://www.ncbi.nlm.nih.gov/bioproject/) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) for your code if you distribute it.
-   - Note in the documentation that the code is based on publicly available BioProject identifier information.
+   - Use a permissive license (e.g., MIT, Apache 2.0) for your code if you
+     distribute it.
+   - Note in the documentation that the code is based on publicly available
+     BioProject identifier information.
 
-This implementation ensures reliable handling of BioProject accession identifiers while adhering to best practices and NCBI guidelines.
+This implementation ensures reliable handling of BioProject accession
+identifiers while adhering to best practices and NCBI guidelines.
 
 ## 21. How do I write a validator, verifier and normalize functions for BioSample accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2691,7 +3026,8 @@ This implementation ensures reliable handling of BioProject accession identifier
 
 #### Understanding BioSample Accession Identifiers
 
-The **BioSample Accession Identifier** is used by NCBI to identify metadata about biological samples. These identifiers have a specific format:
+The **BioSample Accession Identifier** is used by NCBI to identify metadata
+about biological samples. These identifiers have a specific format:
 
 1. **Prefixes**:
    - `SAMN` (North America)
@@ -2699,7 +3035,8 @@ The **BioSample Accession Identifier** is used by NCBI to identify metadata abou
    - `SAMD` (DNA Data Bank of Japan)
 
 2. **Format**:
-   - A prefix (`SAMN`, `SAME`, or `SAMD`) followed by 6 to 9 digits, e.g., `SAMN12345678`.
+   - A prefix (`SAMN`, `SAME`, or `SAMD`) followed by 6 to 9 digits, e.g.,
+     `SAMN12345678`.
 
 ---
 
@@ -2729,9 +3066,12 @@ export async function verifyBioSample(biosampleId: string): Promise<boolean> {
   }
 
   try {
-    const response = await fetch(`https://www.ncbi.nlm.nih.gov/biosample/${biosampleId}`, {
-      method: 'HEAD',
-    });
+    const response = await fetch(
+      `https://www.ncbi.nlm.nih.gov/biosample/${biosampleId}`,
+      {
+        method: "HEAD",
+      },
+    );
     return response.ok;
   } catch {
     return false;
@@ -2757,24 +3097,28 @@ export function normalizeBioSample(biosampleId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateBioSample, verifyBioSample, normalizeBioSample } from './biosampleUtils.ts';
+import {
+  normalizeBioSample,
+  validateBioSample,
+  verifyBioSample,
+} from "./biosampleUtils.ts";
 
-const input = ' samn12345678 ';
+const input = " samn12345678 ";
 
 // Validate BioSample accession identifier
 if (validateBioSample(input)) {
-  console.log('Valid BioSample identifier.');
+  console.log("Valid BioSample identifier.");
 
   // Verify BioSample identifier existence
   verifyBioSample(input).then((exists) => {
     if (exists) {
-      console.log('BioSample identifier exists:', normalizeBioSample(input));
+      console.log("BioSample identifier exists:", normalizeBioSample(input));
     } else {
-      console.log('BioSample identifier does not exist.');
+      console.log("BioSample identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid BioSample identifier.');
+  console.log("Invalid BioSample identifier.");
 }
 ```
 
@@ -2784,34 +3128,46 @@ if (validateBioSample(input)) {
 
 1. **Validator**:
    - Uses a regex to ensure the input matches the expected BioSample format.
-   - Checks for a valid prefix (`SAMN`, `SAME`, or `SAMD`) and a numeric part of 6–9 digits.
+   - Checks for a valid prefix (`SAMN`, `SAME`, or `SAMD`) and a numeric part of
+     6–9 digits.
 
 2. **Verifier**:
-   - Sends a `HEAD` request to the NCBI BioSample database URL (`https://www.ncbi.nlm.nih.gov/biosample/<ID>`).
+   - Sends a `HEAD` request to the NCBI BioSample database URL
+     (`https://www.ncbi.nlm.nih.gov/biosample/<ID>`).
    - A `200 OK` response indicates the identifier exists.
 
 3. **Normalizer**:
-   - Trims unnecessary whitespace and converts the identifier to uppercase for consistency.
+   - Trims unnecessary whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **BioSample Identifier Standards**:
-   - The BioSample identifier format is publicly documented by NCBI, and there are no restrictions on implementing these functions.
+   - The BioSample identifier format is publicly documented by NCBI, and there
+     are no restrictions on implementing these functions.
 
 2. **Using the NCBI Website**:
-   - Querying NCBI for verification is compliant with their [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/). For frequent or automated queries, ensure you adhere to any rate limits.
+   - Querying NCBI for verification is compliant with their
+     [Terms and Conditions](https://www.ncbi.nlm.nih.gov/home/about/policies/).
+     For frequent or automated queries, ensure you adhere to any rate limits.
 
 3. **Attribution**:
-   - Mention in your documentation that the implementation is based on BioSample identifier standards provided by NCBI.
-   - Include a link to the [NCBI BioSample webpage](https://www.ncbi.nlm.nih.gov/biosample) for reference.
+   - Mention in your documentation that the implementation is based on BioSample
+     identifier standards provided by NCBI.
+   - Include a link to the
+     [NCBI BioSample webpage](https://www.ncbi.nlm.nih.gov/biosample) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the code.
-   - Indicate that the code is based on publicly available information about BioSample accession identifiers.
+   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the
+     code.
+   - Indicate that the code is based on publicly available information about
+     BioSample accession identifiers.
 
-By following this approach, you can handle BioSample identifiers effectively while adhering to best practices and respecting NCBI's guidelines.
+By following this approach, you can handle BioSample identifiers effectively
+while adhering to best practices and respecting NCBI's guidelines.
 
 ## 22. How do I write a validator, verifier and normalize functions for Ensembl accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2819,7 +3175,9 @@ By following this approach, you can handle BioSample identifiers effectively whi
 
 #### Understanding Ensembl Accession Identifiers
 
-Ensembl identifiers are used to reference various biological entities such as genes, transcripts, proteins, and regulatory features in the Ensembl database. These identifiers have specific formats depending on the type of entity:
+Ensembl identifiers are used to reference various biological entities such as
+genes, transcripts, proteins, and regulatory features in the Ensembl database.
+These identifiers have specific formats depending on the type of entity:
 
 1. **Common Prefixes**:
    - Gene IDs: `ENSG` (e.g., `ENSG00000139618`)
@@ -2831,7 +3189,8 @@ Ensembl identifiers are used to reference various biological entities such as ge
    - Prefix followed by 11 numeric characters, e.g., `ENSG00000139618`.
 
 3. **Version Numbers** (optional):
-   - Identifiers can include a version suffix separated by a dot, e.g., `ENSG00000139618.2`.
+   - Identifiers can include a version suffix separated by a dot, e.g.,
+     `ENSG00000139618.2`.
 
 ---
 
@@ -2864,8 +3223,8 @@ export async function verifyEnsembl(ensemblId: string): Promise<boolean> {
     const response = await fetch(
       `https://rest.ensembl.org/lookup/id/${ensemblId}?content-type=application/json`,
       {
-        method: 'GET',
-      }
+        method: "GET",
+      },
     );
     return response.ok;
   } catch {
@@ -2892,24 +3251,28 @@ export function normalizeEnsembl(ensemblId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateEnsembl, verifyEnsembl, normalizeEnsembl } from './ensemblUtils.ts';
+import {
+  normalizeEnsembl,
+  validateEnsembl,
+  verifyEnsembl,
+} from "./ensemblUtils.ts";
 
-const input = '  ensG00000139618.2 ';
+const input = "  ensG00000139618.2 ";
 
 // Validate Ensembl accession identifier
 if (validateEnsembl(input)) {
-  console.log('Valid Ensembl identifier.');
+  console.log("Valid Ensembl identifier.");
 
   // Verify Ensembl identifier existence
   verifyEnsembl(input).then((exists) => {
     if (exists) {
-      console.log('Ensembl identifier exists:', normalizeEnsembl(input));
+      console.log("Ensembl identifier exists:", normalizeEnsembl(input));
     } else {
-      console.log('Ensembl identifier does not exist.');
+      console.log("Ensembl identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid Ensembl identifier.');
+  console.log("Invalid Ensembl identifier.");
 }
 ```
 
@@ -2918,35 +3281,50 @@ if (validateEnsembl(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regex to check the prefix (`ENSG`, `ENST`, `ENSP`, or `ENSR`), followed by 11 numeric digits.
+   - Uses a regex to check the prefix (`ENSG`, `ENST`, `ENSP`, or `ENSR`),
+     followed by 11 numeric digits.
    - Optionally validates a version suffix (e.g., `.2`).
 
 2. **Verifier**:
-   - Sends a GET request to the [Ensembl REST API](https://rest.ensembl.org/) to check if the identifier exists.
-   - The endpoint `https://rest.ensembl.org/lookup/id/<ID>` returns details if the ID is valid.
+   - Sends a GET request to the [Ensembl REST API](https://rest.ensembl.org/) to
+     check if the identifier exists.
+   - The endpoint `https://rest.ensembl.org/lookup/id/<ID>` returns details if
+     the ID is valid.
 
 3. **Normalizer**:
-   - Trims extra whitespace and converts the identifier to uppercase for consistency.
+   - Trims extra whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **Ensembl Identifier Standards**:
-   - Ensembl provides documentation on identifier formats. These formats are publicly available, and there are no restrictions on implementing validation or utility functions.
+   - Ensembl provides documentation on identifier formats. These formats are
+     publicly available, and there are no restrictions on implementing
+     validation or utility functions.
 
 2. **Using the Ensembl REST API**:
-   - The Ensembl REST API is publicly accessible and can be used for non-commercial and fair-use purposes. For automated or frequent requests, ensure compliance with their rate limits and API guidelines detailed in the [Ensembl documentation](https://rest.ensembl.org/documentation/info).
+   - The Ensembl REST API is publicly accessible and can be used for
+     non-commercial and fair-use purposes. For automated or frequent requests,
+     ensure compliance with their rate limits and API guidelines detailed in the
+     [Ensembl documentation](https://rest.ensembl.org/documentation/info).
 
 3. **Attribution**:
-   - Include a mention in your documentation that the validation and verification are based on Ensembl identifier formats and use the Ensembl REST API.
-   - Provide a link to the [Ensembl project](https://ensembl.org/) for reference.
+   - Include a mention in your documentation that the validation and
+     verification are based on Ensembl identifier formats and use the Ensembl
+     REST API.
+   - Provide a link to the [Ensembl project](https://ensembl.org/) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the code.
-   - State in the documentation that the code was developed based on publicly available Ensembl identifier specifications.
+   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the
+     code.
+   - State in the documentation that the code was developed based on publicly
+     available Ensembl identifier specifications.
 
-This implementation ensures robust handling of Ensembl accession identifiers while respecting attribution requirements and usage policies.
+This implementation ensures robust handling of Ensembl accession identifiers
+while respecting attribution requirements and usage policies.
 
 ## 23. How do I write a validator, verifier and normalize functions for UniProt accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -2954,7 +3332,9 @@ This implementation ensures robust handling of Ensembl accession identifiers whi
 
 #### Understanding UniProt Accession Identifiers
 
-**UniProt Accession Identifiers** are used to reference entries in the UniProt database, a resource for protein sequence and functional information. These identifiers have specific formats:
+**UniProt Accession Identifiers** are used to reference entries in the UniProt
+database, a resource for protein sequence and functional information. These
+identifiers have specific formats:
 
 1. **Primary Format**:
    - Consists of 6 or 10 alphanumeric characters.
@@ -2997,8 +3377,8 @@ export async function verifyUniProt(uniprotId: string): Promise<boolean> {
     const response = await fetch(
       `https://rest.uniprot.org/uniprotkb/${uniprotId}?format=json`,
       {
-        method: 'GET',
-      }
+        method: "GET",
+      },
     );
     return response.ok;
   } catch {
@@ -3025,24 +3405,28 @@ export function normalizeUniProt(uniprotId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateUniProt, verifyUniProt, normalizeUniProt } from './uniprotUtils.ts';
+import {
+  normalizeUniProt,
+  validateUniProt,
+  verifyUniProt,
+} from "./uniprotUtils.ts";
 
-const input = ' p12345 ';
+const input = " p12345 ";
 
 // Validate UniProt accession identifier
 if (validateUniProt(input)) {
-  console.log('Valid UniProt identifier.');
+  console.log("Valid UniProt identifier.");
 
   // Verify UniProt identifier existence
   verifyUniProt(input).then((exists) => {
     if (exists) {
-      console.log('UniProt identifier exists:', normalizeUniProt(input));
+      console.log("UniProt identifier exists:", normalizeUniProt(input));
     } else {
-      console.log('UniProt identifier does not exist.');
+      console.log("UniProt identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid UniProt identifier.');
+  console.log("Invalid UniProt identifier.");
 }
 ```
 
@@ -3051,7 +3435,8 @@ if (validateUniProt(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regex to match 6 or 10 alphanumeric characters with the correct structure:
+   - Uses a regex to match 6 or 10 alphanumeric characters with the correct
+     structure:
      - 6-character IDs: `[A-NP-Z][0-9][A-Z0-9]{3}[0-9]`.
      - 10-character IDs: `[A-NP-Z][A-Z0-9]{9}`.
 
@@ -3060,27 +3445,37 @@ if (validateUniProt(input)) {
    - A successful `GET` request indicates the ID exists.
 
 3. **Normalizer**:
-   - Trims excess whitespace and converts the identifier to uppercase for consistency.
+   - Trims excess whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **UniProt Identifier Standards**:
-   - The format of UniProt accession identifiers is publicly documented and can be freely implemented.
+   - The format of UniProt accession identifiers is publicly documented and can
+     be freely implemented.
 
 2. **Using the UniProt API**:
-   - The UniProt API is openly accessible for non-commercial and research purposes. Ensure compliance with their [Terms of Use](https://www.uniprot.org/help/legal).
+   - The UniProt API is openly accessible for non-commercial and research
+     purposes. Ensure compliance with their
+     [Terms of Use](https://www.uniprot.org/help/legal).
 
 3. **Attribution**:
-   - Mention in your documentation that the validation and verification functions are based on the UniProt accession identifier format and make use of the UniProt REST API.
-   - Provide a link to the [UniProt](https://www.uniprot.org/) website for reference.
+   - Mention in your documentation that the validation and verification
+     functions are based on the UniProt accession identifier format and make use
+     of the UniProt REST API.
+   - Provide a link to the [UniProt](https://www.uniprot.org/) website for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) if you plan to share or distribute the code.
-   - Document that the implementation is based on publicly available specifications for UniProt identifiers.
+   - Use a permissive license (e.g., MIT, Apache 2.0) if you plan to share or
+     distribute the code.
+   - Document that the implementation is based on publicly available
+     specifications for UniProt identifiers.
 
-This implementation is robust, adheres to best practices, and respects attribution and copyright requirements for UniProt data.
+This implementation is robust, adheres to best practices, and respects
+attribution and copyright requirements for UniProt data.
 
 ## 24. How do I write a validator, verifier and normalize functions for RefSeq accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -3088,7 +3483,9 @@ This implementation is robust, adheres to best practices, and respects attributi
 
 #### Understanding RefSeq Accession Identifiers
 
-RefSeq Accession Identifiers are used by NCBI to refer to sequences in the **RefSeq database**. These identifiers have specific formats based on the type of sequence:
+RefSeq Accession Identifiers are used by NCBI to refer to sequences in the
+**RefSeq database**. These identifiers have specific formats based on the type
+of sequence:
 
 1. **Prefixes**:
    - `NM_`, `NR_`, `XM_`, `XR_`: mRNA and non-coding RNA.
@@ -3097,7 +3494,8 @@ RefSeq Accession Identifiers are used by NCBI to refer to sequences in the **Ref
    - `NZ_`, `WP_`: Complete genomes and proteins in certain categories.
 
 2. **Format**:
-   - Prefix followed by 6, 8, or more digits (e.g., `NM_000207`, `XP_015642853`).
+   - Prefix followed by 6, 8, or more digits (e.g., `NM_000207`,
+     `XP_015642853`).
    - May include a version number suffix (e.g., `NM_000207.2`).
 
 ---
@@ -3113,7 +3511,8 @@ RefSeq Accession Identifiers are used by NCBI to refer to sequences in the **Ref
  * @returns boolean - `true` if the string is a valid RefSeq ID, otherwise `false`.
  */
 export function validateRefSeq(refSeqId: string): boolean {
-  const regex = /^(?:NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|XP|WP)_[0-9]{6,}(\.\d+)?$/;
+  const regex =
+    /^(?:NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|XP|WP)_[0-9]{6,}(\.\d+)?$/;
   return regex.test(refSeqId);
 }
 
@@ -3131,8 +3530,8 @@ export async function verifyRefSeq(refSeqId: string): Promise<boolean> {
     const response = await fetch(
       `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=nucleotide&term=${refSeqId}[accn]&retmode=json`,
       {
-        method: 'GET',
-      }
+        method: "GET",
+      },
     );
     if (response.ok) {
       const data = await response.json();
@@ -3163,24 +3562,28 @@ export function normalizeRefSeq(refSeqId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateRefSeq, verifyRefSeq, normalizeRefSeq } from './refseqUtils.ts';
+import {
+  normalizeRefSeq,
+  validateRefSeq,
+  verifyRefSeq,
+} from "./refseqUtils.ts";
 
-const input = '  nm_000207.2 ';
+const input = "  nm_000207.2 ";
 
 // Validate RefSeq accession identifier
 if (validateRefSeq(input)) {
-  console.log('Valid RefSeq identifier.');
+  console.log("Valid RefSeq identifier.");
 
   // Verify RefSeq identifier existence
   verifyRefSeq(input).then((exists) => {
     if (exists) {
-      console.log('RefSeq identifier exists:', normalizeRefSeq(input));
+      console.log("RefSeq identifier exists:", normalizeRefSeq(input));
     } else {
-      console.log('RefSeq identifier does not exist.');
+      console.log("RefSeq identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid RefSeq identifier.');
+  console.log("Invalid RefSeq identifier.");
 }
 ```
 
@@ -3193,7 +3596,9 @@ if (validateRefSeq(input)) {
    - Supports optional version numbers, e.g., `.2`.
 
 2. **Verifier**:
-   - Queries the [NCBI E-Utilities API](https://www.ncbi.nlm.nih.gov/books/NBK25499/) to check if the identifier exists.
+   - Queries the
+     [NCBI E-Utilities API](https://www.ncbi.nlm.nih.gov/books/NBK25499/) to
+     check if the identifier exists.
    - Looks for results in the `idlist` field of the API response.
 
 3. **Normalizer**:
@@ -3204,23 +3609,32 @@ if (validateRefSeq(input)) {
 ### Copyright and Attribution Requirements
 
 1. **RefSeq Identifier Standards**:
-   - RefSeq identifier formats are publicly documented, and there are no restrictions on implementing these functions.
+   - RefSeq identifier formats are publicly documented, and there are no
+     restrictions on implementing these functions.
 
 2. **Using the NCBI E-Utilities API**:
-   - The API is free for research and educational use. Automated queries should adhere to NCBI's usage guidelines:
+   - The API is free for research and educational use. Automated queries should
+     adhere to NCBI's usage guidelines:
      - Provide a user agent string (optional for low traffic).
-     - Avoid sending too many requests in a short time to prevent rate-limiting or blocking.
-     - Follow [NCBI's E-Utilities usage policies](https://www.ncbi.nlm.nih.gov/books/NBK25497/).
+     - Avoid sending too many requests in a short time to prevent rate-limiting
+       or blocking.
+     - Follow
+       [NCBI's E-Utilities usage policies](https://www.ncbi.nlm.nih.gov/books/NBK25497/).
 
 3. **Attribution**:
-   - Mention that the implementation is based on RefSeq identifier formats and uses NCBI’s E-Utilities API.
-   - Include a reference to [NCBI RefSeq](https://www.ncbi.nlm.nih.gov/refseq/) in your documentation.
+   - Mention that the implementation is based on RefSeq identifier formats and
+     uses NCBI’s E-Utilities API.
+   - Include a reference to [NCBI RefSeq](https://www.ncbi.nlm.nih.gov/refseq/)
+     in your documentation.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) for redistributing the code.
-   - State that the implementation relies on publicly available RefSeq specifications and NCBI services.
+   - Use a permissive license (e.g., MIT, Apache 2.0) for redistributing the
+     code.
+   - State that the implementation relies on publicly available RefSeq
+     specifications and NCBI services.
 
-By adhering to these guidelines, you can effectively handle RefSeq identifiers while respecting copyright and attribution requirements.
+By adhering to these guidelines, you can effectively handle RefSeq identifiers
+while respecting copyright and attribution requirements.
 
 ## 25. How do I write a validator, verifier and normalize functions for GenBank or RefSeq genome assembly accession identifier in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
@@ -3228,14 +3642,17 @@ By adhering to these guidelines, you can effectively handle RefSeq identifiers w
 
 #### Understanding Genome Assembly Accession Identifiers
 
-GenBank and RefSeq genome assembly accession identifiers are used to reference genomic sequences in the **NCBI GenBank** and **RefSeq** databases. These identifiers follow specific formats:
+GenBank and RefSeq genome assembly accession identifiers are used to reference
+genomic sequences in the **NCBI GenBank** and **RefSeq** databases. These
+identifiers follow specific formats:
 
 1. **Prefixes**:
    - `GCA_`: GenBank Assembly.
    - `GCF_`: RefSeq Assembly.
 
 2. **Format**:
-   - Prefix followed by 9 numeric digits (e.g., `GCA_000001405`) and may include a version suffix (e.g., `.1`).
+   - Prefix followed by 9 numeric digits (e.g., `GCA_000001405`) and may include
+     a version suffix (e.g., `.1`).
 
 ---
 
@@ -3259,7 +3676,9 @@ export function validateGenomeAssembly(assemblyId: string): boolean {
  * @param assemblyId - The genome assembly ID to verify.
  * @returns Promise<boolean> - `true` if the genome assembly ID exists, otherwise `false`.
  */
-export async function verifyGenomeAssembly(assemblyId: string): Promise<boolean> {
+export async function verifyGenomeAssembly(
+  assemblyId: string,
+): Promise<boolean> {
   if (!validateGenomeAssembly(assemblyId)) {
     return false;
   }
@@ -3268,8 +3687,8 @@ export async function verifyGenomeAssembly(assemblyId: string): Promise<boolean>
     const response = await fetch(
       `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=assembly&term=${assemblyId}[assembly_accession]&retmode=json`,
       {
-        method: 'GET',
-      }
+        method: "GET",
+      },
     );
     if (response.ok) {
       const data = await response.json();
@@ -3300,24 +3719,31 @@ export function normalizeGenomeAssembly(assemblyId: string): string | null {
 ### Usage Example
 
 ```typescript
-import { validateGenomeAssembly, verifyGenomeAssembly, normalizeGenomeAssembly } from './genomeAssemblyUtils.ts';
+import {
+  normalizeGenomeAssembly,
+  validateGenomeAssembly,
+  verifyGenomeAssembly,
+} from "./genomeAssemblyUtils.ts";
 
-const input = '  gca_000001405.28 ';
+const input = "  gca_000001405.28 ";
 
 // Validate genome assembly accession identifier
 if (validateGenomeAssembly(input)) {
-  console.log('Valid genome assembly identifier.');
+  console.log("Valid genome assembly identifier.");
 
   // Verify genome assembly identifier existence
   verifyGenomeAssembly(input).then((exists) => {
     if (exists) {
-      console.log('Genome assembly identifier exists:', normalizeGenomeAssembly(input));
+      console.log(
+        "Genome assembly identifier exists:",
+        normalizeGenomeAssembly(input),
+      );
     } else {
-      console.log('Genome assembly identifier does not exist.');
+      console.log("Genome assembly identifier does not exist.");
     }
   });
 } else {
-  console.log('Invalid genome assembly identifier.');
+  console.log("Invalid genome assembly identifier.");
 }
 ```
 
@@ -3326,53 +3752,71 @@ if (validateGenomeAssembly(input)) {
 ### Explanation
 
 1. **Validator**:
-   - Uses a regex to validate the format of the genome assembly accession identifier:
+   - Uses a regex to validate the format of the genome assembly accession
+     identifier:
      - Must start with `GCA_` or `GCF_`.
      - Followed by exactly 9 numeric digits.
      - Optionally includes a version suffix (e.g., `.28`).
 
 2. **Verifier**:
-   - Queries the [NCBI E-Utilities API](https://www.ncbi.nlm.nih.gov/books/NBK25499/) using the `assembly` database.
+   - Queries the
+     [NCBI E-Utilities API](https://www.ncbi.nlm.nih.gov/books/NBK25499/) using
+     the `assembly` database.
    - Looks for results in the `idlist` field of the API response.
 
 3. **Normalizer**:
-   - Trims extra whitespace and converts the identifier to uppercase for consistency.
+   - Trims extra whitespace and converts the identifier to uppercase for
+     consistency.
 
 ---
 
 ### Copyright and Attribution Requirements
 
 1. **Genome Assembly Identifier Standards**:
-   - The format of genome assembly accession identifiers is publicly documented and freely available for implementation.
+   - The format of genome assembly accession identifiers is publicly documented
+     and freely available for implementation.
 
 2. **Using the NCBI E-Utilities API**:
    - NCBI’s E-Utilities API is free for research and educational use.
-   - Follow NCBI’s [usage policies](https://www.ncbi.nlm.nih.gov/books/NBK25497/):
+   - Follow NCBI’s
+     [usage policies](https://www.ncbi.nlm.nih.gov/books/NBK25497/):
      - Do not exceed the API rate limits.
-     - Provide a user agent string for automated queries if making frequent requests.
+     - Provide a user agent string for automated queries if making frequent
+       requests.
 
 3. **Attribution**:
-   - Mention in your documentation that the validation and verification functions are based on the genome assembly accession identifier format and use the NCBI E-Utilities API.
-   - Provide a link to [NCBI Assembly Database](https://www.ncbi.nlm.nih.gov/assembly/) for reference.
+   - Mention in your documentation that the validation and verification
+     functions are based on the genome assembly accession identifier format and
+     use the NCBI E-Utilities API.
+   - Provide a link to
+     [NCBI Assembly Database](https://www.ncbi.nlm.nih.gov/assembly/) for
+     reference.
 
 4. **Open Source Licensing**:
-   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the code.
-   - Include a note in your documentation that the implementation relies on publicly available standards for GenBank and RefSeq genome assemblies.
+   - Use a permissive license (e.g., MIT, Apache 2.0) if redistributing the
+     code.
+   - Include a note in your documentation that the implementation relies on
+     publicly available standards for GenBank and RefSeq genome assemblies.
 
-This implementation ensures adherence to NCBI guidelines and robustly handles genome assembly identifiers while respecting copyright and attribution requirements.
+This implementation ensures adherence to NCBI guidelines and robustly handles
+genome assembly identifiers while respecting copyright and attribution
+requirements.
 
 ## 26. How do I write a validator, verifier and normalize functions for detect identifier schemes in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Functions to Detect Identifier Schemes in Deno and TypeScript
 
-To detect various identifier schemes (e.g., DOI, ORCID, ISBN, RefSeq, etc.), we can create functions to identify the type of a given string based on predefined patterns for each scheme. This involves:
+To detect various identifier schemes (e.g., DOI, ORCID, ISBN, RefSeq, etc.), we
+can create functions to identify the type of a given string based on predefined
+patterns for each scheme. This involves:
 
 1. **Validator**:
    - Checks the input against multiple identifier-specific regex patterns.
    - Determines which identifier scheme, if any, the input matches.
 
 2. **Verifier**:
-   - Optionally queries relevant APIs for each scheme to verify the existence of the identifier.
+   - Optionally queries relevant APIs for each scheme to verify the existence of
+     the identifier.
 
 3. **Normalizer**:
    - Cleans and standardizes the identifier format for easier processing.
@@ -3384,7 +3828,13 @@ To detect various identifier schemes (e.g., DOI, ORCID, ISBN, RefSeq, etc.), we 
 #### Code
 
 ```typescript
-type IdentifierScheme = 'DOI' | 'ORCID' | 'ISBN' | 'RefSeq' | 'UniProt' | 'Unknown';
+type IdentifierScheme =
+  | "DOI"
+  | "ORCID"
+  | "ISBN"
+  | "RefSeq"
+  | "UniProt"
+  | "Unknown";
 
 /**
  * Detects the identifier scheme of a given input.
@@ -3407,7 +3857,7 @@ export function detectIdentifierScheme(identifier: string): IdentifierScheme {
     }
   }
 
-  return 'Unknown';
+  return "Unknown";
 }
 
 /**
@@ -3418,17 +3868,17 @@ export function detectIdentifierScheme(identifier: string): IdentifierScheme {
  */
 export async function verifyIdentifier(
   identifier: string,
-  scheme: IdentifierScheme
+  scheme: IdentifierScheme,
 ): Promise<boolean> {
   const normalized = normalizeIdentifier(identifier, scheme);
   if (!normalized) return false;
 
   switch (scheme) {
-    case 'DOI':
+    case "DOI":
       return verifyDOI(normalized);
-    case 'ORCID':
+    case "ORCID":
       return verifyORCID(normalized);
-    case 'RefSeq':
+    case "RefSeq":
       return verifyRefSeq(normalized);
     default:
       return true; // No verification available for other schemes
@@ -3443,17 +3893,17 @@ export async function verifyIdentifier(
  */
 export function normalizeIdentifier(
   identifier: string,
-  scheme: IdentifierScheme
+  scheme: IdentifierScheme,
 ): string | null {
   switch (scheme) {
-    case 'DOI':
+    case "DOI":
       return identifier.trim().toLowerCase();
-    case 'ORCID':
+    case "ORCID":
       return identifier.trim();
-    case 'ISBN':
-      return identifier.replace(/[^0-9X]/gi, '').trim();
-    case 'RefSeq':
-    case 'UniProt':
+    case "ISBN":
+      return identifier.replace(/[^0-9X]/gi, "").trim();
+    case "RefSeq":
+    case "UniProt":
       return identifier.trim().toUpperCase();
     default:
       return null;
@@ -3463,7 +3913,9 @@ export function normalizeIdentifier(
 // Example of a DOI verifier using the CrossRef API
 async function verifyDOI(doi: string): Promise<boolean> {
   try {
-    const response = await fetch(`https://doi.org/api/handles/${encodeURIComponent(doi)}`);
+    const response = await fetch(
+      `https://doi.org/api/handles/${encodeURIComponent(doi)}`,
+    );
     return response.ok;
   } catch {
     return false;
@@ -3487,7 +3939,7 @@ async function verifyORCID(orcid: string): Promise<boolean> {
 async function verifyRefSeq(refSeq: string): Promise<boolean> {
   try {
     const response = await fetch(
-      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=assembly&term=${refSeq}[assembly_accession]&retmode=json`
+      `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=assembly&term=${refSeq}[assembly_accession]&retmode=json`,
     );
     const data = await response.json();
     return response.ok && data.esearchresult.idlist.length > 0;
@@ -3502,25 +3954,29 @@ async function verifyRefSeq(refSeq: string): Promise<boolean> {
 ### Usage Example
 
 ```typescript
-import { detectIdentifierScheme, verifyIdentifier, normalizeIdentifier } from './identifierUtils.ts';
+import {
+  detectIdentifierScheme,
+  normalizeIdentifier,
+  verifyIdentifier,
+} from "./identifierUtils.ts";
 
-const input = ' GCA_000001405.28 ';
+const input = " GCA_000001405.28 ";
 
 // Detect the identifier scheme
 const scheme = detectIdentifierScheme(input);
-console.log('Detected scheme:', scheme);
+console.log("Detected scheme:", scheme);
 
-if (scheme !== 'Unknown') {
+if (scheme !== "Unknown") {
   // Normalize the identifier
   const normalized = normalizeIdentifier(input, scheme);
-  console.log('Normalized identifier:', normalized);
+  console.log("Normalized identifier:", normalized);
 
   // Verify the identifier
   verifyIdentifier(input, scheme).then((exists) => {
     console.log(`Identifier exists: ${exists}`);
   });
 } else {
-  console.log('Unknown identifier scheme.');
+  console.log("Unknown identifier scheme.");
 }
 ```
 
@@ -3529,28 +3985,34 @@ if (scheme !== 'Unknown') {
 ### Copyright and Attribution Requirements
 
 1. **Identifier Standards**:
-   - The formats of identifiers (e.g., DOI, ORCID, RefSeq) are publicly documented and freely available for implementation.
+   - The formats of identifiers (e.g., DOI, ORCID, RefSeq) are publicly
+     documented and freely available for implementation.
 
 2. **Using APIs**:
-   - APIs like CrossRef (DOI), ORCID, and NCBI have usage policies. Ensure compliance with their terms of service:
+   - APIs like CrossRef (DOI), ORCID, and NCBI have usage policies. Ensure
+     compliance with their terms of service:
      - Avoid excessive requests or rate-limit violations.
      - Provide proper attribution to these services in your documentation.
 
 3. **Attribution**:
-   - Mention that the implementation relies on identifier formats and APIs from relevant organizations (e.g., ORCID, NCBI, CrossRef).
+   - Mention that the implementation relies on identifier formats and APIs from
+     relevant organizations (e.g., ORCID, NCBI, CrossRef).
    - Include links to their documentation.
 
 4. **Open Source Licensing**:
    - Use a permissive license (e.g., MIT, Apache 2.0) for redistribution.
    - Document your reliance on publicly available identifier standards and APIs.
 
-This implementation provides a framework to detect and handle multiple identifier schemes while respecting attribution and copyright requirements.
+This implementation provides a framework to detect and handle multiple
+identifier schemes while respecting attribution and copyright requirements.
 
 ## 27. How do I write a validator, verifier and normalize functions for FundRef IDs in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Validator, Verifier, and Normalize Functions for **FunderRef IDs** in Deno and TypeScript
 
-**FunderRef IDs** are unique identifiers used by CrossRef to refer to funding organizations. These IDs are part of the CrossRef Funder Registry and are used in metadata to link publications with funding data.
+**FunderRef IDs** are unique identifiers used by CrossRef to refer to funding
+organizations. These IDs are part of the CrossRef Funder Registry and are used
+in metadata to link publications with funding data.
 
 ---
 
@@ -3558,18 +4020,21 @@ This implementation provides a framework to detect and handle multiple identifie
 
 1. **Format**:
    - FunderRef IDs are numeric strings (e.g., `501100000024`).
-   - No special checksum or validation algorithm applies; the IDs need to be looked up in the Funder Registry for verification.
+   - No special checksum or validation algorithm applies; the IDs need to be
+     looked up in the Funder Registry for verification.
 
 2. **Validation**:
    - Ensure the ID is numeric.
-   - Confirm that the length is within reasonable bounds (e.g., typically 12-14 digits).
+   - Confirm that the length is within reasonable bounds (e.g., typically 12-14
+     digits).
 
 3. **Normalization**:
    - Remove extraneous characters (spaces, non-numeric characters).
    - Ensure a consistent numeric string format.
 
 4. **Verification**:
-   - Query the CrossRef Funder Registry API to verify if the FunderRef ID exists and retrieve associated metadata.
+   - Query the CrossRef Funder Registry API to verify if the FunderRef ID exists
+     and retrieve associated metadata.
 
 ---
 
@@ -3585,7 +4050,8 @@ This implementation provides a framework to detect and handle multiple identifie
  */
 export function validateFunderRefId(funderRefId: string): boolean {
   const normalizedId = normalizeFunderRefId(funderRefId);
-  return /^\d+$/.test(normalizedId) && normalizedId.length >= 12 && normalizedId.length <= 14;
+  return /^\d+$/.test(normalizedId) && normalizedId.length >= 12 &&
+    normalizedId.length <= 14;
 }
 ```
 
@@ -3600,7 +4066,7 @@ export function validateFunderRefId(funderRefId: string): boolean {
  * @returns string - The normalized FunderRef ID.
  */
 export function normalizeFunderRefId(funderRefId: string): string {
-  return funderRefId.replace(/\D/g, '');
+  return funderRefId.replace(/\D/g, "");
 }
 ```
 
@@ -3608,7 +4074,8 @@ export function normalizeFunderRefId(funderRefId: string): string {
 
 #### 3. Verifier
 
-Use the **CrossRef Funder Registry API** to verify the existence of a FunderRef ID.
+Use the **CrossRef Funder Registry API** to verify the existence of a FunderRef
+ID.
 
 ```typescript
 /**
@@ -3621,7 +4088,7 @@ export async function verifyFunderRefId(funderRefId: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://api.crossref.org/funders/${encodeURIComponent(normalizedId)}`
+      `https://api.crossref.org/funders/${encodeURIComponent(normalizedId)}`,
     );
 
     if (!response.ok) return false;
@@ -3640,10 +4107,10 @@ export async function verifyFunderRefId(funderRefId: string): Promise<boolean> {
 
 ```typescript
 import {
-  validateFunderRefId,
   normalizeFunderRefId,
+  validateFunderRefId,
   verifyFunderRefId,
-} from './funderRefUtils.ts';
+} from "./funderRefUtils.ts";
 
 const funderId = "501100000024";
 
@@ -3666,35 +4133,46 @@ verifyFunderRefId(normalizedId).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **FunderRef ID Specification**
-- FunderRef IDs themselves are identifiers in the public domain and require no copyright permissions for usage.
+
+- FunderRef IDs themselves are identifiers in the public domain and require no
+  copyright permissions for usage.
 
 #### 2. **CrossRef Funder Registry API**
-- **Attribution**: When querying the CrossRef API, follow their [terms of service](https://www.crossref.org/services/funder-registry/).
-- Attribution is recommended if the API data is used in published works or services.
+
+- **Attribution**: When querying the CrossRef API, follow their
+  [terms of service](https://www.crossref.org/services/funder-registry/).
+- Attribution is recommended if the API data is used in published works or
+  services.
 - Respect API rate limits and usage policies.
 
 #### 3. **Redistributing Your Code**
-- If you plan to distribute your code, use a permissive license like MIT or Apache 2.0.
+
+- If you plan to distribute your code, use a permissive license like MIT or
+  Apache 2.0.
 - Attribute any external libraries or codebases used in your implementation.
 
 ---
 
-This implementation ensures you can validate, normalize, and verify FunderRef IDs while respecting the CrossRef API's usage guidelines.
-
+This implementation ensures you can validate, normalize, and verify FunderRef
+IDs while respecting the CrossRef API's usage guidelines.
 
 ## 28. How do I write a validator, verifier, and normalize functions for CiteProc in Deno and TypeScript? How to I write a style render engine for CiteProc using CSL in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
-To create a **validator, verifier, and normalizer** for **CiteProc** in Deno and TypeScript, as well as a **rendering engine for Citation Style Language (CSL)**, we need to follow these steps:
+To create a **validator, verifier, and normalizer** for **CiteProc** in Deno and
+TypeScript, as well as a **rendering engine for Citation Style Language (CSL)**,
+we need to follow these steps:
 
 ---
 
 ### Part 1: Validator, Verifier, and Normalizer for CiteProc
 
-**CiteProc** is a citation processing library that relies on structured data (e.g., JSON or JSON-like objects) and styles written in CSL (XML-based styles).
+**CiteProc** is a citation processing library that relies on structured data
+(e.g., JSON or JSON-like objects) and styles written in CSL (XML-based styles).
 
 #### 1. Validator
 
-A validator checks that the input JSON data conforms to the CiteProc standard (e.g., required fields, valid types, etc.).
+A validator checks that the input JSON data conforms to the CiteProc standard
+(e.g., required fields, valid types, etc.).
 
 ```typescript
 export interface Citation {
@@ -3702,7 +4180,7 @@ export interface Citation {
   type: string; // e.g., "article-journal", "book", etc.
   title?: string;
   author?: Array<{ family: string; given?: string }>;
-  issued?: { 'date-parts': number[][] }; // e.g., [[2023, 5, 10]]
+  issued?: { "date-parts": number[][] }; // e.g., [[2023, 5, 10]]
   DOI?: string;
   [key: string]: unknown;
 }
@@ -3719,7 +4197,7 @@ export function validateCitation(citation: Citation): boolean {
       if (!author.family) return false;
     }
   }
-  if (citation.issued && !Array.isArray(citation.issued['date-parts'])) {
+  if (citation.issued && !Array.isArray(citation.issued["date-parts"])) {
     return false;
   }
   return true;
@@ -3728,12 +4206,15 @@ export function validateCitation(citation: Citation): boolean {
 
 #### 2. Verifier
 
-A verifier could validate external references like DOI. Use APIs (e.g., CrossRef) to check if the identifiers exist.
+A verifier could validate external references like DOI. Use APIs (e.g.,
+CrossRef) to check if the identifiers exist.
 
 ```typescript
 export async function verifyDOI(doi: string): Promise<boolean> {
   try {
-    const response = await fetch(`https://doi.org/api/handles/${encodeURIComponent(doi)}`);
+    const response = await fetch(
+      `https://doi.org/api/handles/${encodeURIComponent(doi)}`,
+    );
     return response.ok;
   } catch {
     return false;
@@ -3755,7 +4236,8 @@ export async function verifyCitation(citation: Citation): Promise<boolean> {
 
 #### 3. Normalizer
 
-A normalizer ensures consistent formats (e.g., trims whitespace, sets defaults for missing fields).
+A normalizer ensures consistent formats (e.g., trims whitespace, sets defaults
+for missing fields).
 
 ```typescript
 /**
@@ -3783,7 +4265,8 @@ export function normalizeCitation(citation: Citation): Citation {
 
 #### 1. Loading CSL Styles
 
-CSL styles are XML files. Use a library like `xmldom` or Deno’s built-in `DOMParser` to parse the styles.
+CSL styles are XML files. Use a library like `xmldom` or Deno’s built-in
+`DOMParser` to parse the styles.
 
 ```typescript
 export async function loadCslStyle(url: string): Promise<Document> {
@@ -3796,7 +4279,9 @@ export async function loadCslStyle(url: string): Promise<Document> {
 
 #### 2. Rendering Engine
 
-You can use CiteProc.js, an open-source library written in JavaScript, which can be integrated into Deno. CiteProc.js handles parsing CSL, applying it to data, and generating formatted citations.
+You can use CiteProc.js, an open-source library written in JavaScript, which can
+be integrated into Deno. CiteProc.js handles parsing CSL, applying it to data,
+and generating formatted citations.
 
 ##### Example Integration of CiteProc.js:
 
@@ -3809,7 +4294,7 @@ deno install npm:citeproc
 Then write your render engine:
 
 ```typescript
-import CiteProc from 'citeproc';
+import CiteProc from "citeproc";
 
 /**
  * Renders citations using a CSL style.
@@ -3821,14 +4306,14 @@ import CiteProc from 'citeproc';
 export function renderCitations(
   citations: Citation[],
   style: string,
-  lang = 'en-US'
+  lang = "en-US",
 ): string[] {
   const sys = {
     retrieveLocale: (locale) => {
       // Load CSL locale (you'll need to fetch locale XMLs as well)
-      return fetch(`https://example.com/csl-locales/${locale}.xml`).then((res) =>
-        res.text()
-      );
+      return fetch(`https://example.com/csl-locales/${locale}.xml`).then((
+        res,
+      ) => res.text());
     },
     retrieveItem: (id) => citations.find((citation) => citation.id === id),
   };
@@ -3845,7 +4330,7 @@ export function renderCitations(
 #### 3. Example Usage
 
 ```typescript
-import { renderCitations, loadCslStyle } from './cslRenderer.ts';
+import { loadCslStyle, renderCitations } from "./cslRenderer.ts";
 
 const citations = [
   {
@@ -3871,26 +4356,38 @@ console.log(formatted);
 ### Copyright and Attribution Requirements
 
 1. **CiteProc.js**:
-   - CiteProc.js is licensed under the [AGPL](https://github.com/Juris-M/citeproc-js/blob/master/LICENSE), which requires attribution and sharing derivative works under the same license.
+   - CiteProc.js is licensed under the
+     [AGPL](https://github.com/Juris-M/citeproc-js/blob/master/LICENSE), which
+     requires attribution and sharing derivative works under the same license.
 
 2. **CSL Styles**:
-   - CSL styles are distributed under the [CC BY-SA 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/), requiring attribution and the sharing of modifications under the same terms.
+   - CSL styles are distributed under the
+     [CC BY-SA 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/),
+     requiring attribution and the sharing of modifications under the same
+     terms.
 
 3. **Usage Notes**:
    - Attribute the authors of the CSL styles you use.
-   - When using or modifying CiteProc.js, adhere to the AGPL requirements by sharing your source code.
+   - When using or modifying CiteProc.js, adhere to the AGPL requirements by
+     sharing your source code.
 
 4. **Open Source Licensing**:
-   - Use a compatible license (e.g., AGPL) for your project if integrating CiteProc.js.
-   - Attribute CSL styles explicitly, linking to the style repository (e.g., [Zotero CSL repository](https://github.com/citation-style-language/styles)).
+   - Use a compatible license (e.g., AGPL) for your project if integrating
+     CiteProc.js.
+   - Attribute CSL styles explicitly, linking to the style repository (e.g.,
+     [Zotero CSL repository](https://github.com/citation-style-language/styles)).
 
-By following these steps, you can build a robust, standards-compliant citation processing and rendering engine while respecting licensing requirements.
+By following these steps, you can build a robust, standards-compliant citation
+processing and rendering engine while respecting licensing requirements.
 
 ## 29. How do I write a validator, verifier and normalize functions for LACNAF ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Validator, Verifier, and Normalize Functions for **LACNAF ID** in Deno and TypeScript
 
-**LACNAF IDs** are identifiers used by the **Library of Congress Name Authority File (LCNAF)** to uniquely identify names in the authority database. These IDs are part of a broader system for cataloging and standardizing bibliographic and authority records.
+**LACNAF IDs** are identifiers used by the **Library of Congress Name Authority
+File (LCNAF)** to uniquely identify names in the authority database. These IDs
+are part of a broader system for cataloging and standardizing bibliographic and
+authority records.
 
 ---
 
@@ -3898,7 +4395,8 @@ By following these steps, you can build a robust, standards-compliant citation p
 
 1. **Format**:
    - LACNAF IDs are typically alphanumeric strings (e.g., `n79021164`).
-   - They may have a prefix indicating the type of record (`n`, `no`, `nb`, etc.).
+   - They may have a prefix indicating the type of record (`n`, `no`, `nb`,
+     etc.).
    - The suffix is a numeric sequence that uniquely identifies the record.
 
 2. **Validation**:
@@ -3910,7 +4408,8 @@ By following these steps, you can build a robust, standards-compliant citation p
    - Ensure consistent lowercase format.
 
 4. **Verification**:
-   - Query the **Library of Congress Authorities & Vocabularies API** to check the ID's existence.
+   - Query the **Library of Congress Authorities & Vocabularies API** to check
+     the ID's existence.
 
 ---
 
@@ -3950,7 +4449,8 @@ export function normalizeLacnafId(lacnafId: string): string {
 
 #### 3. Verifier
 
-Use the **Library of Congress Authorities & Vocabularies API** to check if the LACNAF ID exists.
+Use the **Library of Congress Authorities & Vocabularies API** to check if the
+LACNAF ID exists.
 
 ```typescript
 /**
@@ -3963,7 +4463,9 @@ export async function verifyLacnafId(lacnafId: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://id.loc.gov/authorities/names/${encodeURIComponent(normalizedId)}`
+      `https://id.loc.gov/authorities/names/${
+        encodeURIComponent(normalizedId)
+      }`,
     );
     return response.ok;
   } catch {
@@ -3978,10 +4480,10 @@ export async function verifyLacnafId(lacnafId: string): Promise<boolean> {
 
 ```typescript
 import {
-  validateLacnafId,
   normalizeLacnafId,
+  validateLacnafId,
   verifyLacnafId,
-} from './lacnafUtils.ts';
+} from "./lacnafUtils.ts";
 
 const lacnafId = " n79021164 ";
 
@@ -4004,45 +4506,60 @@ verifyLacnafId(normalizedId).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **LACNAF Specification**
-- LACNAF IDs are publicly accessible identifiers and do not require copyright permissions for validation or normalization.
+
+- LACNAF IDs are publicly accessible identifiers and do not require copyright
+  permissions for validation or normalization.
 
 #### 2. **Library of Congress API**
+
 - The Library of Congress provides free API access to its authorities database.
-- Review their [terms of use](https://www.loc.gov/legal/) to ensure compliance with usage policies.
-- No explicit attribution is required, but acknowledging their services is good practice.
+- Review their [terms of use](https://www.loc.gov/legal/) to ensure compliance
+  with usage policies.
+- No explicit attribution is required, but acknowledging their services is good
+  practice.
 
 #### 3. **Redistributing Your Code**
-- Use a permissive license such as MIT or Apache 2.0 if you plan to distribute your implementation.
-- Attribute any external libraries or resources used in your implementation, if applicable.
+
+- Use a permissive license such as MIT or Apache 2.0 if you plan to distribute
+  your implementation.
+- Attribute any external libraries or resources used in your implementation, if
+  applicable.
 
 ---
 
-This implementation ensures compliance with LACNAF ID standards while enabling robust validation, normalization, and verification through the Library of Congress' APIs.
+This implementation ensures compliance with LACNAF ID standards while enabling
+robust validation, normalization, and verification through the Library of
+Congress' APIs.
 
 ## 30. How do I write a validator, verifier and normalize functions for VIAF ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Validator, Verifier, and Normalize Functions for **VIAF ID** in Deno and TypeScript
 
-The **VIAF ID** (Virtual International Authority File Identifier) is a numeric identifier used to link and manage authority records across various national libraries and authority systems.
+The **VIAF ID** (Virtual International Authority File Identifier) is a numeric
+identifier used to link and manage authority records across various national
+libraries and authority systems.
 
 ---
 
 ### Overview of VIAF ID
 
 1. **Format**:
-   - VIAF IDs are numeric, typically consisting of 1 to 10 digits (e.g., `123456789`).
+   - VIAF IDs are numeric, typically consisting of 1 to 10 digits (e.g.,
+     `123456789`).
    - They should not contain any non-numeric characters.
 
 2. **Validation**:
    - Ensure the identifier consists only of digits.
-   - Verify that the ID length falls within reasonable bounds (e.g., 1–10 digits).
+   - Verify that the ID length falls within reasonable bounds (e.g., 1–10
+     digits).
 
 3. **Normalization**:
    - Remove extraneous characters (e.g., spaces, non-numeric symbols).
    - Output a pure numeric string.
 
 4. **Verification**:
-   - Use the **VIAF API** to verify if the ID exists and retrieve related metadata.
+   - Use the **VIAF API** to verify if the ID exists and retrieve related
+     metadata.
 
 ---
 
@@ -4073,7 +4590,7 @@ export function validateViafId(viafId: string): boolean {
  * @returns string - The normalized VIAF ID.
  */
 export function normalizeViafId(viafId: string): string {
-  return viafId.replace(/\D/g, '').trim();
+  return viafId.replace(/\D/g, "").trim();
 }
 ```
 
@@ -4094,7 +4611,7 @@ export async function verifyViafId(viafId: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://viaf.org/viaf/${encodeURIComponent(normalizedId)}/json/`
+      `https://viaf.org/viaf/${encodeURIComponent(normalizedId)}/json/`,
     );
 
     if (!response.ok) return false;
@@ -4112,11 +4629,7 @@ export async function verifyViafId(viafId: string): Promise<boolean> {
 ### Example Usage
 
 ```typescript
-import {
-  validateViafId,
-  normalizeViafId,
-  verifyViafId,
-} from './viafUtils.ts';
+import { normalizeViafId, validateViafId, verifyViafId } from "./viafUtils.ts";
 
 const viafId = " 123456789 ";
 
@@ -4139,27 +4652,37 @@ verifyViafId(normalizedId).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **VIAF Specification**
-- VIAF IDs themselves are identifiers in the public domain. Using, validating, or normalizing them does not require explicit permissions.
+
+- VIAF IDs themselves are identifiers in the public domain. Using, validating,
+  or normalizing them does not require explicit permissions.
 
 #### 2. **VIAF API Usage**
+
 - The VIAF service is provided by OCLC.
-- Review the [OCLC Terms and Conditions](https://www.oclc.org/en/policies/terms.html) for guidelines on API usage.
-- VIAF metadata and identifiers are freely accessible for research and non-commercial use. Attribution to VIAF or OCLC is encouraged.
+- Review the
+  [OCLC Terms and Conditions](https://www.oclc.org/en/policies/terms.html) for
+  guidelines on API usage.
+- VIAF metadata and identifiers are freely accessible for research and
+  non-commercial use. Attribution to VIAF or OCLC is encouraged.
 
 #### 3. **Redistributing Your Code**
+
 - If publishing or sharing your implementation:
   - Use a permissive license like MIT or Apache 2.0.
   - Attribute any external libraries or services used (e.g., VIAF API).
 
 ---
 
-This approach ensures compliance with VIAF standards while providing robust validation, normalization, and verification functions for Deno and TypeScript.
+This approach ensures compliance with VIAF standards while providing robust
+validation, normalization, and verification functions for Deno and TypeScript.
 
 ## 31. How do I write a validator, verifier and normalize functions for SNAC ID in Deno and TypeScript? What is the copyright or attribution requirements to use this code?
 
 ### Writing Validator, Verifier, and Normalize Functions for **SNAC ID** in Deno and TypeScript
 
-**SNAC IDs** (Social Networks and Archival Context identifiers) are unique identifiers assigned to records in the SNAC database, which links archival collections to their associated individuals, families, and organizations.
+**SNAC IDs** (Social Networks and Archival Context identifiers) are unique
+identifiers assigned to records in the SNAC database, which links archival
+collections to their associated individuals, families, and organizations.
 
 ---
 
@@ -4178,7 +4701,8 @@ This approach ensures compliance with VIAF standards while providing robust vali
    - Ensure the output is a pure numeric string.
 
 4. **Verification**:
-   - Use the SNAC API or the SNAC website to verify the ID's existence and potentially retrieve related metadata.
+   - Use the SNAC API or the SNAC website to verify the ID's existence and
+     potentially retrieve related metadata.
 
 ---
 
@@ -4209,7 +4733,7 @@ export function validateSnacId(snacId: string): boolean {
  * @returns string - The normalized SNAC ID.
  */
 export function normalizeSnacId(snacId: string): string {
-  return snacId.replace(/\D/g, '').trim();
+  return snacId.replace(/\D/g, "").trim();
 }
 ```
 
@@ -4217,7 +4741,8 @@ export function normalizeSnacId(snacId: string): string {
 
 #### 3. Verifier
 
-You can query the **SNAC API** or use a direct URL lookup for verification. The SNAC web interface uses URLs like `https://snaccooperative.org/view/{SNAC_ID}`.
+You can query the **SNAC API** or use a direct URL lookup for verification. The
+SNAC web interface uses URLs like `https://snaccooperative.org/view/{SNAC_ID}`.
 
 ```typescript
 /**
@@ -4230,7 +4755,7 @@ export async function verifySnacId(snacId: string): Promise<boolean> {
 
   try {
     const response = await fetch(
-      `https://snaccooperative.org/view/${encodeURIComponent(normalizedId)}`
+      `https://snaccooperative.org/view/${encodeURIComponent(normalizedId)}`,
     );
 
     // A valid SNAC ID will return a 200 response with the expected SNAC page.
@@ -4246,11 +4771,7 @@ export async function verifySnacId(snacId: string): Promise<boolean> {
 ### Example Usage
 
 ```typescript
-import {
-  validateSnacId,
-  normalizeSnacId,
-  verifySnacId,
-} from './snacUtils.ts';
+import { normalizeSnacId, validateSnacId, verifySnacId } from "./snacUtils.ts";
 
 const snacId = " 123456 ";
 
@@ -4273,17 +4794,27 @@ verifySnacId(normalizedId).then((exists) => {
 ### Copyright and Attribution Requirements
 
 #### 1. **SNAC Specification**
-- SNAC IDs themselves are in the public domain and can be freely used without specific permissions.
+
+- SNAC IDs themselves are in the public domain and can be freely used without
+  specific permissions.
 
 #### 2. **SNAC API or Data Usage**
-- The **SNAC Cooperative** provides access to its API and metadata. Refer to their [terms of use](https://snaccooperative.org/terms) for specific usage policies.
-- If you use their API or data for public-facing projects, attribution to the SNAC Cooperative is recommended.
+
+- The **SNAC Cooperative** provides access to its API and metadata. Refer to
+  their [terms of use](https://snaccooperative.org/terms) for specific usage
+  policies.
+- If you use their API or data for public-facing projects, attribution to the
+  SNAC Cooperative is recommended.
 
 #### 3. **Redistributing Your Code**
+
 - If distributing your implementation:
   - Use a permissive license like MIT or Apache 2.0.
-  - Attribute any third-party tools or resources, including the SNAC API if used for verification.
+  - Attribute any third-party tools or resources, including the SNAC API if used
+    for verification.
 
 ---
 
-This implementation ensures proper handling of SNAC IDs with validation, normalization, and verification functionalities. It also complies with SNAC's guidelines for metadata usage and attribution.
+This implementation ensures proper handling of SNAC IDs with validation,
+normalization, and verification functionalities. It also complies with SNAC's
+guidelines for metadata usage and attribution.

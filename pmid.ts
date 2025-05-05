@@ -1,5 +1,5 @@
-export const PMIDPattern = "^[0-9]+$";
-export const rePMID = new RegExp(PMIDPattern);
+export const PMIDPattern: string = "^[0-9]+$";
+export const rePMID: RegExp = new RegExp(PMIDPattern);
 
 /**
  * normalizePMID normalized the Pub Med ID.

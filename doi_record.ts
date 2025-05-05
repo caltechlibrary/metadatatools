@@ -26,7 +26,7 @@ export async function verifyDOI(doi: string): Promise<boolean> {
  */
 export async function getObjectDOI(doi: string): Promise<object | undefined> {
   const normalizedDOI = normalizeDOI(doi);
-  let obj = await getObject(
+  const obj = await getObject(
     doi,
     `https://api.crossref.org/works/${encodeURIComponent(normalizedDOI)}`,
     validateDOI,

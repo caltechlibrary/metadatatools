@@ -17,9 +17,7 @@ export async function verifyIdentifier(
   if (validate(identifier)) {
     const response = await fetch(u);
     if (response !== undefined && response !== null) {
-      if (response.body !== undefined) {
-        response.body?.cancel();
-      }
+   	  if (response.body !== null) await response.body.cancel();
       return response.ok;
     }
   }
@@ -49,6 +47,7 @@ export async function getObject(
         return undefined;
       }
     }
+    if (response.body !== null) response.body.cancel();
   }
   return undefined;
 }

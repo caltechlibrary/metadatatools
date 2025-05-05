@@ -1,5 +1,5 @@
-export const ISNIPattern = "$[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3}[0-9X]";
-export const reISNI = new RegExp(ISNIPattern);
+export const ISNIPattern: string = "$[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3}[0-9X]";
+export const reISNI: RegExp = new RegExp(ISNIPattern);
 
 function stripISNI(isni: string): string {
   return isni.toUpperCase().replace(/\s+/g, "").replace(/-/g, "")

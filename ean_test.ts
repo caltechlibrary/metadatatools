@@ -10,11 +10,15 @@ Deno.test("Deno test valid ean", () => {
     "9780201544282",
   ];
 
-  for (let id of varified_ids) {
+  for (const id of varified_ids) {
     // Normalize
-    let expected = id;
-    let normalized = normalizeEAN(id);
-    assertEquals(normalized, expected, `expected normalizeEAN(${id}) to be "${expected}", got "${normalized}"`);
+    const expected = id;
+    const normalized = normalizeEAN(id);
+    assertEquals(
+      normalized,
+      expected,
+      `expected normalizeEAN(${id}) to be "${expected}", got "${normalized}"`,
+    );
     //console.log(`Normalized EAN: ${normalized}`);
     // Validate
     assertEquals(validateEAN(id), true);
@@ -23,15 +27,23 @@ Deno.test("Deno test valid ean", () => {
     // like Open Library or OCLC if you have access there.
   }
 
-  const invalid_ids: string [] = [
+  const invalid_ids: string[] = [
     "xx000222jwwheeot",
-  ]
-  for (let id of invalid_ids) {
+  ];
+  for (const id of invalid_ids) {
     // Normalize
-    let expected = id.replaceAll(/[a-z]/g, '');
-    let normalized = normalizeEAN(id);
-    assertEquals(normalized, expected, `expected normalizeEAN(${id}) to be "${expected}", got "${normalized}"`);
-    assertNotEquals(normalized, id, `expected normalizeEAN(${id}) not to be equal to id "${id}", got "${normalized}"`);
+    const expected = id.replaceAll(/[a-z]/g, "");
+    const normalized = normalizeEAN(id);
+    assertEquals(
+      normalized,
+      expected,
+      `expected normalizeEAN(${id}) to be "${expected}", got "${normalized}"`,
+    );
+    assertNotEquals(
+      normalized,
+      id,
+      `expected normalizeEAN(${id}) not to be equal to id "${id}", got "${normalized}"`,
+    );
     //console.log(`Normalized EAN: ${normalized}`);
     // Validate
     assertEquals(validateEAN(id), false);

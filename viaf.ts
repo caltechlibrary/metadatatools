@@ -1,5 +1,5 @@
-export const VIAFPattern = "^\\d+$"; // VIAF IDs are numeric
-export const reVIAF = new RegExp(VIAFPattern);
+export const VIAFPattern: string = "^\\d+$"; // VIAF IDs are numeric
+export const reVIAF: RegExp = new RegExp(VIAFPattern);
 
 /**
  * normalizeVIAF

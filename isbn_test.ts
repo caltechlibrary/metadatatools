@@ -1,7 +1,7 @@
 //
 // Test our isbn methods
 //
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals, assertNotEquals } from "jsr:@std/assert";
 
 import { normalizeISBN, validateISBN } from "./isbn.ts";
 import { verifyISBN } from "./isbn_record.ts";
@@ -13,13 +13,14 @@ const varified_ids: string[] = [
   "160606942X",
 ];
 
-for (let id of varified_ids) {
+for (const id of varified_ids) {
   // Normalize
-  let normalized = normalizeISBN(id);
+  const normalized = normalizeISBN(id);
+  assertNotEquals(normalized, undefined);
   console.log(`Normalized ISBN: ${normalized}`);
   // Validate
   assertEquals(validateISBN(id), true);
   // Verify
-  let isOK: boolean = await verifyISBN(id);
+  const isOK: boolean = await verifyISBN(id);
   assertEquals(isOK, true);
 }

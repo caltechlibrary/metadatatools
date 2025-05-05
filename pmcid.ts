@@ -1,8 +1,8 @@
-export const PMCIDPattern = "^PMC\\d+$";
-export const rePMCID = new RegExp(PMCIDPattern);
+export const PMCIDPattern: string = "^PMC\\d+$";
+export const rePMCID: RegExp = new RegExp(PMCIDPattern);
 
 export function normalizePMCID(pmcid: string): string {
-  let cleanedID = pmcid.trim().toUpperCase();
+  const cleanedID = pmcid.trim().toUpperCase();
   if (pmcid.startsWith("PMC")) {
     return cleanedID;
   }

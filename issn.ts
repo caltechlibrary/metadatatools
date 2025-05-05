@@ -1,5 +1,5 @@
-export const ISSNPattern = "^ISSN\s+?(\d{4})-(\d{3}[\dX])$";
-export const reISSN = new RegExp(ISSNPattern, "i");
+export const ISSNPattern: string = "^ISSN\s+?(\d{4})-(\d{3}[\dX])$";
+export const reISSN: RegExp = new RegExp(ISSNPattern, "i");
 
 /**
  * Validates the checksum of an ISSN.

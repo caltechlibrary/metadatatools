@@ -1,41 +1,19 @@
-const appInfo = {
-    appName: "metadatatools",
-    version: "0.0.5",
-    releaseDate: "2025-05-05",
-    releaseHash: "ea45ac7",
-    licenseText: `
-Copyright (c) 2024, Caltech All rights not granted herein are expressly
-reserved by Caltech.
+const version = '0.0.5', releaseDate = '2024-05-05', releaseHash = 'c9513e2', licenseText = `
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+Copyright (c) 2024, Caltech
+All rights not granted herein are expressly reserved by Caltech.
 
-1. Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-2. Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimer in the
-documentation and/or other materials provided with the distribution.
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-3. Neither the name of the copyright holder nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
-`
-};
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+`;
 const ARXIVPattern = "^arxiv:(\\d{4}\\.\\d{4,5}(v\\d+)?|[a-z\\-]+\\/\\d{7}(v\\d+)?)$";
 const reARXIV = new RegExp(ARXIVPattern, "i");
 const newARXIVPattern = "^arxiv:\\d{4}\\.\\d{4,5}(v\\d+)?$";
@@ -122,7 +100,7 @@ function normalizeISBN(isbn) {
 }
 async function verifyISBN(isbn) {
     const normalizedISBN = normalizeISBN(isbn);
-    return verifyIdentifier(isbn, `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`, validateISBN);
+    return await verifyIdentifier(isbn, `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`, validateISBN);
 }
 const ISNIPattern = "$[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{3}[0-9X]";
 const reISNI = new RegExp(ISNIPattern);
@@ -234,7 +212,7 @@ async function verifyORCID(orcid) {
 const PMCIDPattern = "^PMC\\d+$";
 const rePMCID = new RegExp(PMCIDPattern);
 function normalizePMCID(pmcid) {
-    let cleanedID = pmcid.trim().toUpperCase();
+    const cleanedID = pmcid.trim().toUpperCase();
     if (pmcid.startsWith("PMC")) {
         return cleanedID;
     }
@@ -265,7 +243,7 @@ const rorPrefix = "https://ror.org/";
 const RORPattern = "^https:\\/\\/ror\\.org\\/0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$|^0[a-hj-km-np-tv-z|0-9]{6}[0-9]{2}$";
 const reROR = new RegExp(RORPattern, "i");
 function normalizeROR(ror) {
-    let bareROR = ror.trim().toLowerCase();
+    const bareROR = ror.trim().toLowerCase();
     if (bareROR.startsWith(rorPrefix)) {
         return bareROR;
     }
@@ -305,10 +283,10 @@ async function verifyVIAF(id) {
     const normalizedID = normalizeVIAF(id);
     return await verifyIdentifier(id, `https://viaf.org/viaf/${normalizedID}`, validateVIAF);
 }
-const TELPattern = '^\\+?(\\d{1,3})?[-.\\s]?(\\(?\\d{1,4}\\)?)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$';
+const TELPattern = "^\\+?(\\d{1,3})?[-.\\s]?(\\(?\\d{1,4}\\)?)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
 const reTEL = new RegExp(TELPattern);
 function stripTEL(tel) {
-    return tel.trim().replaceAll(/\D/gi, '');
+    return tel.trim().replaceAll(/\D/gi, "");
 }
 function normalizeTEL(tel) {
     const bareTel = stripTEL(tel);
@@ -333,13 +311,13 @@ function validateTEL(tel) {
 const EMAILPattern = '^(?:"?([^"]*)"?\\s)?(?:<?(.+@[^>]+)>?)$';
 const reEMAIL = new RegExp(EMAILPattern);
 function normalizeEMAIL(email) {
-    return email.trim().replaceAll(/\s+/g, '').trim();
+    return email.trim().replaceAll(/\s+/g, "").trim();
 }
 function validateEMAIL(email) {
     const normalized = normalizeEMAIL(email);
     return reEMAIL.test(normalized);
 }
-export { appInfo as appInfo };
+export { version as version, licenseText as licenseText, releaseDate as releaseDate, releaseHash as releaseHash };
 export { ARXIVPattern as ARXIVPattern, newARXIVPattern as newARXIVPattern, normalizeArXivID as normalizeArXivID, oldARXIVPattern as oldARXIVPattern, reARXIV as reARXIV, reNewARXIV as reNewARXIV, reOldARXIV as reOldARXIV, validateArXivID as validateArXivID };
 export { verifyArXivID as verifyArXivID };
 export { DOIPattern as DOIPattern, normalizeDOI as normalizeDOI, reDOI as reDOI, validateDOI as validateDOI };
@@ -348,22 +326,22 @@ export { ISBN10Pattern as ISBN10Pattern, ISBN13Pattern as ISBN13Pattern, ISBNPat
 export { verifyISBN as verifyISBN };
 export { ISNIPattern as ISNIPattern, normalizeISNI as normalizeISNI, reISNI as reISNI, validateISNI as validateISNI };
 export { verifyISNI as verifyISNI };
-export { ISSNPattern as ISSNPattern, reISSN as reISSN, normalizeISSN as normalizeISSN, validateISSN as validateISSN };
+export { ISSNPattern as ISSNPattern, normalizeISSN as normalizeISSN, reISSN as reISSN, validateISSN as validateISSN };
 export { verifyISSN as verifyISSN };
 export { LCNAFPattern as LCNAFPattern, normalizeLCNAF as normalizeLCNAF, reLCNAF as reLCNAF, validateLCNAF as validateLCNAF };
 export { verifyLCNAF as verifyLCNAF };
 export { normalizeORCID as normalizeORCID, ORCIDPattern as ORCIDPattern, reORCID as reORCID, validateORCID as validateORCID };
 export { verifyORCID as verifyORCID };
-export { PMCIDPattern as PMCIDPattern, rePMCID as rePMCID, normalizePMCID as normalizePMCID, validatePMCID as validatePMCID };
+export { normalizePMCID as normalizePMCID, PMCIDPattern as PMCIDPattern, rePMCID as rePMCID, validatePMCID as validatePMCID };
 export { verifyPMCID as verifyPMCID };
-export { PMIDPattern as PMIDPattern, rePMID as rePMID, normalizePMID as normalizePMID, validatePMID as validatePMID };
+export { normalizePMID as normalizePMID, PMIDPattern as PMIDPattern, rePMID as rePMID, validatePMID as validatePMID };
 export { verifyPMID as verifyPMID };
-export { reROR as reROR, RORPattern as RORPattern, normalizeROR as normalizeROR, validateROR as validateROR };
+export { normalizeROR as normalizeROR, reROR as reROR, RORPattern as RORPattern, validateROR as validateROR };
 export { verifyROR as verifyROR };
-export { SNACPattern as SNACPattern, reSNAC as reSNAC, normalizeSNAC as normalizeSNAC, validateSNAC as validateSNAC };
+export { normalizeSNAC as normalizeSNAC, reSNAC as reSNAC, SNACPattern as SNACPattern, validateSNAC as validateSNAC };
 export { verifySNAC as verifySNAC };
-export { VIAFPattern as VIAFPattern, reVIAF as reVIAF, normalizeVIAF as normalizeVIAF, validateVIAF as validateVIAF };
+export { normalizeVIAF as normalizeVIAF, reVIAF as reVIAF, validateVIAF as validateVIAF, VIAFPattern as VIAFPattern };
 export { verifyVIAF as verifyVIAF };
-export { TELPattern as TELPattern, reTEL as reTEL, normalizeTEL as normalizeTEL, validateTEL as validateTEL };
-export { EMAILPattern as EMAILPattern, reEMAIL as reEMAIL, normalizeEMAIL as normalizeEMAIL, validateEMAIL as validateEMAIL };
+export { normalizeTEL as normalizeTEL, reTEL as reTEL, TELPattern as TELPattern, validateTEL as validateTEL };
+export { EMAILPattern as EMAILPattern, normalizeEMAIL as normalizeEMAIL, reEMAIL as reEMAIL, validateEMAIL as validateEMAIL };
 

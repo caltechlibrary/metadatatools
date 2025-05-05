@@ -1,4 +1,4 @@
-export { appInfo } from "./version.ts";
+export { version, licenseText, releaseDate, releaseHash } from "./version.ts";
 export {
   ARXIVPattern,
   newARXIVPattern,
@@ -25,7 +25,7 @@ export {
 export { verifyISBN } from "./isbn_record.ts";
 export { ISNIPattern, normalizeISNI, reISNI, validateISNI } from "./isni.ts";
 export { verifyISNI } from "./isni_record.ts";
-export { ISSNPattern, reISSN, normalizeISSN, validateISSN } from "./issn.ts";
+export { ISSNPattern, normalizeISSN, reISSN, validateISSN } from "./issn.ts";
 export { verifyISSN } from "./issn_record.ts";
 export {
   LCNAFPattern,
@@ -41,15 +41,25 @@ export {
   validateORCID,
 } from "./orcid.ts";
 export { verifyORCID } from "./orcid_record.ts";
-export { PMCIDPattern, rePMCID, normalizePMCID, validatePMCID } from "./pmcid.ts";
+export {
+  normalizePMCID,
+  PMCIDPattern,
+  rePMCID,
+  validatePMCID,
+} from "./pmcid.ts";
 export { verifyPMCID } from "./pmcid_record.ts";
-export { PMIDPattern, rePMID, normalizePMID, validatePMID } from "./pmid.ts";
+export { normalizePMID, PMIDPattern, rePMID, validatePMID } from "./pmid.ts";
 export { verifyPMID } from "./pmid_record.ts";
-export { reROR, RORPattern, normalizeROR, validateROR } from "./ror.ts";
+export { normalizeROR, reROR, RORPattern, validateROR } from "./ror.ts";
 export { verifyROR } from "./ror_record.ts";
-export { SNACPattern, reSNAC, normalizeSNAC, validateSNAC } from "./snac.ts";
+export { normalizeSNAC, reSNAC, SNACPattern, validateSNAC } from "./snac.ts";
 export { verifySNAC } from "./snac_record.ts";
-export { VIAFPattern, reVIAF, normalizeVIAF, validateVIAF } from "./viaf.ts";
+export { normalizeVIAF, reVIAF, validateVIAF, VIAFPattern } from "./viaf.ts";
 export { verifyVIAF } from "./viaf_record.ts";
-export { TELPattern, reTEL, normalizeTEL, validateTEL } from './tel.ts';
-export { EMAILPattern, reEMAIL, normalizeEMAIL, validateEMAIL } from './email.ts';
+export { normalizeTEL, reTEL, TELPattern, validateTEL } from "./tel.ts";
+export {
+  EMAILPattern,
+  normalizeEMAIL,
+  reEMAIL,
+  validateEMAIL,
+} from "./email.ts";

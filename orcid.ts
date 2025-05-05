@@ -1,5 +1,5 @@
-export const ORCIDPattern = "^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$";
-export const reORCID = new RegExp(ORCIDPattern);
+export const ORCIDPattern: string = "^(\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX])$";
+export const reORCID: RegExp = new RegExp(ORCIDPattern);
 
 function stripORCID(orcid: string): string {
   return orcid.toUpperCase().replace(/\s+/g, "").replace(/-/g, "")

@@ -233,13 +233,13 @@ export class OptionsProcessor {
    */
   parse(args: string[]): string[] {
     let optionalParameters: boolean = true;
-    let errors: string[] = [];
+    const errors: string[] = [];
     for (let i = 0; i < args.length; i++) {
       const argv = args[i];
       if (optionalParameters && argv.startsWith("-")) {
         // handle case where arg contains equal sign before value
-        let parts = firstAndRest(argv.replace(/^-+/, ""), /=/);
-        let optname = parts.shift();
+        const parts = firstAndRest(argv.replace(/^-+/, ""), /=/);
+        const optname = parts.shift();
         let rest = parts.shift();
         // handle case where arg's value is next arg
         if (rest === undefined || rest === "") {
@@ -280,7 +280,7 @@ export class OptionsProcessor {
       }
     }
     // Finally we need to set our default values if the options doesn't contain them.
-    for (let attr in this.defaults) {
+    for (const attr in this.defaults) {
       if (!this.options.hasOwnProperty(attr)) {
         this.options[attr] = this.defaults[attr];
       }

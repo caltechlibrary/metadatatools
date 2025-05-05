@@ -4,8 +4,8 @@
  * @returns a string
  */
 export function normalizeEAN(ean: string): string {
-    return ean.trim().replace(/[^0-9]/g, "");
-};
+  return ean.trim().replace(/[^0-9]/g, "");
+}
 
 /**
  * validateEAN13 validates a 13 digit EAN.
@@ -13,13 +13,13 @@ export function normalizeEAN(ean: string): string {
  * @returns true if valid, false otherwise
  */
 function validateEAN13(ean: string): boolean {
-    const digits = normalizeEAN(ean).split("").map(Number);
-    let total = 0;
-    for (let i = 0; i < 12; i++) {
-      total += digits[i] * (i % 2 === 0 ? 1 : 3);
-    }
-    const checkDigit = (10 - (total % 10)) % 10;
-    return checkDigit === digits[12];
+  const digits = normalizeEAN(ean).split("").map(Number);
+  let total = 0;
+  for (let i = 0; i < 12; i++) {
+    total += digits[i] * (i % 2 === 0 ? 1 : 3);
+  }
+  const checkDigit = (10 - (total % 10)) % 10;
+  return checkDigit === digits[12];
 }
 
 /**
@@ -28,13 +28,13 @@ function validateEAN13(ean: string): boolean {
  * @returns true if valid, false otherwise
  */
 function validateEAN8(ean: string): boolean {
-    const digits = normalizeEAN(ean).split("").map(Number);
-    let total = 0;
-    for (let i = 0; i < 7; i++) {
-      total += digits[i] * (i % 2 === 0 ? 3 : 1);
-    }
-    const checkDigit = (10 - (total % 10)) % 10;
-    return checkDigit === digits[7];
+  const digits = normalizeEAN(ean).split("").map(Number);
+  let total = 0;
+  for (let i = 0; i < 7; i++) {
+    total += digits[i] * (i % 2 === 0 ? 3 : 1);
+  }
+  const checkDigit = (10 - (total % 10)) % 10;
+  return checkDigit === digits[7];
 }
 
 /**
@@ -43,12 +43,11 @@ function validateEAN8(ean: string): boolean {
  * @returns true if valid, false otherwise
  */
 export function validateEAN(ean: string): boolean {
-    const normalizedEAN = normalizeEAN(ean);
-    if (normalizedEAN.length === 13) {
-      return validateEAN13(normalizedEAN);
-    } else if (normalizedEAN.length === 8) {
-      return validateEAN8(normalizedEAN);
-    }
-    return false;
-};
-  
+  const normalizedEAN = normalizeEAN(ean);
+  if (normalizedEAN.length === 13) {
+    return validateEAN13(normalizedEAN);
+  } else if (normalizedEAN.length === 8) {
+    return validateEAN8(normalizedEAN);
+  }
+  return false;
+}

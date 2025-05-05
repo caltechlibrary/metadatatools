@@ -1,9 +1,10 @@
-export const ISBN10Pattern = "^(?:\\d[\\ |-]?){9}[\\d|X]$";
-export const reISBN10 = new RegExp(ISBN10Pattern, "i");
-export const ISBN13Pattern = "^(?:\d[\ |-]?){13}$";
-export const reISBN13 = new RegExp(ISBN13Pattern, "i");
-export const ISBNPattern = "^((?:\\d[\\ |-]?){9}[\\d|X]|(?:\d[\ |-]?){13})$";
-export const reISBN = new RegExp(ISBNPattern, "i");
+export const ISBN10Pattern: string = "^(?:\\d[\\ |-]?){9}[\\d|X]$";
+export const reISBN10: RegExp = new RegExp(ISBN10Pattern, "i");
+export const ISBN13Pattern: string = "^(?:\d[\ |-]?){13}$";
+export const reISBN13: RegExp = new RegExp(ISBN13Pattern, "i");
+export const ISBNPattern: string =
+  "^((?:\\d[\\ |-]?){9}[\\d|X]|(?:\d[\ |-]?){13})$";
+export const reISBN: RegExp = new RegExp(ISBNPattern, "i");
 
 /**
  * Validates an ISBN-10.

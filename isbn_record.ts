@@ -8,7 +8,7 @@ import { normalizeISBN, validateISBN } from "./isbn.ts";
  */
 export async function verifyISBN(isbn: string): Promise<boolean> {
   const normalizedISBN = normalizeISBN(isbn);
-  return verifyIdentifier(
+  return await verifyIdentifier(
     isbn,
     `https://openlibrary.org/isbn/${encodeURIComponent(normalizedISBN)}.json`,
     validateISBN,
