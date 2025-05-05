@@ -17,7 +17,7 @@ export async function verifyIdentifier(
   if (validate(identifier)) {
     const response = await fetch(u);
     if (response !== undefined && response !== null) {
-   	  if (response.body !== null) await response.body.cancel();
+      if (response.body !== null) await response.body.cancel();
       return response.ok;
     }
   }

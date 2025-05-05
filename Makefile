@@ -5,7 +5,7 @@ PROJECT = metadatatools
 
 PACKAGE =  $(shell ls -1 *.ts | grep -v 'version.ts')
 
-PROGRAMS = mtd
+PROGRAMS = mdtools
 
 TS_MODS = arxiv.ts arxiv_record.ts doi.ts doi_record.ts \
    isbn.ts isbn_record.ts isni.ts isni_record.ts \
@@ -44,7 +44,7 @@ endif
 #PREFIX = /usr/local/bin
 PREFIX = $(HOME)
 
-build: version.ts mdt.js $(TS_MODS) CITATION.cff about.md bin compile installer.sh installer.ps1 $(HTML_PAGES)
+build: version.ts $(TS_MODS) CITATION.cff about.md INSTALL.md bin compile installer.sh installer.ps1 $(HTML_PAGES)
 
 bin: .FORCE
 	mkdir -p bin
@@ -52,22 +52,19 @@ bin: .FORCE
 
 compile: check $(TS_MODS)
 	deno task build
-	./bin/mdt$(EXT) --help >mdt.1.md
+	./bin/mdtools$(EXT) --help >mdtools.1.md
 
 check: $(TS_MODS)
 
 test: .FORCE
 	deno task test
 
-bundle: mdt.js
-
-mdt.js: *.ts
-	deno task bundle
-	git add mdt.js
-
 version.ts: codemeta.json .FORCE
 	cmt codemeta.json version.ts
 	
+INSTALL.md: .FORCE
+	cmt codemeta.json INSTALL.md
+
 format: $(TS_MODS)
 
 $(TS_MODS): .FORCE
@@ -111,6 +108,24 @@ installer.ps1: .FORCE
 	cmt codemeta.json installer.ps1
 	chmod 775 installer.ps1
 	git add -f installer.ps1
+
+install: build
+	@if [ ! -d $(PREFIX)/bin ]; then mkdir -p $(PREFIX)/bin; fi
+	@echo "Installing programs in $(PREFIX)/bin"
+	for FNAME in $(PROGRAMS); do if [ -f ./bin/$$FNAME ]; then mv -v ./bin/$$FNAME $(PREFIX)/bin/$$FNAME; fi; done
+	@echo ""
+	@echo "Make sure $(PREFIX)/bin is in your PATH"
+	@echo ""
+	for FNAME in $(MAN_PAGES_1); do if [ -f "./man/man1/$${FNAME}" ]; then cp -v "./man/man1/$${FNAME}" "$(PREFIX)/man/man1/$${FNAME}"; fi; done
+	@echo "Make sure $(PREFIX)/man is in your MANPATH"
+	@echo ""
+
+uninstall: .FORCE
+	@echo "Removing programs in $(PREFIX)/bin"
+	for FNAME in $(PROGRAMS); do if [ -f $(PREFIX)/bin/$$FNAME ]; then rm -v $(PREFIX)/bin/$$FNAME; fi; done
+	@echo "Removing manpages in $(PREFIX)/man"
+	for FNAME in $(MAN_PAGES_1); do if [ -f "$(PREFIX)/man/man1/$${FNAME}" ]; then rm -v "$(PREFIX)/man/man1/$${FNAME}"; fi; done
+
 
 clean:
 	if [ -d bin ]; then rm -fR bin/*; fi

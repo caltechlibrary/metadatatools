@@ -1,5 +1,5 @@
 /**
- * mdts.ts - this is a command line program exposing the functionality of metadata tools to
+ * mdt.ts - this is a command line program exposing the functionality of metadata tools to
  * the shell on POSIX systems.
  */
 import { parseArgs } from "@std/cli/parse-args";
@@ -113,7 +113,7 @@ async function action(
  * main() - this is the main entry point for the command line program.
  */
 async function main() {
-  const appName = "mtd";
+  const appName = "mdtools";
   const app = parseArgs(Deno.args, {
     alias: {
       help: "h",

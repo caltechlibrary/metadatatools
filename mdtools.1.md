@@ -1,18 +1,18 @@
-%mtd(1) user manual | 0.0.5 2024-05-05 c9513e2
+%mdtools(1) user manual | 0.0.6 2025-05-05 6a41485
 % R. S.Doiel
-% 2024-05-05 c9513e2
+% 2025-05-05 6a41485
     
 # NAME
     
-mtd
+mdtools
     
 # SYNOPSIS
     
-mtd [OPTIONS] normalize|validate|verify ID_TYPE IDENTIFIER
+mdtools [OPTIONS] normalize|validate|verify ID_TYPE IDENTIFIER
     
 # DESCRIPTION
     
-mtd will normalize, validate or verify the identifier provided
+mdtools will normalize, validate or verify the identifier provided
 based on the type provided. Validate and verify it will return the text
 'true' or 'false' and set an error level. Normalize will return the
 normalized string.
@@ -56,12 +56,12 @@ the text "undefined" and exit code of 3.
 
 # EXAMPLE
 
-mtd used to normalize, validate and verify an ORCID.
+mdtools used to normalize, validate and verify an ORCID.
 
 ~~~shell
-mtd normalize orcid 0000-0003-0900-6903
-mtd validate orcid 0000-0003-0900-6903
-mtd verify orcid 0000-0003-0900-6903
+mdtools normalize orcid 0000-0003-0900-6903
+mdtools validate orcid 0000-0003-0900-6903
+mdtools verify orcid 0000-0003-0900-6903
 ~~~
   
 

@@ -1,8 +1,8 @@
 // metadatatools version and license information.
 
-export const version: string = '0.0.5',
-releaseDate: string = '2024-05-05',
-releaseHash: string = 'c9513e2',
+export const version: string = '0.0.6',
+releaseDate: string = '2025-05-05',
+releaseHash: string = '6a41485',
 licenseText: string = `
 
 Copyright (c) 2024, Caltech
