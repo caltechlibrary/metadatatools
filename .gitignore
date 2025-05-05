@@ -8,3 +8,4 @@ development_approach.html
 bin/*
 man/*
 dist/*
+coverage/
