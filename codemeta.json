@@ -64,7 +64,7 @@
   "developmentStatus": "WIP",
   "issueTracker": "https://github.com/caltechlibrary/metadatatools/issues",
   "downloadUrl": "https://github.com/caltechlibrary/metadatatools/release/latest",
-  "releaseNotes": "WIP, passing lint and passing publish --dry-run. Requires Deno 2.3.",
+  "releaseNotes": "WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn't conflict with another program called mdt.\nFixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via `deno publish`.",
   "copyrightYear": 2024,
   "copyrightHolder": [
     {

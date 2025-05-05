@@ -36,7 +36,8 @@ About this software
 
 ## metadatatools 0.0.6
 
-WIP, passing lint and passing publish --dry-run. Requires Deno 2.3.
+WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn&#x27;t conflict with another program called mdt.
+Fixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via &#x60;deno publish&#x60;.
 
 ### Authors
 

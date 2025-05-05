@@ -1,6 +1,6 @@
-%mdtools(1) user manual | 0.0.6 2025-05-05 6a41485
+%mdtools(1) user manual | 0.0.6 2025-05-05 a391b78
 % R. S.Doiel
-% 2025-05-05 6a41485
+% 2025-05-05 a391b78
     
 # NAME
     
