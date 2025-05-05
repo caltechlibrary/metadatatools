@@ -1,6 +1,6 @@
-%mtd(1) user manual | 0.0.4 2024-12-11 61b3a27
+%mtd(1) user manual | 0.0.5 2025-05-05 ea45ac7
 % R. S.Doiel
-% 2024-12-11 61b3a27
+% 2025-05-05 ea45ac7
     
 # NAME
     

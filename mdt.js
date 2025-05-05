@@ -1,8 +1,8 @@
 const appInfo = {
     appName: "metadatatools",
-    version: "0.0.4",
-    releaseDate: "2024-12-11",
-    releaseHash: "61b3a27",
+    version: "0.0.5",
+    releaseDate: "2025-05-05",
+    releaseHash: "ea45ac7",
     licenseText: `
 Copyright (c) 2024, Caltech All rights not granted herein are expressly
 reserved by Caltech.
@@ -53,6 +53,9 @@ async function verifyIdentifier(identifier, u, validate) {
     if (validate(identifier)) {
         const response = await fetch(u);
         if (response !== undefined && response !== null) {
+            if (response.body !== undefined) {
+                response.body?.cancel();
+            }
             return response.ok;
         }
     }
@@ -171,7 +174,6 @@ function validateISSN(issn) {
 }
 function normalizeISSN(issn) {
     const bareISSN = stripISSN(issn);
-    console.log(`DEBUG bareISSN -> ${bareISSN}`);
     return `${bareISSN.substring(0, 4)}-${bareISSN.substring(4)}`;
 }
 async function verifyISSN(issn) {
