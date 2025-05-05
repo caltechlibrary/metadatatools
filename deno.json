@@ -21,22 +21,28 @@
   "lint": {
     "exclude": [
       "dist/",
+      "man/",
       "pagefind/",
-	  "ancillary/"
+	  "ancillary/",
+	  "presentations/"
     ]
   },
   "check": {
     "exclude": [
       "dist/",
+      "man/",
       "pagefind/",
-	  "ancillary/"
+	  "ancillary/",
+	  "presentations/"
     ]
   },
   "publish": {
     "exclude": [
       "dist/",
+      "man/",
       "pagefind/",
-	  "ancillary/"
+	  "ancillary/",
+	  "presentations/"
     ]
   }
 }

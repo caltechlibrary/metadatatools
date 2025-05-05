@@ -37,8 +37,8 @@ ror.org).
 # USAGE
 
 There are three ways to use Metadata Tools. The first is via the command line
-program `mdt`. This simple command line program accepts three parameters,
-ACTION, ID_TYPE and IDENTIFIER. See [man page for details](mdt.1.md). An ACTION
+program `mdtools`. This simple command line program accepts three parameters,
+ACTION, ID_TYPE and IDENTIFIER. See [man page for details](mdtools.1.md). An ACTION
 can be one of three things, "normalize", "validate" and "verify". The second
 parameter is one of the types listed above. The final parameter the identifier
 value. "normalize" will accept an identifier in a common format variation and
@@ -72,11 +72,6 @@ the Caltech Library development group's GitHub website,
 <https://caltechlibrary.github.io/metadatatools/mod.ts>. The `mod.ts` file will
 pull in the whole set of identifier normalization, validation and verification
 routines.
-
-The third way is as a JavaScript bundle called [mdt.js](mdt.js) which you can
-reference from <https://caltechlibrary.github.io/metadatatools/mdt.js> or copy
-into your own site from this repository. It can be built using the Deno task
-`bundle`.
 
 ## Installation
 
