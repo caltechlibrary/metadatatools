@@ -59,11 +59,11 @@
     "Pandoc >= 3.1",
     "GNU Make >= 3.81"
   ],
-  "version": "0.0.5",
+  "version": "0.0.6",
   "developmentStatus": "concept",
   "issueTracker": "https://github.com/caltechlibrary/metadatatools/issues",
   "downloadUrl": "https://github.com/caltechlibrary/metadatatools/release/latest",
-  "releaseNotes": "Proof of concept, improved test coverage, updated to Deno 2.3.",
+  "releaseNotes": "WIP, passing lint and passing publish --dry-run. Requires Deno 2.3.",
   "copyrightYear": 2024,
   "copyrightHolder": [
     {
