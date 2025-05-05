@@ -1,4 +1,7 @@
 {
+  "name": "@caltechlibrary/metadatatools",
+  "version": "0.0.5",
+  "exports": "./mod.ts",
   "tasks": {
     "build": "deno compile --allow-net --output=bin/mdt cmd/mdt.ts",
     "bundle": "deno run --allow-import --allow-net --allow-env --allow-read ancillary/bundle.ts >mdt.js",

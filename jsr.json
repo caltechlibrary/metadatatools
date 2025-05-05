@@ -1,0 +1,5 @@
+{
+	"name": "@caltechlibrary/metadatatools",
+	"version": "0.0.5",
+	"export": "./mod.ts"
+}
