@@ -5,6 +5,14 @@ import { normalizeArXivID, validateArXivID } from "./arxiv.ts";
  * Verifies an arXiv using an external database, arxiv.org
  * @param arxiv - The identifier string to verify.
  * @returns Promise<boolean> - True if the arXiv exists, otherwise false.
+ * 
+ * ```ts
+ * if (varifyArXivID(arvix)) {
+ *    console.log(`${arvix} has been verified`);
+ * } else {
+ *    console.error(`${arvix} failed to been verified`); * 
+ * }
+ * ```
  */
 export async function verifyArXivID(arxiv: string): Promise<boolean> {
   const normalizedID = normalizeArXivID(arxiv);

@@ -6,10 +6,39 @@ export const reNewARXIV: RegExp = new RegExp(newARXIVPattern, "i");
 export const oldARXIVPattern: string = "^arxiv:[a-z\\-]+\\/\\d{7}(v\\d+)?$";
 export const reOldARXIV: RegExp = new RegExp(oldARXIVPattern, "i");
 
+/**
+ * normalizes the arxiv identifier string
+ * @param arxivID 
+ * @returns stirng with the normalized ArXiv identifier
+ * 
+ * ```ts
+ *   import { normalizeArXivID } from "@caltechlibrary/metadatatools";
+ * 
+ *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
+ *   console.log(arxiv); // displays arXiv:2412.03631
+ * ```
+ */
 export function normalizeArXivID(arxivID: string): string {
   return arxivID.trim().toLowerCase();
 }
 
+/**
+ * noarmlizes the arxiv identifier
+ * @param arxivID 
+ * @returns stirng with the normalized ArXiv identifier
+ * 
+ * ```ts
+ *   import { validateArXivID } from "@caltechlibrary/metadatatools";
+ * 
+ *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
+ * 
+ *   if (validateArXivID(arxiv)) {
+ *       console.log(`${arxiv} appears valid`);
+ *   } else {
+ *       console.error(`${arxiv}, failed validation`);
+ *   }
+ * ```
+ */
 export function validateArXivID(arxivID: string): boolean {
   const normalizedID = normalizeArXivID(arxivID);
   return reARXIV.test(normalizedID);
