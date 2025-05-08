@@ -17,6 +17,7 @@ export const reOldARXIV: RegExp = new RegExp(oldARXIVPattern, "i");
  * @param arxivID 
  * @returns stirng with the normalized ArXiv identifier
  * 
+ * @example
  * ```ts
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
  * 
@@ -32,6 +33,7 @@ export function normalizeArXivID(arxivID: string): string {
  * @param arxivID 
  * @returns stirng with the normalized ArXiv identifier
  * 
+ * @example
  * ```ts
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
  * 

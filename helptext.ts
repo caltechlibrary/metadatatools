@@ -1,3 +1,27 @@
+/**
+ * this module provides help documentation and function for the cli
+ * @module
+ */
+
+/**
+ * this formats the help text replacing the curly bracket delimited application name,
+ * version number, release date and release hash.
+ * 
+ * @param txt 
+ * @param appName 
+ * @param version 
+ * @param releaseDate 
+ * @param releaseHash 
+ * @returns
+ * 
+ * @example
+ * ```ts
+ *   if (args.help) {
+ *      console.log(fmtHelp(textText, appName, version, releaseDate, releaseHash));
+ *      return; // exit after displaying help
+ *   }
+ * ```
+ */
 export function fmtHelp(
   txt: string,
   appName: string,

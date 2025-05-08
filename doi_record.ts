@@ -15,6 +15,7 @@ import { normalizeDOI, validateDOI } from "./doi.ts";
  * @param DOI - the identifier to verify.
  * @returns Promise<boolean> - True if exists, false otherwise.
  * 
+ * @example
  * ```ts
  * const doi:string = '10.22002/bv2pv-2b295';
  * 
@@ -40,6 +41,7 @@ export async function verifyDOI(doi: string): Promise<boolean> {
  * @param DOI - The identifier of the object to retrieve.
  * @returns Promie<object | undefined>, if retrieval fails or JSON parse fail undefined is returned.
  * 
+ * @example
  * ```ts
  * const doi:string = '10.22002/bv2pv-2b295';
  * const obj: {[key: string]:any} = getObjectDOI(doi);

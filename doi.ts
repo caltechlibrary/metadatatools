@@ -12,6 +12,7 @@ export const reDOI: RegExp = new RegExp(DOIPattern);
  * @param doi - The DOI string to normalize.
  * @returns string - The normalized DOI string.
  * 
+ * @example
  * ```ts
  * const doi:string = normalizeDOI('https://www.doi.org/10.22002/bv2pv-2b295');
  * 
@@ -36,6 +37,7 @@ export function normalizeDOI(doi: string): string {
  * @param doi - The DOI string to validate.
  * @returns boolean - True if the DOI is valid, otherwise false.
  * 
+ * @example
  * ```ts
  * const doi:string = normalizeDOI('https://www.doi.org/10.22002/bv2pv-2b295');
  * 

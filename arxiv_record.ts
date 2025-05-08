@@ -13,6 +13,7 @@ import { normalizeArXivID, validateArXivID } from "./arxiv.ts";
  * @param arxiv - The identifier string to verify.
  * @returns Promise<boolean> - True if the arXiv exists, otherwise false.
  * 
+ * @example
  * ```ts
  * const arxiv: string = 'arXiv:2412.03631';
  * 

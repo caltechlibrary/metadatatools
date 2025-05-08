@@ -9,6 +9,7 @@
  * @param ean, the string to be normalized
  * @returns a string
  * 
+ * @example
  * ```ts
  * const ean: string = nomralizeEAN('9780201544282');
  * console.log(ean); // 9780201544282
@@ -23,6 +24,7 @@ export function normalizeEAN(ean: string): string {
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
  * 
+ * @example
  * ```ts
  * const ean: string = nomralizeEAN('9780201544282');
  * if (validateEAN13(ean)) {
@@ -47,6 +49,7 @@ function validateEAN13(ean: string): boolean {
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
  * 
+ * @example
  * ```ts
  * const ean: string = nomralizeEAN('9780201544282');
  * if (validateEAN8(ean)) {
@@ -71,6 +74,7 @@ function validateEAN8(ean: string): boolean {
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
  * 
+ * @example
  * ```ts
  * const ean: string = nomralizeEAN('9780201544282');
  * if (validateEAN13(ean)) {

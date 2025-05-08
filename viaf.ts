@@ -1,3 +1,7 @@
+/**
+ * this module provides normalization and validation of VIAF identifiers
+ * @module
+ */
 export const VIAFPattern: string = "^\\d+$"; // VIAF IDs are numeric
 export const reVIAF: RegExp = new RegExp(VIAFPattern);
 
