@@ -1,3 +1,9 @@
+/**
+ * This module provides nomralization and validation of the form of the ArXiv identifier.
+ * 
+ * @module metadatatools
+ */
+
 export const ARXIVPattern: string =
   "^arxiv:(\\d{4}\\.\\d{4,5}(v\\d+)?|[a-z\\-]+\\/\\d{7}(v\\d+)?)$";
 export const reARXIV: RegExp = new RegExp(ARXIVPattern, "i");
@@ -12,9 +18,8 @@ export const reOldARXIV: RegExp = new RegExp(oldARXIVPattern, "i");
  * @returns stirng with the normalized ArXiv identifier
  * 
  * ```ts
- *   import { normalizeArXivID } from "@caltechlibrary/metadatatools";
- * 
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
+ * 
  *   console.log(arxiv); // displays arXiv:2412.03631
  * ```
  */
@@ -28,8 +33,6 @@ export function normalizeArXivID(arxivID: string): string {
  * @returns stirng with the normalized ArXiv identifier
  * 
  * ```ts
- *   import { validateArXivID } from "@caltechlibrary/metadatatools";
- * 
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
  * 
  *   if (validateArXivID(arxiv)) {

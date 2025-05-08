@@ -106,4 +106,3 @@ export { verifyVIAF } from "./viaf_record.ts";
 
 // helptext.ts export
 export { fmtHelp, helpText } from "./helptext.ts";
-

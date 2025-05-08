@@ -1,3 +1,6 @@
+/**
+ * demonostratuion of how you might use the modules provided by metadatatools.
+ */
 import {
   normalizeDOI,
   normalizeORCID,

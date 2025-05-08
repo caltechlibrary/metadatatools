@@ -1,7 +1,18 @@
 /**
+ * this module provide normalization and validation for EANs both 8 and 13 digits.
+ * 
+ * @module metadatatools
+ */
+
+/**
  * normalizeEAN will take a string holding an ean and normalize it.
  * @param ean, the string to be normalized
  * @returns a string
+ * 
+ * ```ts
+ * const ean: string = nomralizeEAN('9780201544282');
+ * console.log(ean); // 9780201544282
+ * ```
  */
 export function normalizeEAN(ean: string): string {
   return ean.trim().replace(/[^0-9]/g, "");
@@ -11,6 +22,15 @@ export function normalizeEAN(ean: string): string {
  * validateEAN13 validates a 13 digit EAN.
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
+ * 
+ * ```ts
+ * const ean: string = nomralizeEAN('9780201544282');
+ * if (validateEAN13(ean)) {
+ *     console.log(`${ean} appears to be a valid 13 digit ean`);
+ * } else {
+ *     console.error(`${ean} fails validataion`);
+ * }
+ * ```
  */
 function validateEAN13(ean: string): boolean {
   const digits = normalizeEAN(ean).split("").map(Number);
@@ -26,6 +46,15 @@ function validateEAN13(ean: string): boolean {
  * validateEAN8 validates a 8 digit EAN.
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
+ * 
+ * ```ts
+ * const ean: string = nomralizeEAN('9780201544282');
+ * if (validateEAN8(ean)) {
+ *     console.log(`${ean} appears to be a valid 8 digit ean`);
+ * } else {
+ *     console.error(`${ean} fails validataion`);
+ * }
+ * ```
  */
 function validateEAN8(ean: string): boolean {
   const digits = normalizeEAN(ean).split("").map(Number);
@@ -41,6 +70,15 @@ function validateEAN8(ean: string): boolean {
  * validateEAN validates an EAN (International Article Number, European Article Number, Japanese Article Number).
  * @param ean, the string to be validated
  * @returns true if valid, false otherwise
+ * 
+ * ```ts
+ * const ean: string = nomralizeEAN('9780201544282');
+ * if (validateEAN13(ean)) {
+ *     console.log(`${ean} appears to be a valid 13 digit ean`);
+ * } else {
+ *     console.error(`${ean} fails validataion`);
+ * }
+ * ```
  */
 export function validateEAN(ean: string): boolean {
   const normalizedEAN = normalizeEAN(ean);
