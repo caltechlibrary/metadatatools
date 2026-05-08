@@ -36,33 +36,33 @@ About this software
 
 ## metadatatools 0.0.6
 
-WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn&#x27;t conflict with another program called mdt.
-Fixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via &#x60;deno publish&#x60;.
+WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn't conflict with another program called mdt.
+Fixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via `deno publish`.
 
-### Authors
+## Authors
 
-- R. S. Doiel, <https://orcid.org/0000-0003-0900-6903>
-
-
+- [R. S. Doiel](https://orcid.org/0000-0003-0900-6903)
 
 
-### Maintainers
 
-- R. S. Doiel, <https://orcid.org/0000-0003-0900-6903>
+
+## Maintainers
+
+- [R. S. Doiel](https://orcid.org/0000-0003-0900-6903)
 
 
 Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript.
 
-- License: <https://caltechlibrary.github.io/metadatatools/LICENSE>
-- GitHub: <https://github.com/caltechlibrary/metadatatools>
-- Issues: <https://github.com/caltechlibrary/metadatatools/issues>
+- [License](https://caltechlibrary.github.io/metadatatools/LICENSE)
+- [Code Repository](https://github.com/caltechlibrary/metadatatools)
+  - [Issue Tracker](https://github.com/caltechlibrary/metadatatools/issues)
 
-### Programming languages
+## Programming languages
 
 - Typescript
 
 
-### Operating Systems
+## Operating Systems
 
 - Linux
 - Windows
@@ -70,10 +70,13 @@ Inspired by the Python IdUtils package metadatatools provides similar functional
 - web browser
 
 
-### Software Requirements
+## Software Requirements
 
-- Deno &gt;&#x3D; 2.3
-- Pandoc &gt;&#x3D; 3.1
-- GNU Make &gt;&#x3D; 3.81
-- CMTools &gt;&#x3D; 0.0.25
+- Deno >= 2.3
+- Pandoc >= 3.1
+- GNU Make >= 3.81
+- CMTools >= 0.0.25
+
+
+
 
