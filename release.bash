@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REPO_ID="$(basename $(pwd))"
-GROUP_ID="$(basename $(dirname $(pwd)))"
+GROUP_ID="caltechlibrary"
 REPO_URL="https://github.com/${GROUP_ID}/${REPO_ID}"
 echo "REPO_URL -> ${REPO_URL}"
 
