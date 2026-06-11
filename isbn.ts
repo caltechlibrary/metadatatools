@@ -14,11 +14,11 @@ export const reISBN: RegExp = new RegExp(ISBNPattern, "i");
  * Validates an ISBN-10.
  * @param isbn - The ISBN-10 string to validate.
  * @returns boolean - True if valid, false otherwise.
- * 
+ *
  * @example
  * ```ts
  *  const isbn: string = normalizeISBN('978-3-16-148410-0');
- * 
+ *
  *  if (validateISBN10(isbn)) {
  *      console.log(`${isbn} is a valid 10 digit isbn`);
  *  } else {
@@ -45,11 +45,11 @@ function validateISBN10(isbn: string): boolean {
  * Validates an ISBN-13.
  * @param isbn - The ISBN-13 string to validate.
  * @returns boolean - True if valid, false otherwise.
- * 
+ *
  * @example
  * ```ts
  *  const isbn: string = normalizeISBN('978-3-16-148410-0');
- * 
+ *
  *  if (validateISBN13(isbn)) {
  *      console.log(`${isbn} is a valid 13 digit isbn`);
  *  } else {
@@ -75,11 +75,11 @@ function validateISBN13(isbn: string): boolean {
  * Validates an ISBN (either ISBN-10 or ISBN-13).
  * @param isbn - The ISBN string to validate.
  * @returns boolean - True if valid, false otherwise.
- * 
+ *
  * @example
  * ```ts
  *  const isbn: string = normalizeISBN('978-3-16-148410-0');
- * 
+ *
  *  if (validateISBN(isbn)) {
  *      console.log(`${isbn} is a valid 10 or 13 digit isbn`);
  *  } else {
@@ -98,7 +98,7 @@ export function validateISBN(isbn: string): boolean {
  * normalizeISBN normalizes an ISBN by removing hyphens and spaces.
  * @param isbn - The ISBN string to normalize.
  * @returns string - The normalized ISBN string.
- * 
+ *
  * @example
  * ```ts
  *  const isbn: string = normalizeISBN('978-3-16-148410-0');

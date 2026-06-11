@@ -1,6 +1,7 @@
 ---
 title: metadatatools
-abstract: "Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript."
+abstract: |-
+  Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript and Go.
 authors:
   - family_name: Doiel
     given_name: R. S.
@@ -23,6 +24,7 @@ operating_system:
 
 programming_language:
   - Typescript
+  - Go
 
 keywords:
   - metadata
@@ -51,7 +53,7 @@ Fixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. Fir
 - [R. S. Doiel](https://orcid.org/0000-0003-0900-6903)
 
 
-Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript.
+Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript and Go.
 
 - [License](https://caltechlibrary.github.io/metadatatools/LICENSE)
 - [Code Repository](https://github.com/caltechlibrary/metadatatools)
@@ -60,6 +62,7 @@ Inspired by the Python IdUtils package metadatatools provides similar functional
 ## Programming languages
 
 - Typescript
+- Go
 
 
 ## Operating Systems
@@ -73,6 +76,7 @@ Inspired by the Python IdUtils package metadatatools provides similar functional
 ## Software Requirements
 
 - Deno >= 2.3
+- Go >= 1.26
 - Pandoc >= 3.1
 - GNU Make >= 3.81
 - CMTools >= 0.0.25

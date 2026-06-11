@@ -29,7 +29,7 @@
     }
   ],
   "dateCreated": "2024-12-04",
-  "dateModified": "2025-05-05",
+  "dateModified": "2026-06-10",
   "datePublished": "2025-05-05",
   "description": "Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript and Go.",
   "funder": [
@@ -57,22 +57,18 @@
   ],
   "softwareRequirements": [
     "Deno >= 2.3",
-    "Go >= 1.26",
-    "Pandoc >= 3.1",
-    "GNU Make >= 3.81",
-    "CMTools >= 0.0.25"
+    "Go >= 1.26"
   ],
-  "version": "0.0.6",
-  "developmentStatus": "WIP",
+  "softwareSuggestions": [
+    "Pandoc >= 3.9",
+    "GNU Make >= 3.81",
+    "CMTools >= 0.0.45b"
+  ],
+  "version": "0.0.7",
+  "developmentStatus": "active",
   "issueTracker": "https://github.com/caltechlibrary/metadatatools/issues",
   "downloadUrl": "https://github.com/caltechlibrary/metadatatools/release/latest",
-  "releaseNotes": "WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn't conflict with another program called mdt.\nFixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via `deno publish`.",
-  "copyrightYear": 2024,
-  "copyrightHolder": [
-    {
-      "@id": "https://ror.org/05dxps055",
-      "@type": "Organization",
-      "name": "California Institute of Technology"
-    }
-  ]
+  "releaseNotes": "- Integrated a Go port of the TypeScript pacakge",
+  "copyrightYear": 2026,
+  "copyrightHolder": "California Institute of Technology"
 }

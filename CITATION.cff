@@ -3,7 +3,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: metadatatools
-abstract: "Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript."
+abstract: |-
+  Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript and Go.
 authors:
   - family-names: Doiel
     given-names: R. S.

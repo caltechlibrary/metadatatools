@@ -1,6 +1,6 @@
 /**
  * This provides verification of the DOI via doi.org and retrieval the DOI object.
- * 
+ *
  * @module metadatatools
  */
 
@@ -14,11 +14,11 @@ import { normalizeDOI, validateDOI } from "./doi.ts";
  * Verifies an DOI handle exists registered via the DOI API.
  * @param DOI - the identifier to verify.
  * @returns Promise<boolean> - True if exists, false otherwise.
- * 
+ *
  * @example
  * ```ts
  * const doi:string = '10.22002/bv2pv-2b295';
- * 
+ *
  * if (await verifyDOI(doi)) {
  *   console.log(`${doi} appears valid`);
  * } else {
@@ -40,12 +40,12 @@ export async function verifyDOI(doi: string): Promise<boolean> {
  * getObjectDOI retrieves an DOI record from CrossRef or DataCite
  * @param DOI - The identifier of the object to retrieve.
  * @returns Promie<object | undefined>, if retrieval fails or JSON parse fail undefined is returned.
- * 
+ *
  * @example
  * ```ts
  * const doi:string = '10.22002/bv2pv-2b295';
  * const obj: {[key: string]:any} = getObjectDOI(doi);
- * 
+ *
  * if (obj === undefined) {
  *   console.error(`${doi} did now return an object, maybe it is not valid`);
  * } else {

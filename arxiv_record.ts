@@ -1,7 +1,7 @@
 /**
- * This module provides the verification function for ArViX identifiers. This connects 
+ * This module provides the verification function for ArViX identifiers. This connects
  * to https://export.arxiv.org API's to query for the item.
- * 
+ *
  * @module metadatatools
  */
 
@@ -12,15 +12,15 @@ import { normalizeArXivID, validateArXivID } from "./arxiv.ts";
  * Verifies an arXiv using an external database, arxiv.org
  * @param arxiv - The identifier string to verify.
  * @returns Promise<boolean> - True if the arXiv exists, otherwise false.
- * 
+ *
  * @example
  * ```ts
  * const arxiv: string = 'arXiv:2412.03631';
- * 
+ *
  * if (await varifyArXivID(arvix)) {
  *    console.log(`${arvix} has been verified`);
  * } else {
- *    console.error(`${arvix} failed to been verified`); * 
+ *    console.error(`${arvix} failed to been verified`); *
  * }
  * ```
  */

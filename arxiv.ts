@@ -1,6 +1,6 @@
 /**
  * This module provides nomralization and validation of the form of the ArXiv identifier.
- * 
+ *
  * @module metadatatools
  */
 
@@ -14,13 +14,13 @@ export const reOldARXIV: RegExp = new RegExp(oldARXIVPattern, "i");
 
 /**
  * normalizes the arxiv identifier string
- * @param arxivID 
+ * @param arxivID
  * @returns stirng with the normalized ArXiv identifier
- * 
+ *
  * @example
  * ```ts
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
- * 
+ *
  *   console.log(arxiv); // displays arXiv:2412.03631
  * ```
  */
@@ -30,13 +30,13 @@ export function normalizeArXivID(arxivID: string): string {
 
 /**
  * noarmlizes the arxiv identifier
- * @param arxivID 
+ * @param arxivID
  * @returns stirng with the normalized ArXiv identifier
- * 
+ *
  * @example
  * ```ts
  *   const arxiv: string = normalizeArXivID('ARXIV:2412.03631');
- * 
+ *
  *   if (validateArXivID(arxiv)) {
  *       console.log(`${arxiv} appears valid`);
  *   } else {

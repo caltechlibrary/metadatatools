@@ -1,6 +1,6 @@
-%mdtools(1) user manual | 0.0.6 2025-05-05 50a64de
+%mdtools(1) user manual | 0.0.6 2025-05-05 34c0bc2
 % R. S.Doiel
-% 2025-05-05 50a64de
+% 2025-05-05 34c0bc2
     
 # NAME
     

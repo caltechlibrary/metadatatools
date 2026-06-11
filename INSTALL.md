@@ -1,7 +1,7 @@
-Installation for development of **metadatatools**
-===========================================
+Installation **metadatatools**
+============================
 
-**metadatatools** Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript.
+**metadatatools** Inspired by the Python IdUtils package metadatatools provides similar functionality in TypeScript and Go.
 
 Quick install with curl or irm
 ------------------------------
@@ -20,15 +20,23 @@ If you are running Windows 10 or 11 use the Powershell command below.
 irm https://caltechlibrary.github.io/metadatatools/installer.ps1 | iex
 ~~~
 
+### If your are running macOS or Windows
+
+You may get security warnings if you are using macOS or Windows. See the notes for the specific operating system you’re using to fix issues.
+
+- [INSTALL_NOTES_macOS.md](INSTALL_NOTES_macOS.md)
+- [INSTALL_NOTES_Windows.md](INSTALL_NOTES_Windows.md)
+
 Installing from source
 ----------------------
 
 ### Required software
 
-- Deno &gt;&#x3D; 2.3
-- Pandoc &gt;&#x3D; 3.1
-- GNU Make &gt;&#x3D; 3.81
-- CMTools &gt;&#x3D; 0.0.25
+- Deno >= 2.3
+- Go >= 1.26
+- Pandoc >= 3.1
+- GNU Make >= 3.81
+- CMTools >= 0.0.25
 
 ### Steps
 
