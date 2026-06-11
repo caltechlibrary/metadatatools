@@ -1,17 +1,17 @@
-%mdtools(1) user manual | 0.0.6 2025-05-05 34c0bc2
-% R. S.Doiel
-% 2025-05-05 34c0bc2
-    
+%mdtools(1) user manual | version 0.1.0 98f83e7
+% R. S. Doiel
+% 2026-06-11
+
 # NAME
-    
+
 mdtools
-    
+
 # SYNOPSIS
-    
+
 mdtools [OPTIONS] normalize|validate|verify ID_TYPE IDENTIFIER
-    
+
 # DESCRIPTION
-    
+
 mdtools will normalize, validate or verify the identifier provided
 based on the type provided. Validate and verify it will return the text
 'true' or 'false' and set an error level. Normalize will return the
@@ -21,11 +21,14 @@ NOTE: verify requires network access.
 
 # ID_TYPE
 
-The following identifier types are supported (type name are case insensitive).
+The following identifier types are supported (type names are case insensitive).
 
 - ArXiv
 - DOI
+- DOI-Short (bare 10.xxxx/yyyy form of DOI)
+- EAN (verification unavailable)
 - EMAIL (email address, verification unavailable)
+- FUNDREF
 - ISBN
 - ISSN
 - ISNI
@@ -33,13 +36,15 @@ The following identifier types are supported (type name are case insensitive).
 - ORCID
 - PMID
 - PMCID
+- RAiD (verification unavailable)
+- RAiD-Short (bare 10.xxxx/yyyy or 102.xxxx/yyyy form of RAiD, verification unavailable)
 - ROR
 - SNAC
-- TEL (telphone number, verification unavailable)
-- UUID (NOTE: verification unavailable)
+- TEL (telephone number, verification unavailable)
+- UUID (verification unavailable)
 - VIAF
 
-NOTE: for identifier types with unavailable varification they will return
+NOTE: for identifier types with unavailable verification they will return
 the text "undefined" and exit code of 3.
 
 # OPTIONS
@@ -53,7 +58,6 @@ the text "undefined" and exit code of 3.
 -v, --version
 : display version
 
-
 # EXAMPLE
 
 mdtools used to normalize, validate and verify an ORCID.
@@ -63,5 +67,4 @@ mdtools normalize orcid 0000-0003-0900-6903
 mdtools validate orcid 0000-0003-0900-6903
 mdtools verify orcid 0000-0003-0900-6903
 ~~~
-  
 

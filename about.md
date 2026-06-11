@@ -14,7 +14,7 @@ maintainer:
     id: https://orcid.org/0000-0003-0900-6903
 
 repository_code: https://github.com/caltechlibrary/metadatatools
-version: 0.0.6
+version: 0.1.0
 license_url: https://caltechlibrary.github.io/metadatatools/LICENSE
 operating_system:
   - Linux
@@ -30,16 +30,17 @@ keywords:
   - metadata
   - identifiers
 
-date_released: 2025-05-05
+date_released: 2026-06-11
 ---
 
 About this software
 ===================
 
-## metadatatools 0.0.6
+## metadatatools 0.1.0
 
-WIP, passing lint and passing publish --dry-run. Renamed demo program of mdt to mdtools so it doesn't conflict with another program called mdt.
-Fixed missing install/uninstall in Makefile. Using cmt generated INSTALL.md. First release published via `deno publish`.
+- Integrated a Go port of the TypeScript package
+- Added RAiD support, this introduce a breaking change from the 0.0 series
+- The mdtools cli is now based on the Go source rather than Deno+TypeScript
 
 ## Authors
 
@@ -77,10 +78,12 @@ Inspired by the Python IdUtils package metadatatools provides similar functional
 
 - Deno >= 2.3
 - Go >= 1.26
-- Pandoc >= 3.1
+
+
+## Software Suggestions
+
+- Pandoc >= 3.9
 - GNU Make >= 3.81
-- CMTools >= 0.0.25
-
-
+- CMTools >= 0.0.45b
 
 

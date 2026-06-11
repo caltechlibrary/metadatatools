@@ -10,7 +10,17 @@ export {
   validateArXivID,
 } from "./arxiv.ts";
 export { verifyArXivID } from "./arxiv_record.ts";
-export { DOIPattern, normalizeDOI, reDOI, validateDOI } from "./doi.ts";
+export {
+  DOIPattern,
+  DOIPrefix,
+  DOIShortPattern,
+  normalizeDOI,
+  normalizeDOIShort,
+  reDOI,
+  reDOIShort,
+  validateDOI,
+  validateDOIShort,
+} from "./doi.ts";
 export { verifyDOI } from "./doi_record.ts";
 export {
   ISBN10Pattern,
@@ -50,6 +60,17 @@ export {
 export { verifyPMCID } from "./pmcid_record.ts";
 export { normalizePMID, PMIDPattern, rePMID, validatePMID } from "./pmid.ts";
 export { verifyPMID } from "./pmid_record.ts";
+export {
+  normalizeRAiD,
+  normalizeRAiDShort,
+  RAiDPattern,
+  RAiDPrefix,
+  RAiDShortPattern,
+  reRAiD,
+  reRAiDShort,
+  validateRAiD,
+  validateRAiDShort,
+} from "./raid.ts";
 export { normalizeROR, reROR, RORPattern, validateROR } from "./ror.ts";
 export { verifyROR } from "./ror_record.ts";
 export { normalizeSNAC, reSNAC, SNACPattern, validateSNAC } from "./snac.ts";

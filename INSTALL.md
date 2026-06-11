@@ -34,9 +34,6 @@ Installing from source
 
 - Deno >= 2.3
 - Go >= 1.26
-- Pandoc >= 3.1
-- GNU Make >= 3.81
-- CMTools >= 0.0.25
 
 ### Steps
 

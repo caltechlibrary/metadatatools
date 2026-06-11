@@ -111,6 +111,8 @@ func main() {
 		exitCode = action(metadatatools.NormalizeArXivID, metadatatools.ValidateArXivID, metadatatools.VerifyArXivID, verb, identifier)
 	case "doi":
 		exitCode = action(metadatatools.NormalizeDOI, metadatatools.ValidateDOI, metadatatools.VerifyDOI, verb, identifier)
+	case "doi-short":
+		exitCode = action(metadatatools.NormalizeDOIShort, metadatatools.ValidateDOIShort, metadatatools.VerifyDOI, verb, identifier)
 	case "ean":
 		exitCode = action(metadatatools.NormalizeEAN, metadatatools.ValidateEAN, nil, verb, identifier)
 	case "email":
@@ -131,6 +133,10 @@ func main() {
 		exitCode = action(metadatatools.NormalizePMCID, metadatatools.ValidatePMCID, metadatatools.VerifyPMCID, verb, identifier)
 	case "pmid":
 		exitCode = action(metadatatools.NormalizePMID, metadatatools.ValidatePMID, metadatatools.VerifyPMID, verb, identifier)
+	case "raid":
+		exitCode = action(metadatatools.NormalizeRAiD, metadatatools.ValidateRAiD, nil, verb, identifier)
+	case "raid-short":
+		exitCode = action(metadatatools.NormalizeRAiDShort, metadatatools.ValidateRAiDShort, nil, verb, identifier)
 	case "ror":
 		exitCode = action(metadatatools.NormalizeROR, metadatatools.ValidateROR, metadatatools.VerifyROR, verb, identifier)
 	case "snac":

@@ -1,5 +1,8 @@
 #
-# A Deno project makefile (with a parallel Go implementation)
+# metadatatools is distributed as a Go binary (mdtools, built from
+# cmd/mdtools). The TypeScript module (mod.ts) and Go module
+# (github.com/caltechlibrary/metadatatools) remain supported as
+# importable libraries.
 #
 PROJECT = metadatatools
 
@@ -11,7 +14,7 @@ TS_MODS = arxiv.ts arxiv_record.ts doi.ts doi_record.ts \
    isbn.ts isbn_record.ts isni.ts isni_record.ts \
    issn.ts issn_record.ts lcnaf.ts lcnaf_record.ts \
    orcid.ts orcid_record.ts pmcid.ts pmcid_record.ts \
-   pmid.ts pmid_record.ts ror.ts ror_record.ts \
+   pmid.ts pmid_record.ts raid.ts ror.ts ror_record.ts \
    snac.ts snac_record.ts utility.ts viaf.ts viaf_record.ts
 
 GO_PACKAGE = $(shell ls -1 *.go | grep -v 'version.go')
@@ -46,19 +49,15 @@ endif
 #PREFIX = /usr/local/bin
 PREFIX = $(HOME)
 
-build: version.ts $(TS_MODS) CITATION.cff about.md INSTALL.md bin compile installer.sh installer.ps1 $(HTML_PAGES)
+build: version.ts version.go $(TS_MODS) CITATION.cff about.md INSTALL.md go-build installer.sh installer.ps1 $(HTML_PAGES)
 
 bin: .FORCE
 	mkdir -p bin
 	-if [ -d bin ]; then rm bin/*; fi
 
-compile: check $(TS_MODS)
-	deno task build
-	./bin/mdtools$(EXT) --help >mdtools.1.md
-
 check: $(TS_MODS)
 
-test: .FORCE
+test: go-test
 	deno task test
 
 version.ts: codemeta.json .FORCE
@@ -67,9 +66,9 @@ version.ts: codemeta.json .FORCE
 version.go: codemeta.json .FORCE
 	cmt codemeta.json version.go
 
-go-build: version.go $(GO_PACKAGE)
-	@mkdir -p bin
+go-build: bin version.go $(GO_PACKAGE)
 	go build -o bin/mdtools$(EXT) ./cmd/mdtools
+	./bin/mdtools$(EXT) --help >mdtools.1.md
 
 go-test: .FORCE
 	go vet ./...
@@ -166,31 +165,31 @@ distribute_docs: website setup_dist
 
 dist/Linux-x86_64: .FORCE
 	@mkdir -p dist/bin
-	deno task release_linux_x86_64
+	env GOOS=linux GOARCH=amd64 go build -o dist/bin/mdtools ./cmd/mdtools
 	@cd dist && zip -r $(PROJECT)-v$(VERSION)-Linux-x86_64.zip LICENSE codemeta.json CITATION.cff *.md bin/*
 	@rm -fR dist/bin
 
 dist/Linux-aarch64: .FORCE
 	@mkdir -p dist/bin
-	deno task release_linux_aarch64
+	env GOOS=linux GOARCH=arm64 go build -o dist/bin/mdtools ./cmd/mdtools
 	@cd dist && zip -r $(PROJECT)-v$(VERSION)-Linux-aarch64.zip LICENSE codemeta.json CITATION.cff *.md bin/*
 	@rm -fR dist/bin
 
 dist/macOS-x86_64: .FORCE
 	@mkdir -p dist/bin
-	deno task release_macos_x86_64
+	env GOOS=darwin GOARCH=amd64 go build -o dist/bin/mdtools ./cmd/mdtools
 	@cd dist && zip -r $(PROJECT)-v$(VERSION)-macOS-x86_64.zip LICENSE codemeta.json CITATION.cff *.md bin/*
 	@rm -fR dist/bin
 
 dist/macOS-arm64: .FORCE
 	@mkdir -p dist/bin
-	deno task release_macos_aarch64
+	env GOOS=darwin GOARCH=arm64 go build -o dist/bin/mdtools ./cmd/mdtools
 	@cd dist && zip -r $(PROJECT)-v$(VERSION)-macOS-arm64.zip LICENSE codemeta.json CITATION.cff *.md bin/*
 	@rm -fR dist/bin
 
 dist/Windows-x86_64: .FORCE
 	@mkdir -p dist/bin
-	deno task release_windows_x86_64
+	env GOOS=windows GOARCH=amd64 go build -o dist/bin/mdtools.exe ./cmd/mdtools
 	@cd dist && zip -r $(PROJECT)-v$(VERSION)-Windows-x86_64.zip LICENSE codemeta.json CITATION.cff *.md bin/*
 	@rm -fR dist/bin
 

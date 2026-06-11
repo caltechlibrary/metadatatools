@@ -29,6 +29,7 @@ ror.org).
 - ORCID
 - PMID
 - PMCID
+- RAiD
 - ROR
 - LCNAF
 - VIAF

@@ -29,6 +29,7 @@ The following identifier types are supported (type names are case insensitive).
 
 - ArXiv
 - DOI
+- DOI-Short (bare 10.xxxx/yyyy form of DOI)
 - EAN (verification unavailable)
 - EMAIL (email address, verification unavailable)
 - FUNDREF
@@ -39,6 +40,8 @@ The following identifier types are supported (type names are case insensitive).
 - ORCID
 - PMID
 - PMCID
+- RAiD (verification unavailable)
+- RAiD-Short (bare 10.xxxx/yyyy or 102.xxxx/yyyy form of RAiD, verification unavailable)
 - ROR
 - SNAC
 - TEL (telephone number, verification unavailable)

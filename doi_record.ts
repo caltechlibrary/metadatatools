@@ -8,7 +8,7 @@
 // DOI verify will contact either CrossRef or DataCite to verify the DOI
 //
 import { getObject, verifyIdentifier } from "./utility.ts";
-import { normalizeDOI, validateDOI } from "./doi.ts";
+import { normalizeDOIShort, validateDOI } from "./doi.ts";
 
 /**
  * Verifies an DOI handle exists registered via the DOI API.
@@ -27,10 +27,10 @@ import { normalizeDOI, validateDOI } from "./doi.ts";
  * ```
  */
 export async function verifyDOI(doi: string): Promise<boolean> {
-  const normalizedDOI = normalizeDOI(doi);
+  const shortDOI = normalizeDOIShort(doi);
   const verified: boolean = await verifyIdentifier(
     doi,
-    `https://doi.org/api/handles/${encodeURIComponent(normalizedDOI)}`,
+    `https://doi.org/api/handles/${encodeURIComponent(shortDOI)}`,
     validateDOI,
   );
   return verified;
@@ -54,17 +54,17 @@ export async function verifyDOI(doi: string): Promise<boolean> {
  * ```
  */
 export async function getObjectDOI(doi: string): Promise<object | undefined> {
-  const normalizedDOI = normalizeDOI(doi);
+  const shortDOI = normalizeDOIShort(doi);
   const obj = await getObject(
     doi,
-    `https://api.crossref.org/works/${encodeURIComponent(normalizedDOI)}`,
+    `https://api.crossref.org/works/${encodeURIComponent(shortDOI)}`,
     validateDOI,
   );
   if (obj === undefined) {
     // Now try DataCite
     return await getObject(
       doi,
-      `https://api.datacite.org/dois/${encodeURIComponent(normalizedDOI)}`,
+      `https://api.datacite.org/dois/${encodeURIComponent(shortDOI)}`,
       validateDOI,
     );
   }

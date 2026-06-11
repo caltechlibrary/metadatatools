@@ -26,11 +26,14 @@
 </nav>
 <section id="main-content">
 <h1 id="about-this-software">About this software</h1>
-<h2 id="metadatatools-0.0.6">metadatatools 0.0.6</h2>
-<p>WIP, passing lint and passing publish –dry-run. Renamed demo program
-of mdt to mdtools so it doesn’t conflict with another program called
-mdt. Fixed missing install/uninstall in Makefile. Using cmt generated
-INSTALL.md. First release published via <code>deno publish</code>.</p>
+<h2 id="metadatatools-0.1.0">metadatatools 0.1.0</h2>
+<ul>
+<li>Integrated a Go port of the TypeScript package</li>
+<li>Added RAiD support, this introduce a breaking change from the 0.0
+series</li>
+<li>The mdtools cli is now based on the Go source rather than
+Deno+TypeScript</li>
+</ul>
 <h2 id="authors">Authors</h2>
 <ul>
 <li><a href="https://orcid.org/0000-0003-0900-6903">R. S. Doiel</a></li>
@@ -40,7 +43,7 @@ INSTALL.md. First release published via <code>deno publish</code>.</p>
 <li><a href="https://orcid.org/0000-0003-0900-6903">R. S. Doiel</a></li>
 </ul>
 <p>Inspired by the Python IdUtils package metadatatools provides similar
-functionality in TypeScript.</p>
+functionality in TypeScript and Go.</p>
 <ul>
 <li><a
 href="https://caltechlibrary.github.io/metadatatools/LICENSE">License</a></li>
@@ -55,6 +58,7 @@ Tracker</a></li>
 <h2 id="programming-languages">Programming languages</h2>
 <ul>
 <li>Typescript</li>
+<li>Go</li>
 </ul>
 <h2 id="operating-systems">Operating Systems</h2>
 <ul>
@@ -66,9 +70,13 @@ Tracker</a></li>
 <h2 id="software-requirements">Software Requirements</h2>
 <ul>
 <li>Deno &gt;= 2.3</li>
-<li>Pandoc &gt;= 3.1</li>
+<li>Go &gt;= 1.26</li>
+</ul>
+<h2 id="software-suggestions">Software Suggestions</h2>
+<ul>
+<li>Pandoc &gt;= 3.9</li>
 <li>GNU Make &gt;= 3.81</li>
-<li>CMTools &gt;= 0.0.25</li>
+<li>CMTools &gt;= 0.0.45b</li>
 </ul>
 </section>
 <footer-global></footer-global>
