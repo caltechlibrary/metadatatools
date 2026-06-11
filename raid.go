@@ -11,14 +11,19 @@ const RAiDPrefix = "https://raid.org/"
 
 // RAiDPattern is the regular expression pattern matching a normalized
 // (extended/full URL) RAiD.
-const RAiDPattern = `^https://raid\.org/102?\.\d+/[^\s]+$`
+//
+// RAiDs are issued as DOIs via DataCite, so this is the same shape as
+// DOIPattern (10.<4-9 digit registrant code>/<suffix>) under the raid.org
+// resolver host. See dev-notes/decisions_RAiD_support.md D8.
+const RAiDPattern = `^https://raid\.org/10\.\d{4,9}/[^\s]+$`
 
 // reRAiD is the compiled form of RAiDPattern.
 var reRAiD = regexp.MustCompile(RAiDPattern)
 
 // RAiDShortPattern is the regular expression pattern matching a normalized
-// short-form (bare) RAiD.
-const RAiDShortPattern = `^102?\.\d+/[^\s]+$`
+// short-form (bare) RAiD. Identical to DOIShortPattern, since RAiDs are
+// DOI-shaped. See dev-notes/decisions_RAiD_support.md D8.
+const RAiDShortPattern = `^10\.\d{4,9}/[^\s]+$`
 
 // reRAiDShort is the compiled form of RAiDShortPattern.
 var reRAiDShort = regexp.MustCompile(RAiDShortPattern)

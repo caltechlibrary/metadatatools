@@ -6,10 +6,15 @@
  */
 
 export const RAiDPrefix: string = "https://raid.org/";
+
+// RAiDs are issued as DOIs via DataCite, so RAiDPattern/RAiDShortPattern are
+// the same shape as DOIPattern/DOIShortPattern (10.<4-9 digit registrant
+// code>/<suffix>) under the raid.org resolver host. See
+// dev-notes/decisions_RAiD_support.md D8.
 export const RAiDPattern: string =
-  "^https:\\/\\/raid\\.org\\/102?\\.\\d+\\/[^\\s]+$";
+  "^https:\\/\\/raid\\.org\\/10\\.\\d{4,9}\\/[^\\s]+$";
 export const reRAiD: RegExp = new RegExp(RAiDPattern);
-export const RAiDShortPattern: string = "^102?\\.\\d+\\/[^\\s]+$";
+export const RAiDShortPattern: string = "^10\\.\\d{4,9}\\/[^\\s]+$";
 export const reRAiDShort: RegExp = new RegExp(RAiDShortPattern);
 
 /**

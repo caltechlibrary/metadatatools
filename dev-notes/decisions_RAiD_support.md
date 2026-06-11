@@ -169,3 +169,63 @@ build/release process was revised so the `mdtools` binary is built solely from
 kept in sync — the TypeScript side remains fully supported as a library
 (`mod.ts`), just without a separate CLI entry point. See `git log` for the
 Makefile/`deno.json` changes.
+
+## D8: Correction — `102?\.`/`102.` removed; RAiD pattern aligned with DOI
+
+**Decision:** `RAiDPattern`/`RAiDShortPattern` (`raid.go`/`raid.ts`) drop the
+`102?` alternative entirely. The corrected patterns are:
+
+- `RAiDShortPattern = ^10\.\d{4,9}/[^\s]+$` — textually identical to
+  `DOIShortPattern`.
+- `RAiDPattern = ^https://raid\.org/10\.\d{4,9}/[^\s]+$` — same shape as
+  `DOIPattern`, just with the `raid.org` resolver host instead of `doi.org`.
+
+`raid_test.go`/`raid_test.ts` drop the `102.26259/0e59e9a5` cases from
+`TestNormalizeRAiD`/`TestNormalizeRAiDShort`/`TestValidateRAiD` (adding
+`102.26259/0e59e9a5` to the *invalid* list instead), add real RAiD examples
+from ACORN (`10.83962/fb5be317`, `10.83962/f2a7645d`), and replace
+`TestDOIRAiDDisambiguation`/"test DOI/RAiD disambiguation" with
+`TestRAiDIsDOIShaped`/"test RAiD is DOI-shaped".
+
+**Rationale:** The `102?\.` came from identifiers.org's RAiD registry entry
+(MIR:00001107, pattern `^102?\.\d+\/.+$`, created 2025-06-19) cited in the
+Background section above. Cross-checking against ACORN
+(cloned at `~/WorkLab/Reference/acorn` — the source Jason Wohlgemuth recommended,
+refined against the live ARDC RAiD demo service point) shows this was a
+transcription bug in that registry entry, not a real RAiD format:
+
+- ACORN's `RE_RAID_TEXT` (`acorn-lib/src/util/constants/mod.rs`):
+  `(?<schema_uri>https[:]\/\/raid\.org\/)?(?<directory_indicator>10).(?<registrant_code>\d{4,9})\/(?<suffix>[-._;()/:a-zA-Z0-9]+)`
+  — the directory indicator is the literal `10`, structurally identical to
+  `RE_DOI_TEXT` minus the ISBN-A `97[89]` prefix-element exception. There is
+  no `2?` anywhere in ACORN's regex.
+- ACORN's doc comment on `RAID::from_string`
+  (`acorn-lib/src/schema/pid/mod.rs`) states "RAiD identifiers are DOI
+  identifiers", citing DataCite's "DataCite & ARDC announce partnership to
+  deliver the RAiD service" blog post. `RAID::is_valid` is literally "is this
+  a DOI-shaped `10.<registrant>/<suffix>`" (excluding the `10.5555`
+  DataCite/Crossref test prefix).
+- Real examples agree: ACORN's `RAID::format` doc example is
+  `https://raid.org/10.83962/fb5be317`; the demo-service fixture
+  `tests/fixtures/raid/success.json` contains
+  `"id": "https://raid.org/10.83962/f2a7645d"`; identifiers.org's own sample
+  ID is `10.26259/0e59e9a5`. None use a `102.` prefix, and no
+  `102.`-prefixed RAiD appears anywhere in ACORN's source or fixtures.
+
+**Consequence — supersedes D2/D3's residual-ambiguity framing:** D2/D3
+treated `102.xxxx/yyyy` as the RAiD-exclusive form that disambiguates RAiD
+from DOI (D3: "only the `102.xxxx/yyyy` form ... can disambiguate"). That
+escape hatch doesn't exist. RAiD and DOI are **format-identical**
+(`10.\d{4,9}/suffix`) with **no** format-level disambiguator — which matches
+ACORN's own approach (it doesn't attempt to disambiguate either; a RAiD *is*
+a DOI). `ValidateRAiD`/`ValidateDOI` will continue to agree for any shared
+`10.xxxx/yyyy` identifier; this is now documented as permanent/by-design
+rather than a residual edge case pending a better disambiguator. D2's
+"bounded vs unbounded digits" question is resolved as a side effect: bounded
+`\d{4,9}`, matching both `DOIShortPattern` and ACORN's `registrant_code`
+group.
+
+**Out of scope:** ACORN's `10.5555` test-prefix exclusion in `RAID::is_valid`
+is an ACORN-specific business rule (avoid treating DataCite/Crossref test
+DOIs as real RAiDs), not a format rule — `ValidateDOI`/`ValidateRAiD` are
+format-only validators and intentionally do not special-case `10.5555`.
