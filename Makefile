@@ -1,5 +1,5 @@
 #
-# A Deno project makefile
+# A Deno project makefile (with a parallel Go implementation)
 #
 PROJECT = metadatatools
 
@@ -13,6 +13,8 @@ TS_MODS = arxiv.ts arxiv_record.ts doi.ts doi_record.ts \
    orcid.ts orcid_record.ts pmcid.ts pmcid_record.ts \
    pmid.ts pmid_record.ts ror.ts ror_record.ts \
    snac.ts snac_record.ts utility.ts viaf.ts viaf_record.ts
+
+GO_PACKAGE = $(shell ls -1 *.go | grep -v 'version.go')
 
 GIT_GROUP = caltechlibrary
 
@@ -61,7 +63,22 @@ test: .FORCE
 
 version.ts: codemeta.json .FORCE
 	cmt codemeta.json version.ts
-	
+
+version.go: codemeta.json .FORCE
+	cmt codemeta.json version.go
+
+go-build: version.go $(GO_PACKAGE)
+	@mkdir -p bin
+	go build -o bin/mdtools$(EXT) ./cmd/mdtools
+
+go-test: .FORCE
+	go vet ./...
+	go test ./...
+
+go-test-short: .FORCE
+	go vet ./...
+	go test -short ./...
+
 INSTALL.md: .FORCE
 	cmt codemeta.json INSTALL.md
 
