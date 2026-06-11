@@ -1,11 +1,11 @@
 #!/bin/sh
-# generated with CMTools 0.1.0 98f83e7
+# generated with CMTools 0.1.1 5618538
 
 #
 # Set the package name and version to install
 #
 PACKAGE="metadatatools"
-VERSION="0.1.0"
+VERSION="0.1.1"
 GIT_GROUP="caltechlibrary"
 RELEASE="https://github.com/$GIT_GROUP/$PACKAGE/releases/tag/v$VERSION"
 if [ "$PKG_VERSION" != "" ]; then

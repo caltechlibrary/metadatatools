@@ -64,11 +64,11 @@
     "GNU Make >= 3.81",
     "CMTools >= 0.0.45b"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "developmentStatus": "active",
   "issueTracker": "https://github.com/caltechlibrary/metadatatools/issues",
   "downloadUrl": "https://github.com/caltechlibrary/metadatatools/release/latest",
-  "releaseNotes": "- Integrated a Go port of the TypeScript package\n- Added RAiD support, this introduce a breaking change from the 0.0 series\n- The mdtools cli is now based on the Go source rather than Deno+TypeScript",
+  "releaseNotes": "- Integrated a Go port of the TypeScript package\n- Added RAiD support, this introduce a breaking change from the 0.0 series\n- The mdtools cli is now based on the Go source rather than Deno+TypeScript\n- Fix bug in RAiD implementation caused by including support for 102. prefixes.",
   "copyrightYear": 2026,
   "copyrightHolder": "California Institute of Technology"
 }

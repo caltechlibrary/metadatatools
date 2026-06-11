@@ -14,7 +14,7 @@ maintainer:
     id: https://orcid.org/0000-0003-0900-6903
 
 repository_code: https://github.com/caltechlibrary/metadatatools
-version: 0.1.0
+version: 0.1.1
 license_url: https://caltechlibrary.github.io/metadatatools/LICENSE
 operating_system:
   - Linux
@@ -36,11 +36,12 @@ date_released: 2026-06-11
 About this software
 ===================
 
-## metadatatools 0.1.0
+## metadatatools 0.1.1
 
 - Integrated a Go port of the TypeScript package
 - Added RAiD support, this introduce a breaking change from the 0.0 series
 - The mdtools cli is now based on the Go source rather than Deno+TypeScript
+- Fix bug in RAiD implementation caused by including support for 102. prefixes.
 
 ## Authors
 

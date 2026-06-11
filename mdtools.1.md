@@ -1,4 +1,4 @@
-%mdtools(1) user manual | version 0.1.0 98f83e7
+%mdtools(1) user manual | version 0.1.1 5618538
 % R. S. Doiel
 % 2026-06-11
 
