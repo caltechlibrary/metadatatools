@@ -49,7 +49,7 @@ endif
 #PREFIX = /usr/local/bin
 PREFIX = $(HOME)
 
-build: version.ts version.go $(TS_MODS) CITATION.cff about.md INSTALL.md go-build installer.sh installer.ps1 $(HTML_PAGES)
+build: version.ts version.go $(TS_MODS) CITATION.cff INSTALL.md go-build installer.sh installer.ps1 $(HTML_PAGES)
 
 bin: .FORCE
 	mkdir -p bin
@@ -96,9 +96,6 @@ $(MAN_PAGES_1): .FORCE
 CITATION.cff: codemeta.json .FORCE
 	cmt codemeta.json CITATION.cff
 
-about.md: codemeta.json .FORCE
-	cmt codemeta.json about.md
-
 status:
 	git status
 
@@ -111,9 +108,6 @@ website: $(HTML_PAGES) presentations .FORCE
 
 presentations: .FORCE
 	cd presentations && make || exit 1
-
-publish: website .FORCE
-	./publish.bash
 
 installer.sh: .FORCE
 	cmt codemeta.json installer.sh
