@@ -70,14 +70,14 @@ TypeScript module. The TypeScript module you can use from
 [Deno](https://deno.com). The latest version of the Metadata Tools module can be
 found at <https://github.com/caltechlibrary/metadatatools/latest/release> and on
 the Caltech Library development group's GitHub website,
-<https://caltechlibrary.github.io/metadatatools/mod.ts>. The `mod.ts` file will
+<https://software.library.caltech.edu/metadatatools/mod.ts>. The `mod.ts` file will
 pull in the whole set of identifier normalization, validation and verification
 routines.
 
 ## Installation
 
 The command line program can be installed using installer scripts hosted at
-<https://caltechlibrary.github.io/metadatatools>. See [INSTALL.md](INSTALL.md)
+<https://software.library.caltech.edu/metadatatools>. See [INSTALL.md](INSTALL.md)
 for details.
 
 While Metadata Tools should be considered experimental binaries are being

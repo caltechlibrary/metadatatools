@@ -16,7 +16,7 @@ place: Caltech
 section-titles: false
 toc: true
 keywords: [ "metadata", "identifiers", "normalizaiton", "validation", "verification", "TypeScript", "Deno" ]
-url: "https://caltechlibrary.github.io/metadatatools"
+url: "https://software.library.caltech.edu/metadatatools"
 ---
 
 # What is the Metadata Tools Project?
@@ -53,7 +53,7 @@ native binary executables and in web browsers.
 # How do I use Metadata Tools in TypeScript and Deno?
 
 ```TypeScript
-import * as mt from "https://caltechlibrary.github.io/metadatatools/mod.ts";
+import * as mt from "https://software.library.caltech.edu/metadatatools/mod.ts";
 ```
 
 # Example source

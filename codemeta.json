@@ -44,7 +44,7 @@
     "identifiers"
   ],
   "name": "metadatatools",
-  "license": "https://caltechlibrary.github.io/metadatatools/LICENSE",
+  "license": "https://software.library.caltech.edu/metadatatools/LICENSE",
   "operatingSystem": [
     "Linux",
     "Windows",
