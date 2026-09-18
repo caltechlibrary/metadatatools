@@ -1,6 +1,14 @@
 {
   "fmt": {
-    "indentWidth": 2
+    "indentWidth": 2,
+    "include": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.mjs",
+      "**/*.cjs"
+    ]
   },
   "name": "@caltechlibrary/metadatatools",
   "version": "0.1.0",
